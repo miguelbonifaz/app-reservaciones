@@ -31,16 +31,13 @@ class CreateUserCommand extends Command
         parent::__construct();
     }
 
-    /**
-     * Execute the console command.
-     *
-     * @return int
-     */
     public function handle()
     {
         User::updateOrCreate([
             'name' => 'Miguel Bonifaz',
             'email' => 'booking@gmail.com',
         ], ['password' => bcrypt('booking')]);
+
+        $this->info('The user was successfully created.');
     }
 }
