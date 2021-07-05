@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CalendarController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -19,8 +20,6 @@ Route::get('/', function () {
     );
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth'])->name('dashboard');
+Route::get('/calendar', [CalendarController::class, 'index'])->name('calendar.index');
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
