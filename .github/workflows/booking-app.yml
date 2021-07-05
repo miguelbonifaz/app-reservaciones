@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      DB_DATABASE: booking_app
+      DB_DATABASE: booking_app_test
       DB_USER: root
       DB_PASSWORD: root
 
@@ -26,7 +26,7 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '7.4'
+          php-version: '8.0'
           extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, gd, exif, imagick, bcmath
           coverage: none
 
