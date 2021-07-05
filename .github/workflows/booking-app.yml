@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      DB_DATABASE: edu4lat_test
+      DB_DATABASE: booking_app
       DB_USER: root
       DB_PASSWORD: root
 
@@ -49,7 +49,7 @@ jobs:
         uses: sarisia/actions-status-discord@v1
         if: always()
         with:
-          webhook: https://discord.com/api/webhooks/836011821651460147/ysMeJGIbpMd46-87b-FfZqQ-E7ArLbzK1e6tAq4VYDJuWdEgpE6flf8qS4ssiR7MgRdp
+          webhook: https://discord.com/api/webhooks/861469762549841930/eyZmFYN-svCtKaOiYZzZchPB-RIurxjjhd3o7_U7-x1Edj84Vs7be3_gL30q_yFqRWFJ
           title: "deploy"
-          description: "Edu4lat Testing"
+          description: "Booking App"
           username: GitHub Actions
