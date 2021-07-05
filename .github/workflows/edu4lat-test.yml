@@ -1,0 +1,55 @@
+name: PHPUnit tests
+
+on:
+  push:
+
+jobs:
+  php-tests:
+    runs-on: ubuntu-latest
+
+    env:
+      DB_DATABASE: edu4lat_test
+      DB_USER: root
+      DB_PASSWORD: root
+
+    steps:
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.6.0
+        with:
+          access_token: ${{ secrets.GA_TOKEN }}
+
+      - name: Start MySQL
+        run: |
+          sudo /etc/init.d/mysql start
+          mysql -e 'CREATE DATABASE ${{ env.DB_DATABASE }};' -u${{ env.DB_USER }} -p${{ env.DB_PASSWORD }}
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '7.4'
+          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, gd, exif, imagick, bcmath
+          coverage: none
+
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Copy .env
+        run: php -r "file_exists('.env') || copy('.env.example', '.env');"
+
+      - name: Install dependencies
+        run: composer install --ignore-platform-reqs
+
+      - name: Generate key
+        run: php artisan key:generate
+
+      - name: Run tests
+        run: ./vendor/bin/phpunit -d memory_limit=2048M
+
+      - name: Discord notification
+        uses: sarisia/actions-status-discord@v1
+        if: always()
+        with:
+          webhook: https://discord.com/api/webhooks/836011821651460147/ysMeJGIbpMd46-87b-FfZqQ-E7ArLbzK1e6tAq4VYDJuWdEgpE6flf8qS4ssiR7MgRdp
+          title: "deploy"
+          description: "Edu4lat Testing"
+          username: GitHub Actions
