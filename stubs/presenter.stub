@@ -1,0 +1,13 @@
+<?php
+
+namespace {{ namespace }};
+
+class {{ class }}
+{
+    public $property;
+
+    public function __construct(Model $property)
+    {
+        $this->property = $property;
+    }
+}
