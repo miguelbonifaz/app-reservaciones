@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Presenter\UserPresenter;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -70,4 +71,9 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function present()
+    {
+        return new UserPresenter($this);
+    }
 }

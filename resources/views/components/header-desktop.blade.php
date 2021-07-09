@@ -9,7 +9,7 @@
                 <div class="ml-10 flex items-baseline space-x-4">
                     @foreach ($menu as $m)
                         <a
-                            href="{{ $m['title'] }}"
+                            href="{{ $m['route'] }}"
                             @if ($m['isActive'])
                             class="bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium"
                             @else
