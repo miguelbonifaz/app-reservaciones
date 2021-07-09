@@ -43,7 +43,7 @@ jobs:
         run: php artisan key:generate
 
       - name: Run tests
-        run: ./vendor/bin/phpunit -d memory_limit=2048M
+        run: ./vendor/bin/pest -d memory_limit=2048M
 
       - name: Discord notification
         uses: sarisia/actions-status-discord@v1
