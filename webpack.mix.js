@@ -21,3 +21,5 @@ mix.js('resources/js/app.js', 'public/js')
 mix.browserSync({
     proxy: process.env.APP_URL
 });
+
+mix.copyDirectory('resources/assets', 'public/assets');
