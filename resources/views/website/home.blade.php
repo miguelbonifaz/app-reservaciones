@@ -8,7 +8,9 @@
     <link rel="stylesheet" href="{{ mix('css/app.css') }}">
     <title>Psicóloga María José Jáuregui</title>
 </head>
-<body class="flex justify-center items-center h-screen bg-center bg-cover px-4" style="background-image: url({{ asset('assets/bg_home.jpg') }})">
+<body
+    class="flex justify-center items-center h-screen bg-center bg-cover px-4"
+    style="background-image: url({{ asset('assets/bg.jpg') }})">
     <figure>
         <img src="{{ asset('assets/Logo.svg') }}" alt="Psicóloga María José Jáuregui Logo">
     </figure>
