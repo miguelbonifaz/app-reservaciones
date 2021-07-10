@@ -1,6 +1,4 @@
 <x-app-layout header-title="Usuarios">
-    <x-input.error>
-    </x-input.error>
     <div class="flex justify-end space-x-2">
         <x-input.link href="{{ route('users.create') }}">
             Crear Usuario

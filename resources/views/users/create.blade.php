@@ -14,6 +14,7 @@
                     <x-input.text
                         name="password"
                         label="Password"
+                        type="password"
                     />     
                     <x-input.text
                     label="Foto"
