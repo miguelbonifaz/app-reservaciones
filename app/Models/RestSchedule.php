@@ -15,6 +15,12 @@ use Illuminate\Database\Eloquent\Model;
  * @method static Builder|RestSchedule newQuery()
  * @method static Builder|RestSchedule query()
  * @mixin \Eloquent
+ * @property int $id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @method static Builder|RestSchedule whereCreatedAt($value)
+ * @method static Builder|RestSchedule whereId($value)
+ * @method static Builder|RestSchedule whereUpdatedAt($value)
  */
 class RestSchedule extends Model
 {

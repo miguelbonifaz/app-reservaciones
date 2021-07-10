@@ -15,6 +15,12 @@ use Illuminate\Database\Eloquent\Model;
  * @method static Builder|Appointment newQuery()
  * @method static Builder|Appointment query()
  * @mixin \Eloquent
+ * @property int $id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @method static Builder|Appointment whereCreatedAt($value)
+ * @method static Builder|Appointment whereId($value)
+ * @method static Builder|Appointment whereUpdatedAt($value)
  */
 class Appointment extends Model
 {

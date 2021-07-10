@@ -15,6 +15,16 @@ use Illuminate\Database\Eloquent\Model;
  * @method static Builder|Service newQuery()
  * @method static Builder|Service query()
  * @mixin \Eloquent
+ * @property int $id
+ * @property string $names
+ * @property int $duration
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @method static Builder|Service whereCreatedAt($value)
+ * @method static Builder|Service whereDuration($value)
+ * @method static Builder|Service whereId($value)
+ * @method static Builder|Service whereNames($value)
+ * @method static Builder|Service whereUpdatedAt($value)
  */
 class Service extends Model
 {

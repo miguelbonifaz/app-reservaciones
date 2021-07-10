@@ -15,6 +15,12 @@ use Illuminate\Database\Eloquent\Model;
  * @method static Builder|Customer newQuery()
  * @method static Builder|Customer query()
  * @mixin \Eloquent
+ * @property int $id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @method static Builder|Customer whereCreatedAt($value)
+ * @method static Builder|Customer whereId($value)
+ * @method static Builder|Customer whereUpdatedAt($value)
  */
 class Customer extends Model
 {
