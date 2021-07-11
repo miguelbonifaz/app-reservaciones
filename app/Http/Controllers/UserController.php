@@ -3,15 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
 
 class UserController extends Controller
 {
     public function index()
     {
-        $users = User::query()->get();                                    
-        
+        $users = User::query()
+            ->withoutTheUserConnected()
+            ->get();
+
         return view ('users.index', [
             'users' => $users
         ]);
@@ -21,30 +21,29 @@ class UserController extends Controller
     {
         $user = new User();
 
-        return view('users.create')
-            ->with([
-                'user' => $user,
-            ]);
+        return view('users.create', [
+            'user' => $user,
+        ]);
     }
 
     public function store()
-    {                        
+    {
         request()->validate([
             'name' => 'required',
-            'email' => 'required|email',
+            'email' => 'required|email|unique:users,email',
             'password' => 'required',
         ]);
 
         $user = User::create([
-            'name' => request()->name,                
-            'email' => request()->email,                   
-            'password' => bcrypt(request()->password)            
+            'name' => request()->name,
+            'email' => request()->email,
+            'password' => bcrypt(request()->password)
         ]);
-        
-        if (request()->hasFile('avatar')) {         
+
+        if (request()->hasFile('avatar')) {
             $user->saveAvatar(request()->avatar);
-        }     
-        
+        }
+
         return redirect()
             ->route('users.index')
             ->with('flash_success', 'Se creó con éxito el usuario.');

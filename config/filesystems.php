@@ -34,10 +34,10 @@ return [
             'driver' => 'local',
             'root' => storage_path('app'),
         ],
-        
+
         'media' => [
             'driver' => 'local',
-            'root'   => public_path('media'),
+            'root'   => storage_path('app/public'),
             'url'    => env('APP_URL').'/media',
         ],
 
