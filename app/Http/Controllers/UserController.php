@@ -53,8 +53,6 @@ class UserController extends Controller
     {
         $user = request()->user;
 
-        $user = User::firstWhere('id',$user);
-        
         return view('users.edit',[
             'user' => $user
         ]);
@@ -64,23 +62,21 @@ class UserController extends Controller
     {
         $user = request()->user;
 
-        $user = User::firstWhere('id',$user);
-
         request()->validate([
             'name' => 'required',
             'email' => 'required|email'
         ]);
 
         $user->update([
-            'name' => request()->name,                
-            'email' => request()->email,                   
-            'password' => bcrypt(request()->password)            
+            'name' => request()->name,
+            'email' => request()->email,
+            'password' => bcrypt(request()->password)
         ]);
-        
-        if (request()->hasFile('avatar')) {         
+
+        if (request()->hasFile('avatar')) {
             $user->saveAvatar(request()->avatar);
-        }     
-        
+        }
+
         return redirect()
             ->route('users.index')
             ->with('flash_success', 'Se actualizó con éxito el usuario.');
@@ -88,22 +84,19 @@ class UserController extends Controller
 
     public function destroy()
     {
-        
         $user = request()->user;
-
-        $user = User::firstWhere('id',$user);
 
         $avatar = $user->getFirstMedia('avatar');
 
         if($avatar){
             $avatar->delete();
-        }    
-        
-        $user->delete();        
-        
+        }
+
+        $user->delete();
+
         return redirect()
             ->route('users.index')
             ->with('flash_success', 'Se eliminó con éxito el usuario.');
     }
-    
+
 }

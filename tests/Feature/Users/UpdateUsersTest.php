@@ -9,22 +9,22 @@ uses(RefreshDatabase::class);
 
 uses(TestCase::class)->in('Feature');
 
-function updateUser(User $user,$data = [])
+function updateUser(User $user, $data = [])
 {
-    $url = route('users.update',$user);
+    $url = route('users.update', $user);
 
     return test()->actingAsUser()->post($url, $data);
 }
 
 test('can see update user form', function () {
-    
     // Arrange
-    $user = \App\Models\User::factory()->create();
+    $user = User::factory()->create();
 
     // Act
     $url = route('users.edit', $user);
 
     $response = $this->actingAsUser()->get($url);
+
     // Assert
     $response->assertOk();
 
@@ -34,23 +34,23 @@ test('can see update user form', function () {
 });
 
 test('can update an user', function () {
-    
-    // Arrange      
-    $user = \App\Models\User::factory()->create();
+    // Arrange
+    /** @var User $user */
+    $user = User::factory()->create();
 
-    $data = \App\Models\User::factory()->make();
+    /** @var User $data */
+    $data = User::factory()->make();
 
     // Act
 
-    $response = updateUser($user,[
+    $response = updateUser($user, [
         'name' => $data->name,
         'email' => $data->email,
         'password' => $data->password,
-        'avatar' => Illuminate\Http\UploadedFile::fake()->image('avatar.jpg'),        
+        'avatar' => UploadedFile::fake()->image('avatar.jpg'),
     ]);
 
     // Assert
-
     $response->assertRedirect(route('users.index'));
 
     $response->assertSessionHas('flash_success', 'Se actualizó con éxito el usuario.');
@@ -62,13 +62,15 @@ test('can update an user', function () {
     $this->assertEquals($data->name, $user->name);
     $this->assertEquals($data->email, $user->email);
     $this->assertNotNull($user->avatar());
+    $this->assertTrue(Hash::check($data->password, $user->password));
 });
 
 test('fields are required', function () {
     // Arrange
-    $user = \App\Models\User::factory()->create(); 
+    $user = User::factory()->create();
+
     //Act
-    $response = updateUser($user,[
+    $response = updateUser($user, [
         'name' => null,
         'email' => null,
     ]);
@@ -82,9 +84,9 @@ test('fields are required', function () {
 
 test('field email must be valid', function () {
     // Arrange
-    $user = \App\Models\User::factory()->create();
+    $user = User::factory()->create();
     // Act
-    $response =  updateUser($user,[
+    $response = updateUser($user, [
         'email' => 'not-email',
     ]);
 
@@ -95,11 +97,12 @@ test('field email must be valid', function () {
 });
 
 test('can delete the profile picture', function () {
-    
-    // Arrange      
-    $user = \App\Models\User::factory()->create();
 
-    $user->saveAvatar(Illuminate\Http\UploadedFile::fake()->image('avatar.jpg'));
+    // Arrange
+    /** @var User $user */
+    $user = User::factory()->create();
+
+    $user->saveAvatar(UploadedFile::fake()->image('avatar.jpg'));
 
     $this->assertNotNull($user->avatar());
 
@@ -107,9 +110,9 @@ test('can delete the profile picture', function () {
 
     //Act
     $response = $this->actingAsUser()->get($url);
-    
+
     //Assert
-    $response->assertRedirect(route('users.edit',$user));
+    $response->assertRedirect(route('users.edit', $user));
 
     $response->assertSessionHas('flash_success', 'Se eliminó con éxito la foto.');
 

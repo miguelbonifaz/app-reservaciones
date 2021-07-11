@@ -2,7 +2,6 @@
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Http\UploadedFile;
 use Tests\TestCase;
 
 uses(RefreshDatabase::class);
@@ -11,18 +10,15 @@ uses(TestCase::class)->in('Feature');
 
 function deleteUser(User $user)
 {
-    $logedUser = \App\Models\User::factory()->create();
-
     $url = route('users.destroy', $user);
 
-    return test()->actingAs($logedUser)->delete($url);
+    return test()->actingAsUser()->delete($url);
 }
 
 test('can delete a user', function () {
+    // Arrange
+    $user = User::factory()->create();
 
-    // Arrange      
-    $user = \App\Models\User::factory()->create();
-    
     //Act
     $response = deleteUser($user);
 
