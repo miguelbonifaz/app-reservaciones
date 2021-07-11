@@ -33,9 +33,8 @@
                                         {{ $user->present()->email() }}
                                     </td>
                                     <td>
-                                    <x-input.link href="{{ route('users.edit',$user) }}">
-                                        Editar
-                                    </x-input.link>                                   
+                                        <a href="{{ route('users.edit',$user) }}">Editar</a>
+                                    </td>                                 
                                 </tr>
                             @endforeach
                         </tbody>
