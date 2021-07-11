@@ -1,4 +1,5 @@
 <x-app-layout header-title="Usuarios">
+    <x-ui.flash />
     <div class="flex justify-end space-x-2">
         <x-input.link href="{{ route('users.create') }}">
             Crear Usuario

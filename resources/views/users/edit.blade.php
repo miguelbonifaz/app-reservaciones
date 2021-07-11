@@ -1,6 +1,7 @@
-<x-app-layout header-title="{{ $user->present()->name() }}">
-    <div class="px-4">
+<x-app-layout header-title="{{ $user->present()->name() }}">    
+    <div class="px-4">        
         <div class="mx-auto max-w-7xl">
+            <x-ui.flash />
             <div class="py-4">                
                 <x-base-form :route="route('users.update',$user)">
                     <x-input.text
@@ -22,7 +23,14 @@
                         <x-input.text
                         label="Foto"
                         name="avatar"                        
-                        type="file" />                        
+                        type="file" />
+                        @if ($user->getFirstMedia('avatar') != null)
+                            <a href="{{ route('users.remove',$user) }}" onclick="return confirm('¿Seguro desea eliminar esta foto?');">
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800">
+                                    Eliminar foto
+                                </span>
+                            </a>
+                        @endif                      
                     </div>                                                                                               
                     <x-slot name="footer">
                         <x-input.link theme="white" href="{{ route('users.index') }}">
@@ -32,17 +40,7 @@
                             Guardar
                         </x-input.button>
                     </x-slot>
-                </x-base-form>
-                @if ($user->getFirstMedia('avatar') != null)
-                    <form action="{{ route('users.remove',$user) }}" method="post">                            
-                        @csrf                            
-                            <button
-                                class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800"
-                                type="submit">
-                                Eliminar foto
-                            </button>
-                    </form>   
-                @endif                               
+                </x-base-form>                                            
             </div>
         </div>
     </div>

@@ -13,5 +13,5 @@ Route::prefix('/users')->group(function () {
     Route::post('/', [UserController::class, 'store'])->name('users.store');
     Route::get('/{user}/edit', [UserController::class, 'edit'])->name('users.edit');
     Route::post('/{user}', [UserController::class, 'update'])->name('users.update');
-    Route::post('/{user}/avatar', [UserPhotoController::class, '__invoke'])->name('users.remove');
+    Route::get('/{user}/avatar', [UserPhotoController::class, '__invoke'])->name('users.remove');
 });
