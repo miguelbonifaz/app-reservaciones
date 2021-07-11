@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Presenter\ServicePresenter;
 use Database\Factories\ServiceFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -29,4 +30,14 @@ use Illuminate\Database\Eloquent\Model;
 class Service extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'name',
+        'duration'
+    ];
+
+    public function present()
+    {
+        return new ServicePresenter($this);
+    }
 }

@@ -22,7 +22,8 @@ class ServiceFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'name' => $this->faker->name(),
+            'duration' => $this->faker->numberBetween(000,999),
         ];
     }
 }
