@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Employee;
+use Illuminate\Validation\Rule;
 
 class EmployeeController extends Controller
 {
@@ -41,5 +42,40 @@ class EmployeeController extends Controller
         return redirect()
             ->route('employees.index')
             ->with('flash_success', 'Se creó con éxito el empleado.');
+    }
+
+    public function edit()
+    {
+        $employee = request()->employee;
+
+        return view('employees.edit',[
+            'employee' => $employee
+        ]);
+    }
+
+    public function update()
+    {
+        $employee = request()->employee;
+
+        request()->validate([
+            'name' => 'required',
+            'email' => [
+                'required',
+                'email',
+                Rule::unique('employees', 'email')->ignoreModel($employee)
+            ],
+            'phone' => 'required|numeric',
+        ]);
+
+        $employee->update([
+            'name' => request()->name,
+            'email' => request()->email,
+            'phone' => request()->phone,
+
+        ]);
+
+        return redirect()
+            ->route('employees.index')
+            ->with('flash_success', 'Se actualizó con éxito el empleado.');
     }
 }
