@@ -20,4 +20,6 @@ Route::prefix('/users')->group(function () {
 
 Route::prefix('/employees')->group(function () {
     Route::get('/', [EmployeeController::class, 'index'])->name('employees.index');
+    Route::get('/create', [EmployeeController::class, 'create'])->name('employees.create');
+    Route::post('/', [EmployeeController::class, 'store'])->name('employees.store');
 });
