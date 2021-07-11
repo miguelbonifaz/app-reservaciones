@@ -11,7 +11,7 @@
                     <x-input.text
                         name="email"
                         :value="old('email')"
-                        label="email"
+                        label="Email"
                     />
                     <x-input.text
                         name="phone"

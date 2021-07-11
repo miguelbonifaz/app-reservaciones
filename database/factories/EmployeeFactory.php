@@ -24,7 +24,7 @@ class EmployeeFactory extends Factory
         return [
             'name' => $this->faker->name(),
             'email' => $this->faker->unique()->safeEmail(),
-            'phone' => $this->faker->numberBetween(0, 100),
+            'phone' => $this->faker->numberBetween(00000000, 99999999),
         ];
     }
 }
