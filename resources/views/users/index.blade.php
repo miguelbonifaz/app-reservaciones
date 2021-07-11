@@ -19,7 +19,7 @@
                                 <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
                                     Email 
                                 </th>
-                                <th>                                    
+                                <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">                                    
                                 </th>
                             </tr>
                         </thead>
@@ -32,9 +32,25 @@
                                     <td class="px-6 py-4 text-sm whitespace-nowrap">
                                         {{ $user->present()->email() }}
                                     </td>
-                                    <td>
-                                        <a href="{{ route('users.edit',$user) }}">Editar</a>
-                                    </td>                                 
+                                    <td class="px-6 py-4 text-sm whitespace-nowrap">
+                                        <div class="flex items-center justify-end space-x-8">
+                                            <a href="{{ route('users.edit',$user) }}">
+                                                Editar
+                                            </a>                                    
+                                            <form
+                                                action="{{ route('users.destroy', $user) }}"
+                                                method="POST"
+                                                onclick="return confirm('¿Seguro desea eliminar este usuario?');">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button
+                                                    type="submit"
+                                                    class="font-medium text-teal-600 hover:text-teal-900 focus:outline-none focus:underline">
+                                                    Eliminar
+                                                </button>                                     
+                                            </form>
+                                        </div>
+                                    </td>                                                                        
                                 </tr>
                             @endforeach
                         </tbody>
