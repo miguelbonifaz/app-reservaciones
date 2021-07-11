@@ -3,7 +3,7 @@
     <div class="flex justify-end space-x-2">
         <x-input.link href="{{ route('employees.create') }}">
             Crear Empleado
-        </x-input.link> 
+        </x-input.link>
     </div>
     <div class="h-4"></div>
     <div class="flex flex-col">
@@ -23,7 +23,7 @@
                                     Teléfono
                                 </th>
                                 <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
-                                    
+
                                 </th>
                             </tr>
                         </thead>
@@ -54,8 +54,8 @@
                                                     type="submit"
                                                     class="font-medium text-teal-600 hover:text-teal-900 focus:outline-none focus:underline">
                                                     Eliminar
-                                                </button>                                     
-                                            </form>                                                                               
+                                                </button>
+                                            </form>
                                         </div>
                                     </td>
                                 </tr>
