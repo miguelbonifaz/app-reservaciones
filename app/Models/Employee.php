@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Presenter\EmployeePresenter;
 use Database\Factories\EmployeeFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -29,4 +30,15 @@ use Illuminate\Database\Eloquent\Model;
 class Employee extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'name',
+        'email',
+        'phone',
+    ];
+
+    public function present()
+    {
+        return new EmployeePresenter($this);
+    }
 }
