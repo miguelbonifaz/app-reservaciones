@@ -6,13 +6,11 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 uses(RefreshDatabase::class);
 
 test('can see user list', function () {
-    // Arrange
-    $user = User::factory()->create();
-
-    $url = route('users.index');
-
+    // Arrange    
     // Act
-    $response = $this->actingAs($user)->get($url);
+    $url = route('users.index');
+    
+    $response = $this->actingAsUser()->get($url);
 
     // Assert
     $response->assertOk();

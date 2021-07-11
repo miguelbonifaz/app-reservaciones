@@ -1,4 +1,5 @@
 <x-app-layout header-title="Usuarios">
+    <x-ui.flash />
     <div class="flex justify-end space-x-2">
         <x-input.link href="{{ route('users.create') }}">
             Crear Usuario
@@ -18,6 +19,8 @@
                                 <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
                                     Email 
                                 </th>
+                                <th>                                    
+                                </th>
                             </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200">
@@ -29,6 +32,9 @@
                                     <td class="px-6 py-4 text-sm whitespace-nowrap">
                                         {{ $user->present()->email() }}
                                     </td>
+                                    <td>
+                                        <a href="{{ route('users.edit',$user) }}">Editar</a>
+                                    </td>                                 
                                 </tr>
                             @endforeach
                         </tbody>

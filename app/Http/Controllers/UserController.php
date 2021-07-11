@@ -48,4 +48,38 @@ class UserController extends Controller
             ->route('users.index')
             ->with('flash_success', 'Se creó con éxito el usuario.');
     }
+
+    public function edit()
+    {
+        $user = request()->user;
+
+        return view('users.edit',[
+            'user' => $user
+        ]);
+    }
+
+    public function update()
+    {
+        $user = request()->user;
+
+        request()->validate([
+            'name' => 'required',
+            'email' => 'required|email'
+        ]);
+
+        $user->update([
+            'name' => request()->name,
+            'email' => request()->email,
+            'password' => bcrypt(request()->password)
+        ]);
+
+        if (request()->hasFile('avatar')) {
+            $user->saveAvatar(request()->avatar);
+        }
+
+        return redirect()
+            ->route('users.index')
+            ->with('flash_success', 'Se actualizó con éxito el usuario.');
+    }
+
 }
