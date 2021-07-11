@@ -11,22 +11,18 @@ uses(TestCase::class)->in('Feature');
 
 function createUser($data = [])
 {
-    $user = User::factory()->create();
-
     $url = route('users.store');
 
-    return test()->actingAs($user)->post($url, $data);
+    return test()->actingAsUser()->post($url, $data);
 }
 
 test('can see create user form', function () {
 
-    // Arrange
-    $user = User::factory()->create();
-
+    // Arrange    
     // Act
     $url = route('users.create');
 
-    $response = $this->actingAs($user)->get($url);
+    $response = $this->actingAsUser()->get($url);
     // Assert
     $response->assertOk();
 
