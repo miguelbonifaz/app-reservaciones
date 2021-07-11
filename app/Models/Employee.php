@@ -19,4 +19,15 @@ use Illuminate\Database\Eloquent\Model;
 class Employee extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'name',
+        'email',
+        'phone',
+    ];
+
+    public function present()
+    {
+        return new UserPresenter($this);
+    }
 }
