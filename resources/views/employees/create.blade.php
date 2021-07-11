@@ -16,7 +16,7 @@
                     <x-input.text
                         name="phone"
                         :value="old('phone')"
-                        label="phone"
+                        label="Teléfono"
                     />
                     <x-slot name="footer">
                         <x-input.link theme="white" href="{{ route('employees.index') }}">
