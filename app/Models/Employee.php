@@ -15,6 +15,16 @@ use Illuminate\Database\Eloquent\Model;
  * @method static Builder|Employee newQuery()
  * @method static Builder|Employee query()
  * @mixin \Eloquent
+ * @property int $id
+ * @property string $name
+ * @property string $email
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @method static Builder|Employee whereCreatedAt($value)
+ * @method static Builder|Employee whereEmail($value)
+ * @method static Builder|Employee whereId($value)
+ * @method static Builder|Employee whereName($value)
+ * @method static Builder|Employee whereUpdatedAt($value)
  */
 class Employee extends Model
 {

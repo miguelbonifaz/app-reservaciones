@@ -22,4 +22,5 @@ class UserPresenter
     {
         return $this->user->email;
     }
+
 }
