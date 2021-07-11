@@ -34,7 +34,7 @@ class ServiceController extends Controller
 
         Service::create([
             'name' => request()->name,
-            'duration' => request()->duration,            
+            'duration' => request()->duration,
         ]);
 
         return redirect()
@@ -56,7 +56,7 @@ class ServiceController extends Controller
         $service = request()->service;
 
         request()->validate([
-            'name' => 'required',            
+            'name' => 'required',
             'duration' => 'required|numeric',
         ]);
 
