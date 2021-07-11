@@ -3,7 +3,7 @@
     <div class="flex justify-end space-x-2">
         <x-input.link href="{{ route('employees.create') }}">
             Crear Empleado
-        </x-input.link> 
+        </x-input.link>
     </div>
     <div class="h-4"></div>
     <div class="flex flex-col">
@@ -23,7 +23,7 @@
                                     Teléfono
                                 </th>
                                 <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
-                                    
+
                                 </th>
                             </tr>
                         </thead>
@@ -43,7 +43,19 @@
                                         <div class="flex items-center justify-end space-x-8">
                                             <a href="{{ route('employees.edit',$employee) }}">
                                                 Editar
-                                            </a>                                                                                
+                                            </a>
+                                            <form
+                                                action="{{ route('employees.destroy', $employee) }}"
+                                                method="POST"
+                                                onclick="return confirm('¿Seguro desea eliminar este empleado?');">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button
+                                                    type="submit"
+                                                    class="font-medium text-teal-600 hover:text-teal-900 focus:outline-none focus:underline">
+                                                    Eliminar
+                                                </button>
+                                            </form>
                                         </div>
                                     </td>
                                 </tr>
