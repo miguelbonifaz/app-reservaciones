@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Presenter\EmployeePresenter;
 use Database\Factories\EmployeeFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -38,6 +39,6 @@ class Employee extends Model
 
     public function present()
     {
-        return new UserPresenter($this);
+        return new EmployeePresenter($this);
     }
 }

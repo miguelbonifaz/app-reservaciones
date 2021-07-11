@@ -8,8 +8,7 @@ class EmployeeController extends Controller
 {
     public function index()
     {
-        $employees = Employee::query()
-            ->paginate(10);
+        $employees = Employee::all();
 
         return view ('employees.index', [
             'employees' => $employees

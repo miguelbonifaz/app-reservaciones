@@ -8,12 +8,12 @@
                         <thead class="bg-gray-50 sm:rounded-t-lg">
                             <tr>
                                 <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
-                                    Nombre 
+                                    Nombre
                                 </th>
                                 <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
-                                    Email 
+                                    Email
                                 </th>
-                                <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">                                    
+                                <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
                                     Teléfono
                                 </th>
                             </tr>
@@ -29,11 +29,14 @@
                                     </td>
                                     <td class="px-6 py-4 text-sm whitespace-nowrap">
                                         {{ $employee->present()->phone() }}
-                                    </td>                                                                   
+                                    </td>
                                 </tr>
                             @endforeach
                         </tbody>
-                    </table>                
+                    </table>
+                    <x-ui.empty-list :count="$employees->count()">
+                        No se encuentra ningún empleado registrado.
+                    </x-ui.empty-list>
                 </div>
             </div>
         </div>
