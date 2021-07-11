@@ -11,22 +11,18 @@ uses(TestCase::class)->in('Feature');
 
 function createUser($data = [])
 {
-    $user = \App\Models\User::factory()->create();
-
     $url = route('users.store');
 
-    return test()->actingAs($user)->post($url, $data);
+    return test()->actingAsUser()->post($url, $data);
 }
 
 test('can see create user form', function () {
 
-    // Arrange  
-    $user = \App\Models\User::factory()->create();
-
+    // Arrange    
     // Act
     $url = route('users.create');
 
-    $response = $this->actingAs($user)->get($url);
+    $response = $this->actingAsUser()->get($url);
     // Assert
     $response->assertOk();
 
@@ -36,16 +32,16 @@ test('can see create user form', function () {
 });
 
 test('can create a user', function () {
-    
-    // Arrange      
-    $data = \App\Models\User::factory()->make();
 
-    // Act    
+    // Arrange
+    $data = User::factory()->make();
+
+    // Act
     $response = createUser([
         'name' => $data->name,
         'email' => $data->email,
         'password' => $data->password,
-        'avatar' => Illuminate\Http\UploadedFile::fake()->image('avatar.jpg'),        
+        'avatar' => UploadedFile::fake()->image('avatar.jpg'),
     ]);
 
     // Assert
@@ -64,7 +60,7 @@ test('can create a user', function () {
 });
 
 test('fields are required', function () {
-    // Arrange  
+    // Arrange
     //Act
     $response = createUser([
         'name' => null,
@@ -81,10 +77,26 @@ test('fields are required', function () {
 });
 
 test('field email must be valid', function () {
-    // Arrange  
+    // Arrange
     // Act
-    $response =  createUser([
+    $response = createUser([
         'email' => 'not-email',
+    ]);
+
+    // Assert
+    $response->assertSessionHasErrors([
+        'email',
+    ]);
+});
+
+test('email must be unique', function () {
+    // Arrange
+    /** @var User $user */
+    $user = User::factory()->create();
+
+    // Act
+    $response = createUser([
+        'email' => $user->email,
     ]);
 
     // Assert

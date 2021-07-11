@@ -11,24 +11,20 @@ uses(TestCase::class)->in('Feature');
 
 function updateUser(User $user,$data = [])
 {
-    $logedUser = \App\Models\User::factory()->create();
-
     $url = route('users.update',$user);
 
-    return test()->actingAs($logedUser)->post($url, $data);
+    return test()->actingAsUser()->post($url, $data);
 }
 
 test('can see update user form', function () {
     
     // Arrange
-    $logedUser = \App\Models\User::factory()->create();
-
     $user = \App\Models\User::factory()->create();
 
     // Act
     $url = route('users.edit', $user);
 
-    $response = $this->actingAs($logedUser)->get($url);
+    $response = $this->actingAsUser()->get($url);
     // Assert
     $response->assertOk();
 
@@ -100,9 +96,7 @@ test('field email must be valid', function () {
 
 test('can delete the profile picture', function () {
     
-    // Arrange  
-    $logedUser = \App\Models\User::factory()->create();
-    
+    // Arrange      
     $user = \App\Models\User::factory()->create();
 
     $user->saveAvatar(Illuminate\Http\UploadedFile::fake()->image('avatar.jpg'));
@@ -112,7 +106,7 @@ test('can delete the profile picture', function () {
     $url = route('users.remove', [$user]);
 
     //Act
-    $response = $this->actingAs($logedUser)->post($url);
+    $response = $this->actingAsUser()->get($url);
     
     //Assert
     $response->assertRedirect(route('users.edit',$user));

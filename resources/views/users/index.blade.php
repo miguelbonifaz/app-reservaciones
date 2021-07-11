@@ -1,4 +1,5 @@
 <x-app-layout header-title="Usuarios">
+    <x-ui.flash />
     <div class="flex justify-end space-x-2">
         <x-input.link href="{{ route('users.create') }}">
             Crear Usuario
@@ -33,21 +34,23 @@
                                     </td>
                                     <td class="px-6 py-4 text-sm whitespace-nowrap">
                                         <div class="flex items-center justify-end space-x-8">
-                                            <x-input.link href="{{ route('users.edit', $user) }}">
+                                            <a href="{{ route('users.edit',$user) }}">
                                                 Editar
-                                            </x-input.link>                                    
+                                            </a>                                    
                                             <form
                                                 action="{{ route('users.destroy', $user) }}"
                                                 method="POST"
                                                 onclick="return confirm('¿Seguro desea eliminar este usuario?');">
                                                 @csrf
                                                 @method('DELETE')
-                                                <x-input.button>
+                                                <button
+                                                    type="submit"
+                                                    class="font-medium text-teal-600 hover:text-teal-900 focus:outline-none focus:underline">
                                                     Eliminar
-                                                </x-input.button>                                                
+                                                </button>                                     
                                             </form>
                                         </div>
-                                    </td>                                    
+                                    </td>                                                                        
                                 </tr>
                             @endforeach
                         </tbody>

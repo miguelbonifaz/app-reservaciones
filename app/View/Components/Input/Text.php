@@ -10,13 +10,15 @@ class Text extends Component
     public $placeholder;
     public $type;
     public $name;
+    public $value;
 
-    public function __construct($name, $placeholder = null, $label = false, $type = 'text')
+    public function __construct($name, $label = false, $type = 'text', $value = null, $placeholder = null)
     {
         $this->label = $label;
         $this->placeholder = $placeholder;
         $this->type = $type;
         $this->name = $name;
+        $this->value = $value;
     }
 
     public function render()
