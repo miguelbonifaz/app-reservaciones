@@ -22,6 +22,9 @@
                                 <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
                                     Teléfono
                                 </th>
+                                <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
+                                    
+                                </th>
                             </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200">
@@ -35,6 +38,13 @@
                                     </td>
                                     <td class="px-6 py-4 text-sm whitespace-nowrap">
                                         {{ $employee->present()->phone() }}
+                                    </td>
+                                    <td class="px-6 py-4 text-sm whitespace-nowrap">
+                                        <div class="flex items-center justify-end space-x-8">
+                                            <a href="{{ route('employees.edit',$employee) }}">
+                                                Editar
+                                            </a>                                                                                
+                                        </div>
                                     </td>
                                 </tr>
                             @endforeach
