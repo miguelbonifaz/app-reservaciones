@@ -22,8 +22,8 @@ class Navbar extends Component
             ],
             [
                 'title' => 'Empleados',
-                'route' => '',
-                'isActive' => false
+                'route' => route('employees.index'),
+                'isActive' => request()->routeIs('employees.index')
             ],
             [
                 'title' => 'Usuarios',
