@@ -73,4 +73,15 @@ class EmployeeController extends Controller
             ->route('employees.index')
             ->with('flash_success', 'Se actualizó con éxito el empleado.');
     }
+
+    public function destroy()
+    {
+        $employee = request()->employee;
+
+        $employee->delete();
+
+        return redirect()
+            ->route('employees.index')
+            ->with('flash_success', 'Se eliminó con éxito el empleado.');
+    }
 }

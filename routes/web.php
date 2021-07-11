@@ -14,7 +14,7 @@ Route::prefix('/users')->group(function () {
     Route::post('/', [UserController::class, 'store'])->name('users.store');
     Route::get('/{user}/edit', [UserController::class, 'edit'])->name('users.edit');
     Route::post('/{user}', [UserController::class, 'update'])->name('users.update');
-    Route::delete('/{user}', [UserController::class, 'destroy'])->name('users.destroy');       
+    Route::delete('/{user}', [UserController::class, 'destroy'])->name('users.destroy');
     Route::get('/{user}/avatar', [UserPhotoController::class, '__invoke'])->name('users.remove');
 });
 
@@ -24,4 +24,5 @@ Route::prefix('/employees')->group(function () {
     Route::post('/', [EmployeeController::class, 'store'])->name('employees.store');
     Route::get('/{employee}/edit', [EmployeeController::class, 'edit'])->name('employees.edit');
     Route::post('/{employee}', [EmployeeController::class, 'update'])->name('employees.update');
+    Route::delete('/{employee}', [EmployeeController::class, 'destroy'])->name('employees.destroy');
 });
