@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Employee;
+use Illuminate\Validation\Rule;
 
 class EmployeeController extends Controller
 {
@@ -58,7 +59,11 @@ class EmployeeController extends Controller
 
         request()->validate([
             'name' => 'required',
-            'email' => 'required|email',
+            'email' => [
+                'required',
+                'email',
+                Rule::unique('employees', 'email')->ignoreModel($employee)
+            ],
             'phone' => 'required|numeric',
         ]);
 
@@ -66,7 +71,7 @@ class EmployeeController extends Controller
             'name' => request()->name,
             'email' => request()->email,
             'phone' => request()->phone,
-            
+
         ]);
 
         return redirect()

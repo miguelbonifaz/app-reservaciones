@@ -16,10 +16,10 @@ function updateEmployee(Employee $employee ,$data = [])
 }
 
 test('can see create employee form', function () {
-    
+
     // Arrange
     /** @var Employee $employee */
-    $employee = Employee::factory()->create();  
+    $employee = Employee::factory()->create();
     // Act
     $url = route('employees.edit', $employee);
 
@@ -32,8 +32,7 @@ test('can see create employee form', function () {
     $response->assertViewHas('employee');
 });
 
-test('can create a employee', function () {
-    
+test('can update an employee', function () {
     // Arrange
     $employee = Employee::factory()->create();
 
@@ -43,7 +42,7 @@ test('can create a employee', function () {
     $response = updateEmployee($employee,[
         'name' => $data->name,
         'email' => $data->email,
-        'phone' => $data->phone,        
+        'phone' => $data->phone,
     ]);
 
     // Assert
@@ -59,7 +58,23 @@ test('can create a employee', function () {
     $this->assertEquals($data->name, $employee->name);
     $this->assertEquals($data->email, $employee->email);
     $this->assertEquals($data->phone, $employee->phone);
-    
+});
+
+test('can update an employee with the same email', function () {
+    // Arrange
+    $employee = Employee::factory()->create();
+
+    $data = Employee::factory()->make();
+
+    // Act
+    $response = updateEmployee($employee,[
+        'name' => $data->name,
+        'email' => $employee->email,
+        'phone' => $data->phone,
+    ]);
+
+    // Assert
+    $response->assertSessionHasNoErrors('email');
 });
 
 test('fields are required', function () {
@@ -93,6 +108,23 @@ test('field phone must be a number', function () {
     // Assert
     $response->assertSessionHasErrors([
         'phone',
+    ]);
+});
+
+test('field email must be unique', function () {
+    // Arrange
+    $anotherEmployee = Employee::factory()->create();
+
+    $employee = Employee::factory()->create();
+
+    // Act
+    $response = updateEmployee($employee,[
+        'email' => $anotherEmployee->email,
+    ]);
+
+    // Assert
+    $response->assertSessionHasErrors([
+        'email',
     ]);
 });
 
