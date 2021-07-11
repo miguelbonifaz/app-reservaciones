@@ -18,7 +18,7 @@
                                 <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
                                     Email 
                                 </th>
-                                <th>                                    
+                                <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">                                    
                                 </th>
                             </tr>
                         </thead>
@@ -31,10 +31,23 @@
                                     <td class="px-6 py-4 text-sm whitespace-nowrap">
                                         {{ $user->present()->email() }}
                                     </td>
-                                    <td>
-                                    <x-input.link href="{{ route('users.edit',$user) }}">
-                                        Editar
-                                    </x-input.link>                                   
+                                    <td class="px-6 py-4 text-sm whitespace-nowrap">
+                                        <div class="flex items-center justify-end space-x-8">
+                                            <x-input.link href="{{ route('users.edit', $user) }}">
+                                                Editar
+                                            </x-input.link>                                    
+                                            <form
+                                                action="{{ route('users.destroy', $user) }}"
+                                                method="POST"
+                                                onclick="return confirm('¿Seguro desea eliminar este usuario?');">
+                                                @csrf
+                                                @method('DELETE')
+                                                <x-input.button>
+                                                    Eliminar
+                                                </x-input.button>                                                
+                                            </form>
+                                        </div>
+                                    </td>                                    
                                 </tr>
                             @endforeach
                         </tbody>

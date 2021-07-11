@@ -85,5 +85,25 @@ class UserController extends Controller
             ->route('users.index')
             ->with('flash_success', 'Se actualizó con éxito el usuario.');
     }
+
+    public function destroy()
+    {
+        
+        $user = request()->user;
+
+        $user = User::firstWhere('id',$user);
+
+        $avatar = $user->getFirstMedia('avatar');
+
+        if($avatar){
+            $avatar->delete();
+        }    
+        
+        $user->delete();        
+        
+        return redirect()
+            ->route('users.index')
+            ->with('flash_success', 'Se eliminó con éxito el usuario.');
+    }
     
 }
