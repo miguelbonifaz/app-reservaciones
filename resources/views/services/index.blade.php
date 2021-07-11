@@ -1,4 +1,4 @@
-<x-app-layout header-title="Services">
+<x-app-layout header-title="Servicios">
     <x-ui.flash />    
     <div class="h-4"></div>
     <div class="flex flex-col">
