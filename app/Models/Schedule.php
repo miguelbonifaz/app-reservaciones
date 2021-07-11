@@ -15,6 +15,12 @@ use Illuminate\Database\Eloquent\Model;
  * @method static Builder|Schedule newQuery()
  * @method static Builder|Schedule query()
  * @mixin \Eloquent
+ * @property int $id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @method static Builder|Schedule whereCreatedAt($value)
+ * @method static Builder|Schedule whereId($value)
+ * @method static Builder|Schedule whereUpdatedAt($value)
  */
 class Schedule extends Model
 {
