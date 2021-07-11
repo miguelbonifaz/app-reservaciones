@@ -1,8 +1,8 @@
-<x-app-layout header-title="Nuevo Usuario">
+<x-app-layout header-title="Nuevo Empleado">
     <div class="px-4">
         <div class="mx-auto max-w-7xl">
             <div class="py-4">
-                <x-base-form :route="route('users.store')">
+                <x-base-form :route="route('employees.store')">
                     <x-input.text
                         name="name"
                         :value="old('name')"
@@ -11,22 +11,15 @@
                     <x-input.text
                         name="email"
                         :value="old('email')"
-                        label="email"
+                        label="Email"
                     />
                     <x-input.text
-                        name="password"
-                        label="Password"
-                        type="password"
+                        name="phone"
+                        :value="old('phone')"
+                        label="Teléfono"
                     />
-
-                    <x-input.text
-                        label="Foto"
-                        name="avatar"
-                        type="file"
-                    />
-
                     <x-slot name="footer">
-                        <x-input.link theme="white" href="{{ route('users.index') }}">
+                        <x-input.link theme="white" href="{{ route('employees.index') }}">
                             Cancelar
                         </x-input.link>
                         <x-input.button>
@@ -34,7 +27,6 @@
                         </x-input.button>
                     </x-slot>
                 </x-base-form>
-
             </div>
         </div>
     </div>

@@ -54,7 +54,10 @@
                                 </tr>
                             @endforeach
                         </tbody>
-                    </table>                
+                    </table>
+                    <x-ui.empty-list :count="$users->count()">
+                        No se encuentra ningún usuario registrado.
+                    </x-ui.empty-list>                
                 </div>
             </div>
         </div>

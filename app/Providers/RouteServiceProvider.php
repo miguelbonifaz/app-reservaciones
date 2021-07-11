@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\Employee;
 use App\Models\User;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
@@ -37,6 +38,7 @@ class RouteServiceProvider extends ServiceProvider
     public function boot()
     {
         Route::model('user', User::class);
+        Route::model('employee', Employee::class);
 
         $this->configureRateLimiting();
 
