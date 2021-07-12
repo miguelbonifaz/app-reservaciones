@@ -41,4 +41,44 @@ class ServiceController extends Controller
             ->route('services.index')
             ->with('flash_success', 'Se creó con éxito el servicio.');
     }
+
+    public function edit()
+    {
+        $service = request()->service;
+
+        return view('services.edit',[
+            'service' => $service
+        ]);
+    }
+
+    public function update()
+    {
+        $service = request()->service;
+
+        request()->validate([
+            'name' => 'required',            
+            'duration' => 'required|numeric',
+        ]);
+
+        $service->update([
+            'name' => request()->name,
+            'duration' => request()->duration,
+
+        ]);
+
+        return redirect()
+            ->route('services.index')
+            ->with('flash_success', 'Se actualizó con éxito el servicio.');
+    }
+
+    public function destroy()
+    {
+        $service = request()->service;
+
+        $service->delete();
+
+        return redirect()
+            ->route('services.index')
+            ->with('flash_success', 'Se eliminó con éxito el servicio.');
+    }
 }

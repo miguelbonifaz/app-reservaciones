@@ -32,4 +32,7 @@ Route::prefix('/services')->group(function () {
     Route::get('/', [ServiceController::class, 'index'])->name('services.index');
     Route::get('/create', [ServiceController::class, 'create'])->name('services.create');
     Route::post('/', [ServiceController::class, 'store'])->name('services.store');
+    Route::get('/{service}/edit', [ServiceController::class, 'edit'])->name('services.edit');
+    Route::post('/{service}', [ServiceController::class, 'update'])->name('services.update');
+    Route::delete('/{service}', [ServiceController::class, 'destroy'])->name('services.destroy');
 });
