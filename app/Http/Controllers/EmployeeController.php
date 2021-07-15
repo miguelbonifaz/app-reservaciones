@@ -65,7 +65,7 @@ class EmployeeController extends Controller
     {
         $employee = request()->employee;
 
-        return view('employees.edit', [
+        return view('employees.edit',[
             'employee' => $employee
         ]);
     }

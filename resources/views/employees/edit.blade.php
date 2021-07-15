@@ -5,6 +5,7 @@
                 <x-forms.employee
                     :route="route('employees.update',$employee)"
                     :employee="$employee"
+                    :daysOfWeek="$daysOfWeek ?? []"
                 />
             </div>
         </div>

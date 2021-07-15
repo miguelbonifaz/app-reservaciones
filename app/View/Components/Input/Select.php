@@ -11,7 +11,7 @@ class Select extends Component
     public $type;
     public $name;
 
-    public function __construct($name, $placeholder = null, $label = false)
+    public function __construct($name, $placeholder = 'Escoja una opción...', $label = false)
     {
         $this->label = $label;
         $this->placeholder = $placeholder;
