@@ -5,6 +5,7 @@
                 <x-forms.employee
                     :route="route('employees.store')"
                     :employee="$employee"
+                    :daysOfWeek="collect()"
                     :services="$services"
                 />
             </div>

@@ -53,7 +53,6 @@ class EmployeeController extends Controller
                     'employee_id' => $employee->id,
                 ]);
             });
-
         });
 
         return redirect()
@@ -65,8 +64,22 @@ class EmployeeController extends Controller
     {
         $employee = request()->employee;
 
-        return view('employees.edit',[
-            'employee' => $employee
+        $daysOfWeek = [
+            1 => 'Lunes',
+            2 => 'Martes',
+            3 => 'Miercoles',
+            4 => 'Jueves',
+            5 => 'Viernes',
+            6 => 'Sábado',
+            0 => 'Domingo'
+        ];
+
+        $services = Service::all();
+
+        return view('employees.edit', [
+            'employee' => $employee,
+            'services' => $services,
+            'daysOfWeek' => $daysOfWeek,
         ]);
     }
 
