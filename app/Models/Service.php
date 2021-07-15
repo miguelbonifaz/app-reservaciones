@@ -42,4 +42,9 @@ class Service extends Model
     {
         return new ServicePresenter($this);
     }
+
+    public function employees()
+    {
+        return $this->belongsToMany(Employee::class, 'employee_service');        
+    }
 }

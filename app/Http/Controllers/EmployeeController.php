@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Employee;
+use App\Models\Schedule;
+use App\Models\Service;
 use Illuminate\Validation\Rule;
 
 class EmployeeController extends Controller
@@ -20,8 +22,11 @@ class EmployeeController extends Controller
     {
         $employee = new Employee();
 
+        $services = Service::all();
+
         return view('employees.create', [
             'employee' => $employee,
+            'services' => $services,
         ]);
     }
 
@@ -33,11 +38,30 @@ class EmployeeController extends Controller
             'phone' => 'required|numeric',
         ]);
 
-        Employee::create([
-            'name' => request()->name,
-            'email' => request()->email,
-            'phone' => request()->phone
-        ]);
+        $service = request()->service;
+        
+        /* $employee->services()->sync($service); */
+
+        $days= [0,1,2,3,4,5];
+
+        DB::transaction(function () use ($days,$service) {
+            $employee = Employee::create([
+                'name' => request()->name,
+                'email' => request()->email,
+                'phone' => request()->phone
+            ]);
+
+            $employee->services()->attach($service);
+            /* $employee->services()->sync($service); */
+            
+            $days->each(function($day,$employee){
+                $employee->schedules()->create([
+                    'day' => $day,
+                    'employee_id' => $employee->id,
+                ]);
+            });      
+            
+        });
 
         return redirect()
             ->route('employees.index')

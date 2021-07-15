@@ -1,6 +1,9 @@
 <?php
 
 use App\Models\Employee;
+use App\Models\Schedule;
+use App\Models\Service;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -35,12 +38,32 @@ test('can create a employee', function () {
     // Arrange
     $data = Employee::factory()->make();
 
+    $service = Service::factory()->count(5)->create();    
+    
+    $days = [0,1,2,3,4];
     // Act
     $response = createEmployee([
         'name' => $data->name,
         'email' => $data->email,
-        'phone' => $data->phone,        
+        'phone' => $data->phone,
     ]);
+
+    $employee = Employee::first();        
+    
+    foreach ($days as $day) {
+        Schedule::create([
+            'day' => $day,
+            'employee_id' => $employee->id,
+        ]);
+    }
+
+    dd($employee->schedules);
+
+    $employee->services()->attach($service);        
+
+
+    
+    
 
     // Assert
 

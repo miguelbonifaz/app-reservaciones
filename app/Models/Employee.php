@@ -43,4 +43,15 @@ class Employee extends Model
     {
         return new EmployeePresenter($this);
     }
+
+    public function services()
+    {
+        return $this->belongsToMany(Service::class, 'employee_service', 'employee_id' , 'service_id');
+    }
+
+    public function schedules()
+    {
+        return $this->hasMany(Schedule::class);
+    }
+    
 }
