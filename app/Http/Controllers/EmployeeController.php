@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\EmployeeCreateRequest;
 use App\Models\Employee;
 use App\Models\Schedule;
 use App\Models\Service;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 
 class EmployeeController extends Controller
@@ -13,7 +15,7 @@ class EmployeeController extends Controller
     {
         $employees = Employee::all();
 
-        return view ('employees.index', [
+        return view('employees.index', [
             'employees' => $employees
         ]);
     }
@@ -30,37 +32,28 @@ class EmployeeController extends Controller
         ]);
     }
 
-    public function store()
+    public function store(EmployeeCreateRequest $request)
     {
-        request()->validate([
-            'name' => 'required',
-            'email' => 'required|email|unique:employees,email',
-            'phone' => 'required|numeric',
-        ]);
+        $servicesId = request()->servicesId;
 
-        $service = request()->service;
-        
-        /* $employee->services()->sync($service); */
+        $days = collect([0, 1, 2, 3, 4, 5, 6]);
 
-        $days= [0,1,2,3,4,5];
-
-        DB::transaction(function () use ($days,$service) {
+        DB::transaction(function () use ($servicesId, $days) {
             $employee = Employee::create([
                 'name' => request()->name,
                 'email' => request()->email,
                 'phone' => request()->phone
             ]);
 
-            $employee->services()->attach($service);
-            /* $employee->services()->sync($service); */
-            
-            $days->each(function($day,$employee){
+            $employee->services()->attach($servicesId);
+
+            $days->each(function ($day) use ($employee) {
                 $employee->schedules()->create([
                     'day' => $day,
                     'employee_id' => $employee->id,
                 ]);
-            });      
-            
+            });
+
         });
 
         return redirect()
@@ -72,7 +65,7 @@ class EmployeeController extends Controller
     {
         $employee = request()->employee;
 
-        return view('employees.edit',[
+        return view('employees.edit', [
             'employee' => $employee
         ]);
     }

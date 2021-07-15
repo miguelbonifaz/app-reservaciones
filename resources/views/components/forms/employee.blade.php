@@ -28,17 +28,9 @@
                 </option>
             @endforeach
         </x-input.select>
-        {{-- @foreach ($services as $services)
-                  
-            <input id="services" name="{{ $service->id }}[]"
-            value="{{ $service->id }}"
-            type="checkbox"
-            class="w-4 h-4 mx-3 text-indigo-600 border-gray-300 cursor-pointer check focus:ring-indigo-500" >
-                <span class="block font-medium text-md justify-items-start">
-                    {{ $service->present()->name() }}
-                </span>
-        </div>
-    @endforeach --}}
+        @foreach($services as $service)
+            <x-input
+        @endforeach
 
     <x-slot name="footer">
         <x-input.link theme="white" href="{{ route('employees.index') }}">
