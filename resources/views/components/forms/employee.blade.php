@@ -127,5 +127,4 @@
             Guardar
         </x-input.button>
     </x-slot>
-
 </x-base-form>

@@ -16,7 +16,7 @@ class CreateEmployeeServiceTable extends Migration
         Schema::create('employee_service', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->foreignId('service_id')->constrained('services')->onDelete('cascade');
-            $table->foreignId('employee_id')->constrained('employees')->onDelete('cascade');            
+            $table->foreignId('employee_id')->constrained('employees')->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -28,6 +28,5 @@ class CreateEmployeeServiceTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('employee_service');
     }
 }
