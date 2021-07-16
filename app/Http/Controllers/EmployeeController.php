@@ -110,7 +110,10 @@ class EmployeeController extends Controller
 
             $employee->services()->sync($servicesId);
 
-            collect(request()->start_time)->each(function ($hour, $day) use ($employee) {
+            collect(request()->start_time)->each(function($hour,$day) use ($employee) {
+                if ($hour == null) {
+                    return;
+                }
                 $schedule = Schedule::query()
                     ->where('day', $day)
                     ->where('employee_id', $employee->id)
@@ -124,6 +127,9 @@ class EmployeeController extends Controller
             });
 
             collect(request()->end_time)->each(function ($hour, $day) use ($employee) {
+                if ($hour == null) {
+                    return;
+                }
                 $schedule = Schedule::query()
                     ->where('day', $day)
                     ->where('employee_id', $employee->id)

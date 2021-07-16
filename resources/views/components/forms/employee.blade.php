@@ -57,15 +57,17 @@
                                 <div>
                                     <x-input.text
                                         label="Hora de inicio"
-                                        name="star_date[{{ $key }}]"
+                                        name="start_time[{{ $key }}]"
                                         type="time"
+                                        value="{{ $employee->schedules->firstWhere('day',$key)->start_time }}"
                                     />
                                 </div>
                                 <div>
                                     <x-input.text
                                         label="Hora de salida"
-                                        name="end_date[{{ $key }}]"
+                                        name="end_time[{{ $key }}]"
                                         type="time"
+                                        value="{{$employee->schedules->firstWhere('day',$key)->end_time }}"
                                     />
                                 </div>
                             </div>
