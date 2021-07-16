@@ -155,3 +155,20 @@ test('field email must be valid', function () {
         'email',
     ]);
 });
+
+test('email must be unique', function () {
+    $this->markTestIncomplete('Revisar test');
+    // Arrange
+    /** @var Employee $employee */
+    $employee = Employee::factory()->create();
+
+    // Act
+    $response = updateEmployee($employee,[
+        'email' => $employee->email,
+    ]);
+
+    // Assert
+    $response->assertSessionHasErrors([
+        'email',
+    ]);
+});
