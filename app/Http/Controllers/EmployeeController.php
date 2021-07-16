@@ -6,6 +6,7 @@ use App\Http\Requests\EmployeeCreateRequest;
 use App\Models\Employee;
 use App\Models\Schedule;
 use App\Models\Service;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 
@@ -84,8 +85,11 @@ class EmployeeController extends Controller
     }
 
     public function update()
-    {
-        $employee = request()->employee;
+    {        
+
+        $servicesId = request()->servicesId;
+
+        $employee = request()->employee;        
 
         request()->validate([
             'name' => 'required',
@@ -95,14 +99,44 @@ class EmployeeController extends Controller
                 Rule::unique('employees', 'email')->ignoreModel($employee)
             ],
             'phone' => 'required|numeric',
-        ]);
+            
+        ]);        
+        DB::transaction(function () use ($servicesId,$employee) {
+            $employee->update([
+                'name' => request()->name,
+                'email' => request()->email,
+                'phone' => request()->phone
+            ]);
 
-        $employee->update([
-            'name' => request()->name,
-            'email' => request()->email,
-            'phone' => request()->phone,
+            $employee->services()->sync($servicesId);
+            
+            collect(request()->start_time)->each(function($hour,$day) use ($employee) {
+                $schedule = Schedule::query()
+                    ->where('day', $day)
+                    ->where('employee_id', $employee->id)
+                    ->first();            
 
-        ]);
+                $startTime = Carbon::createFromTimestamp(strtotime($hour))->format('H:i');
+
+                $schedule->update([
+                    'start_time' => $startTime,
+                ]);
+            });
+
+            collect(request()->end_time)->each(function($hour,$day) use ($employee) {
+                $schedule = Schedule::query()
+                    ->where('day', $day)
+                    ->where('employee_id', $employee->id)
+                    ->first();                
+
+                $endTime = Carbon::createFromTimestamp(strtotime($hour))->format('H:i');
+                
+                $schedule->update([
+                    'end_time' => $endTime,
+                ]);
+            });
+            
+        });
 
         return redirect()
             ->route('employees.index')

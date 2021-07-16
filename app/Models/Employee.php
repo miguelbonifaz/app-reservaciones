@@ -53,5 +53,5 @@ class Employee extends Model
     {
         return $this->hasMany(Schedule::class);
     }
-    
+
 }

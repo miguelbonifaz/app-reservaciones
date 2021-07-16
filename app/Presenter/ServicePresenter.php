@@ -23,4 +23,9 @@ class ServicePresenter
         return "{$this->service->duration} minutos";
     }
 
+    public function value()
+    {
+        return $this->service->value;
+    }
+
 }

@@ -29,7 +29,8 @@ class Schedule extends Model
     protected $fillable = [
         'day',
         'start_time',
-        'end_time'
+        'end_time',
+        'employee_id'
     ];
 
     public function present()

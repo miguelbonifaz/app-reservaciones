@@ -30,11 +30,13 @@ class ServiceController extends Controller
         request()->validate([
             'name' => 'required',
             'duration' => 'required|numeric',
+            'value' => 'required|numeric',
         ]);
 
         Service::create([
             'name' => request()->name,
             'duration' => request()->duration,
+            'value' => request()->value,
         ]);
 
         return redirect()
@@ -58,11 +60,13 @@ class ServiceController extends Controller
         request()->validate([
             'name' => 'required',
             'duration' => 'required|numeric',
+            'value' => 'required|numeric',
         ]);
 
         $service->update([
             'name' => request()->name,
             'duration' => request()->duration,
+            'value' => request()->value,
 
         ]);
 

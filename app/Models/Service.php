@@ -35,7 +35,8 @@ class Service extends Model
 
     protected $fillable = [
         'name',
-        'duration'
+        'duration',
+        'value'
     ];
 
     public function present()

@@ -18,6 +18,7 @@ class CreateServicesTable extends Migration
 
             $table->string('name');
             $table->integer('duration');
+            $table->float('value');
 
             $table->timestamps();
         });

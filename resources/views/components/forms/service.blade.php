@@ -11,6 +11,12 @@
         label="Duración"
     />
 
+    <x-input.text
+        name="value"
+        value="{{old('value', $service->value)}}"
+        label="Valor"
+    />
+
     <x-slot name="footer">
         <x-input.link theme="white" href="{{ route('services.index') }}">
             Cancelar
