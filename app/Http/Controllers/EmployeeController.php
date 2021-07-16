@@ -99,7 +99,6 @@ class EmployeeController extends Controller
                 Rule::unique('employees', 'email')->ignoreModel($employee)
             ],
             'phone' => 'required|numeric',
-
         ]);
 
         DB::transaction(function () use ($servicesId, $employee) {
