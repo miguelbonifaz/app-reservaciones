@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Traits\Timestamp;
 use Database\Factories\ScheduleFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -33,8 +34,13 @@ class Schedule extends Model
         'employee_id'
     ];
 
-    public function present()
+    protected $cast = [
+        'start_time' => 'timestamp',
+        'end_time' => 'timestamp'
+    ];
+
+    public function rests()
     {
-        return new ServicePresenter($this);
+        return $this->hasMany(RestSchedule::class);
     }
 }

@@ -25,4 +25,15 @@ use Illuminate\Database\Eloquent\Model;
 class RestSchedule extends Model
 {
     use HasFactory;
+
+    protected $fillable = [        
+        'start_time',
+        'end_time',
+        'schedule_id'
+    ];
+
+    protected $cast = [
+        'start_time' => 'timestamp',
+        'end_time' => 'timestamp'
+    ];
 }

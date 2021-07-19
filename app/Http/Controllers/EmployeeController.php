@@ -66,6 +66,8 @@ class EmployeeController extends Controller
         /** @var Employee $employee */
         $employee = request()->employee;
 
+        $schedules = $employee->schedules;
+
         $daysOfWeek = [
             1 => 'Lunes',
             2 => 'Martes',
@@ -141,7 +143,6 @@ class EmployeeController extends Controller
                     'end_time' => $endTime,
                 ]);
             });
-
         });
 
         return redirect()

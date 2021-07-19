@@ -10,7 +10,7 @@
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
-
+    <livewire:styles />
 </head>
 <body>
 
@@ -26,6 +26,6 @@
     </main>
 </div>
 
-
+<livewire:scripts />
 </body>
 </html>

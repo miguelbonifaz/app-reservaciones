@@ -46,32 +46,33 @@
             <p class="mb-2 text-lg font-bold text-gray-800">Horario de trabajo</p>
             <div class="grid gap-1.5 md:grid-cols-2">
                 @foreach ($daysOfWeek as $key => $value)
-                    <div class="py-2 px-4 mt-1 mr-2 mb-2 space-y-1 bg-gray-50 rounded-lg shadow-sm">
+                    <div class="py-2 px-4 mt-1 mr-2 mb-2 space-y-1 bg-gray-50 rounded-lg shadow-sm">                        
                         <div>
+                            <label for="monday" class="block mb-1 ml-2 font-semibold text-gray-800">
+                                {{ $value }}
+                            </label>
+                        </div>
+                        <div class="sm:grid sm:grid-cols-2 sm:gap-2">
                             <div>
-                                <label for="monday" class="block mb-1 ml-2 font-semibold text-gray-800">
-                                    {{ $value }}
-                                </label>                                
+                                <x-input.text
+                                    label="Hora de inicio"
+                                    name="start_time[{{ $key }}]"
+                                    type="time"
+                                    value="{{ $employee->schedules->firstWhere('day',$key)->start_time }}"
+                                />
                             </div>
-                            <div class="sm:grid sm:grid-cols-2 sm:gap-2">
-                                <div>
-                                    <x-input.text
-                                        label="Hora de inicio"
-                                        name="start_time[{{ $key }}]"
-                                        type="time"
-                                        value="{{ $employee->schedules->firstWhere('day',$key)->start_time }}"
-                                    />
-                                </div>
-                                <div>
-                                    <x-input.text
-                                        label="Hora de salida"
-                                        name="end_time[{{ $key }}]"
-                                        type="time"
-                                        value="{{$employee->schedules->firstWhere('day',$key)->end_time }}"
-                                    />
-                                </div>
+                            <div>
+                                <x-input.text
+                                    label="Hora de salida"
+                                    name="end_time[{{ $key }}]"
+                                    type="time"
+                                    value="{{$employee->schedules->firstWhere('day',$key)->end_time }}"
+                                />
                             </div>
                         </div>
+                        <livewire:employee-rest-schedule-livewire                            
+                            day="{{ $key }}"
+                            />
                     </div>
                 @endforeach
             </div>

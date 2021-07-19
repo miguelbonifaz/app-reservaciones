@@ -15,6 +15,9 @@ class CreateRestSchedulesTable extends Migration
     {
         Schema::create('rest_schedules', function (Blueprint $table) {
             $table->id();
+            $table->time('start_time')->nullable();
+            $table->time('end_time')->nullable();
+            $table->foreignId('schedule_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });
     }

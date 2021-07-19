@@ -1,10 +1,12 @@
 <?php
 
+use App\Http\Livewire\EmployeeRestScheduleLivewire;
 use App\Models\Employee;
 use App\Models\Schedule;
 use App\Models\Service;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Livewire\Livewire;
 use Tests\TestCase;
 
 uses(DatabaseTransactions::class);
@@ -15,6 +17,27 @@ function updateEmployee(Employee $employee ,$data = [])
 
     return test()->actingAsUser()->post($url, $data);
 }
+
+function buildComponent($scheduleId = null)
+{
+    $this->actingAsUser();
+    return Livewire::test(EmployeeRestScheduleLivewire::class, [
+        'scheduleId' => $scheduleId,
+    ]);
+}
+
+test('can make the component in the form', function () {
+
+    // Arrange
+    /** @var Employee $employee */
+    $employee = Employee::factory()->create();
+    $scheduleId = $employee->schedules->first()->id;
+    // Act
+    $component = $this->buildComponent($scheduleId);
+    
+    // Assert
+    $this->assertNotNull($component);
+});
 
 test('can see create employee form', function () {
 
@@ -38,8 +61,12 @@ test('can update an employee', function () {
     // Arrange
     /** @var Employee $data */
     $service = Service::factory()->create();
+
+    /* $linkActivity = factory(LinkActivity::class)->make(); */
     
-    $employee = Employee::factory()->create();  
+    $employee = Employee::factory()->create();
+
+    $scheduleId = $employee->schedules->first()->id;
     
     $data = Employee::factory()->make();    
 
@@ -52,6 +79,12 @@ test('can update an employee', function () {
         'start_time' => ['0' => '00:00'],
         'end_time' => ['0' => '02:00'],
     ]);
+
+    $component = $this->buildComponent($scheduleId);
+
+    $component->set('start_time', '12:00')
+        ->set('end_time',  '18:00')
+        ->call('storeRest');
 
     // Assert
     $response->assertRedirect(route('employees.index'));
