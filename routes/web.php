@@ -3,6 +3,7 @@
 use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\UserPhotoController;
 use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -25,4 +26,8 @@ Route::prefix('/employees')->group(function () {
     Route::get('/{employee}/edit', [EmployeeController::class, 'edit'])->name('employees.edit');
     Route::post('/{employee}', [EmployeeController::class, 'update'])->name('employees.update');
     Route::delete('/{employee}', [EmployeeController::class, 'destroy'])->name('employees.destroy');
+});
+
+Route::prefix('/services')->group(function () {
+    Route::get('/', [ServiceController::class, 'index'])->name('services.index');
 });
