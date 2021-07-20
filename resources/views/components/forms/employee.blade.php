@@ -24,29 +24,29 @@
     />
     <div class="sm:col-span-2">
         <p class="mb-2 text-lg font-bold text-gray-800">Asignación de servicios</p>
-            @foreach ($services as $service)    
-                <div class="inline-flex items-center px-4 py-2 mt-1 mb-2 mr-2 space-x-1 rounded-full shadow-sm bg-gray-50">
-                    <input 
-                        {{ collect(old('servicesId', $employee->services->pluck('id')))->contains($service->id) ? 'checked' : '' }}
-                        id="service_{{ $service->id }}" 
-                        name="servicesId[]" 
-                        value="{{ $service->id }}"
-                        type="checkbox" 
-                        class="w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500">
-                        <label 
-                            for="service_{{ $service->id }}" 
-                            class="block ml-2 text-sm text-gray-900">
-                       {{ $service->present()->name() }}
-                    </label>
-                </div>            
-            @endforeach            
+        @foreach ($services as $service)
+            <div class="inline-flex items-center px-4 py-2 mt-1 mb-2 mr-2 space-x-1 rounded-full shadow-sm bg-gray-50">
+                <input
+                    {{ collect(old('servicesId', $employee->services->pluck('id')))->contains($service->id) ? 'checked' : '' }}
+                    id="service_{{ $service->id }}"
+                    name="servicesId[]"
+                    value="{{ $service->id }}"
+                    type="checkbox"
+                    class="w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500">
+                <label
+                    for="service_{{ $service->id }}"
+                    class="block ml-2 text-sm text-gray-900">
+                    {{ $service->present()->name() }}
+                </label>
+            </div>
+        @endforeach
     </div>
     @if (count($daysOfWeek))
         <div class="sm:col-span-2">
             <p class="mb-2 text-lg font-bold text-gray-800">Horario de trabajo</p>
             <div class="grid gap-1.5 md:grid-cols-2">
                 @foreach ($daysOfWeek as $key => $value)
-                    <div class="py-2 px-4 mt-1 mr-2 mb-2 space-y-1 bg-gray-50 rounded-lg shadow-sm">                        
+                    <div class="py-2 px-4 mt-1 mr-2 mb-2 space-y-1 bg-gray-50 rounded-lg shadow-sm">
                         <div>
                             <label for="monday" class="block mb-1 ml-2 font-semibold text-gray-800">
                                 {{ $value }}
@@ -70,9 +70,10 @@
                                 />
                             </div>
                         </div>
-                        <livewire:employee-rest-schedule-livewire                            
+
+                        <livewire:employee-rest-schedule-livewire
                             day="{{ $key }}"
-                            />
+                        />
                     </div>
                 @endforeach
             </div>
