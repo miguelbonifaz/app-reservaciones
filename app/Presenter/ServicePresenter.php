@@ -17,10 +17,10 @@ class ServicePresenter
     {
         return $this->service->name;
     }
-    
+
     public function duration()
     {
-        return $this->service->duration;
+        return "{$this->service->duration} minutos";
     }
 
 }

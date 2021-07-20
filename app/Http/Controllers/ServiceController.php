@@ -9,7 +9,7 @@ class ServiceController extends Controller
 {
     public function index()
     {
-        $services = Service::all();
+        $services = Service::latest()->get();
 
         return view ('services.index', [
             'services' => $services

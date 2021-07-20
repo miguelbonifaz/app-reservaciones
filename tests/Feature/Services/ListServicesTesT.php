@@ -5,7 +5,6 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 uses(RefreshDatabase::class);
 
 test('can see service list', function () {
-    
     // Arrange
     $url = route('services.index');
 
