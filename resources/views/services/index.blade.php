@@ -20,6 +20,9 @@
                                     Duración
                                 </th>
                                 <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">                                    
+                                    Valor
+                                </th>
+                                <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">                                    
                                 </th>
                             </tr>
                         </thead>
@@ -31,6 +34,9 @@
                                     </td>
                                     <td class="px-6 py-4 text-sm whitespace-nowrap">
                                         {{ $service->present()->duration() }}
+                                    </td>
+                                    <td class="px-6 py-4 text-sm whitespace-nowrap">
+                                        {{ $service->present()->value() }}
                                     </td>
                                     <td class="px-6 py-4 text-sm whitespace-nowrap">
                                         <div class="flex items-center justify-end space-x-8">

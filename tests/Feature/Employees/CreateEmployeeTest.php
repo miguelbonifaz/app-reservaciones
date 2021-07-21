@@ -1,12 +1,11 @@
 <?php
 
 use App\Models\Employee;
+use App\Models\Schedule;
+use App\Models\Service;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
 
 uses(RefreshDatabase::class);
-
-uses(TestCase::class)->in('Feature');
 
 function createEmployee($data = [])
 {
@@ -16,12 +15,13 @@ function createEmployee($data = [])
 }
 
 test('can see create employee form', function () {
-    
-    // Arrange    
+    // Arrange
+
     // Act
     $url = route('employees.create');
 
     $response = $this->actingAsUser()->get($url);
+
     // Assert
     $response->assertOk();
 
@@ -31,19 +31,21 @@ test('can see create employee form', function () {
 });
 
 test('can create a employee', function () {
-    
     // Arrange
+    /** @var Employee $data */
     $data = Employee::factory()->make();
+
+    $service = Service::factory()->create();
 
     // Act
     $response = createEmployee([
         'name' => $data->name,
         'email' => $data->email,
-        'phone' => $data->phone,        
+        'phone' => $data->phone,
+        'servicesId' => [$service->id]
     ]);
 
     // Assert
-
     $response->assertRedirect(route('employees.index'));
 
     $response->assertSessionHas('flash_success', 'Se creó con éxito el empleado.');
@@ -51,11 +53,23 @@ test('can create a employee', function () {
     $this->assertCount(1, Employee::all());
 
     $employee = Employee::first();
-
     $this->assertEquals($data->name, $employee->name);
     $this->assertEquals($data->email, $employee->email);
     $this->assertEquals($data->phone, $employee->phone);
-    
+
+    $this->assertCount(1, $employee->services);
+    $this->assertEquals($service->id, $employee->services->first()->id);
+
+    $this->assertCount(7, Schedule::all());
+
+    collect(range(0, 6))->each(function ($number) use ($employee) {
+        $schedule = Schedule::query()
+            ->where('day', $number)
+            ->where('employee_id', $employee->id)
+            ->first();
+
+        $this->assertNotNull($schedule);
+    });
 });
 
 test('fields are required', function () {

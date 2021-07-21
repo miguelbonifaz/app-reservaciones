@@ -13,14 +13,19 @@ class ServicePresenter
         $this->service = $service;
     }
 
-    public function name()
+    public function name(): string
     {
         return $this->service->name;
     }
 
-    public function duration()
+    public function duration(): string
     {
         return "{$this->service->duration} minutos";
+    }
+
+    public function value(): string
+    {
+        return "$ {$this->service->value}";
     }
 
 }
