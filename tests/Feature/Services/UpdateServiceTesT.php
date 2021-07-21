@@ -2,11 +2,8 @@
 
 use App\Models\Service;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
 
 uses(RefreshDatabase::class);
-
-uses(TestCase::class)->in('Feature');
 
 function updateService(Service $service, $data = [])
 {
@@ -16,9 +13,9 @@ function updateService(Service $service, $data = [])
 }
 
 test('can see service edit form', function () {
-
     // Arrange
     $service = Service::factory()->create();
+
     // Act
     $url = route('services.edit', $service);
 
@@ -45,7 +42,6 @@ test('can update a service', function () {
     ]);
 
     // Assert
-
     $response->assertRedirect(route('services.index'));
 
     $response->assertSessionHas('flash_success', 'Se actualizó con éxito el servicio.');
@@ -65,23 +61,23 @@ test('fields are required', function () {
     //Act
     $response = updateService($service,[
         'name' => null,
-        'duration' => null,        
+        'duration' => null,
     ]);
 
     //Assert
     $response->assertSessionHasErrors([
         'name',
-        'duration',        
+        'duration',
     ]);
 });
 
 test('field duration must be a number', function () {
     // Arrange
     $service = Service::factory()->create();
-    
+
     // Act
     $response = updateService($service,[
-        'duration' => 'duration Number String',
+        'duration' => 'string',
     ]);
 
     // Assert
