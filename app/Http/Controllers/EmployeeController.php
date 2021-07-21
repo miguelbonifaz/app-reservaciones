@@ -14,7 +14,7 @@ class EmployeeController extends Controller
 {
     public function index()
     {
-        $employees = Employee::all();
+        $employees = Employee::query()->latest()->get();
 
         return view('employees.index', [
             'employees' => $employees
@@ -25,7 +25,7 @@ class EmployeeController extends Controller
     {
         $employee = new Employee();
 
-        $services = Service::all();
+        $services = Service::query()->latest()->get();
 
         return view('employees.create', [
             'employee' => $employee,
@@ -63,6 +63,7 @@ class EmployeeController extends Controller
 
     public function edit()
     {
+        /** @var Employee $employee */
         $employee = request()->employee;
 
         $daysOfWeek = [
@@ -75,7 +76,7 @@ class EmployeeController extends Controller
             0 => 'Domingo'
         ];
 
-        $services = Service::all();
+        $services = Service::query()->latest()->get();
 
         return view('employees.edit', [
             'employee' => $employee,
@@ -85,11 +86,10 @@ class EmployeeController extends Controller
     }
 
     public function update()
-    {        
-
+    {
         $servicesId = request()->servicesId;
 
-        $employee = request()->employee;        
+        $employee = request()->employee;
 
         request()->validate([
             'name' => 'required',
@@ -99,9 +99,10 @@ class EmployeeController extends Controller
                 Rule::unique('employees', 'email')->ignoreModel($employee)
             ],
             'phone' => 'required|numeric',
-            
-        ]);        
-        DB::transaction(function () use ($servicesId,$employee) {
+
+        ]);
+
+        DB::transaction(function () use ($servicesId, $employee) {
             $employee->update([
                 'name' => request()->name,
                 'email' => request()->email,
@@ -109,12 +110,12 @@ class EmployeeController extends Controller
             ]);
 
             $employee->services()->sync($servicesId);
-            
-            collect(request()->start_time)->each(function($hour,$day) use ($employee) {
+
+            collect(request()->start_time)->each(function ($hour, $day) use ($employee) {
                 $schedule = Schedule::query()
                     ->where('day', $day)
                     ->where('employee_id', $employee->id)
-                    ->first();            
+                    ->first();
 
                 $startTime = Carbon::createFromTimestamp(strtotime($hour))->format('H:i');
 
@@ -123,19 +124,19 @@ class EmployeeController extends Controller
                 ]);
             });
 
-            collect(request()->end_time)->each(function($hour,$day) use ($employee) {
+            collect(request()->end_time)->each(function ($hour, $day) use ($employee) {
                 $schedule = Schedule::query()
                     ->where('day', $day)
                     ->where('employee_id', $employee->id)
-                    ->first();                
+                    ->first();
 
                 $endTime = Carbon::createFromTimestamp(strtotime($hour))->format('H:i');
-                
+
                 $schedule->update([
                     'end_time' => $endTime,
                 ]);
             });
-            
+
         });
 
         return redirect()
