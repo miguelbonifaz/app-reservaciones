@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Presenter\CustomerPresenter;
 use Database\Factories\CustomerFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -25,4 +26,17 @@ use Illuminate\Database\Eloquent\Model;
 class Customer extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'name',
+        'email',
+        'phone',
+        'identification_number',
+    ];    
+
+    public function present()
+    {
+        return new CustomerPresenter($this);
+    }
+            
 }

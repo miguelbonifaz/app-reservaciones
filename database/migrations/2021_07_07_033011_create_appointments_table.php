@@ -15,6 +15,12 @@ class CreateAppointmentsTable extends Migration
     {
         Schema::create('appointments', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('customer_id')->constrained('customers')->onDelete('cascade');
+            $table->foreignId('employee_id')->constrained('employees')->onDelete('cascade');                        
+            $table->date('date');
+            $table->time('start_time');
+            $table->time('end_time');
+            $table->string('note')->nullable();
             $table->timestamps();
         });
     }

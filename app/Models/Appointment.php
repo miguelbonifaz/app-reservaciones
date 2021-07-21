@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Presenter\AppointmentPresenter;
 use Database\Factories\AppointmentFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -25,4 +26,34 @@ use Illuminate\Database\Eloquent\Model;
 class Appointment extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'employee_id',
+        'customer_id',
+        'date',
+        'start_time',
+        'end_time',
+        'note',
+    ];    
+
+    protected $casts = [
+        'date' => 'datetime',
+        'start_time' => 'timestamp',
+        'end_time' => 'timestamp',
+    ];
+
+    public function present()
+    {
+        return new AppointmentPresenter($this);
+    }
+
+    public function employee()
+    {
+        return $this->belongsTo(Employee::class);
+    }
+
+    public function customer()
+    {
+        return $this->belongsTo(Customer::class);
+    }
 }

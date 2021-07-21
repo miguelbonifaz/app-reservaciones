@@ -10,6 +10,8 @@
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
+    @livewireScripts
+    @livewireResourceTimeGridScripts
     <livewire:styles />
 </head>
 <body>
