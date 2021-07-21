@@ -16,12 +16,13 @@ function createService($data = [])
 }
 
 test('can see service create form', function () {
+    // Arrange
 
-    // Arrange    
     // Act
     $url = route('services.create');
 
     $response = $this->actingAsUser()->get($url);
+
     // Assert
     $response->assertOk();
 
@@ -31,7 +32,6 @@ test('can see service create form', function () {
 });
 
 test('can create a service', function () {
-
     // Arrange
     $data = Service::factory()->make();
 
@@ -42,7 +42,6 @@ test('can create a service', function () {
     ]);
 
     // Assert
-
     $response->assertRedirect(route('services.index'));
 
     $response->assertSessionHas('flash_success', 'Se creó con éxito el servicio.');
@@ -60,21 +59,22 @@ test('fields are required', function () {
     //Act
     $response = createService([
         'name' => null,
-        'duration' => null,        
+        'duration' => null,
     ]);
 
     //Assert
     $response->assertSessionHasErrors([
         'name',
-        'duration',        
+        'duration',
     ]);
 });
 
 test('field duration must be a number', function () {
     // Arrange
+
     // Act
     $response = createService([
-        'duration' => 'duration Number String',
+        'duration' => 'string',
     ]);
 
     // Assert

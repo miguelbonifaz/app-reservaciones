@@ -1,4 +1,4 @@
-name: PHPUnit tests
+name: PEST tests
 
 on:
   push:
