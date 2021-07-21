@@ -19,6 +19,8 @@
                                 <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
                                     Duración
                                 </th>
+                                <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">                                    
+                                </th>
                             </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200">
@@ -29,7 +31,26 @@
                                     </td>
                                     <td class="px-6 py-4 text-sm whitespace-nowrap">
                                         {{ $service->present()->duration() }}
-                                    </td>                                    
+                                    </td>
+                                    <td class="px-6 py-4 text-sm whitespace-nowrap">
+                                        <div class="flex items-center justify-end space-x-8">
+                                            <a href="{{ route('services.edit',$service) }}">
+                                                Editar
+                                            </a>                                    
+                                            <form
+                                                action="{{ route('services.destroy', $service) }}"
+                                                method="POST"
+                                                onclick="return confirm('¿Seguro desea eliminar este servicio?');">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button
+                                                    type="submit"
+                                                    class="font-medium text-teal-600 hover:text-teal-900 focus:outline-none focus:underline">
+                                                    Eliminar
+                                                </button>                                     
+                                            </form>
+                                        </div>
+                                    </td>                                  
                                 </tr>
                             @endforeach
                         </tbody>

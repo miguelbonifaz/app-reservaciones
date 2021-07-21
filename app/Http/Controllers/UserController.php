@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Illuminate\Validation\Rule;
 
 class UserController extends Controller
 {
@@ -64,7 +65,8 @@ class UserController extends Controller
 
         request()->validate([
             'name' => 'required',
-            'email' => 'required|email'
+            'email' => 'required|email',
+                Rule::unique('users', 'email')->ignoreModel($user)
         ]);
 
         $user->update([
