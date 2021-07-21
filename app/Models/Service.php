@@ -7,6 +7,8 @@ use Database\Factories\ServiceFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Support\Carbon;
 
 /**
  * App\Models\Service
@@ -19,8 +21,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $id
  * @property string $names
  * @property int $duration
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
  * @method static Builder|Service whereCreatedAt($value)
  * @method static Builder|Service whereDuration($value)
  * @method static Builder|Service whereId($value)
@@ -39,13 +41,13 @@ class Service extends Model
         'value'
     ];
 
-    public function present()
+    public function present(): ServicePresenter
     {
         return new ServicePresenter($this);
     }
 
-    public function employees()
+    public function employees(): BelongsToMany
     {
-        return $this->belongsToMany(Employee::class, 'employee_service');        
+        return $this->belongsToMany(Employee::class);
     }
 }

@@ -7,6 +7,8 @@ use Database\Factories\EmployeeFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * App\Models\Employee
@@ -39,17 +41,17 @@ class Employee extends Model
         'phone',
     ];
 
-    public function present()
+    public function present(): EmployeePresenter
     {
         return new EmployeePresenter($this);
     }
 
-    public function services()
+    public function services(): BelongsToMany
     {
         return $this->belongsToMany(Service::class, 'employee_service', 'employee_id' , 'service_id');
     }
 
-    public function schedules()
+    public function schedules(): HasMany
     {
         return $this->hasMany(Schedule::class);
     }
