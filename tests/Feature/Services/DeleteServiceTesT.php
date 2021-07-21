@@ -2,11 +2,8 @@
 
 use App\Models\Service;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
 
 uses(RefreshDatabase::class);
-
-uses(TestCase::class)->in('Feature');
 
 function deleteService(Service $service)
 {
