@@ -26,6 +26,8 @@ use Illuminate\Database\Eloquent\Model;
  * @method static Builder|Employee whereId($value)
  * @method static Builder|Employee whereName($value)
  * @method static Builder|Employee whereUpdatedAt($value)
+ * @property string $phone
+ * @method static Builder|Employee wherePhone($value)
  */
 class Employee extends Model
 {

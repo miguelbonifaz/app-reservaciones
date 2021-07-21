@@ -1,5 +1,10 @@
-<x-app-layout header-title="Services">
-    <x-ui.flash />    
+<x-app-layout header-title="Servicios">
+    <x-ui.flash />
+    <div class="flex justify-end space-x-2">
+        <x-input.link href="{{ route('services.create') }}">
+            Crear Servicio
+        </x-input.link> 
+    </div>   
     <div class="h-4"></div>
     <div class="flex flex-col">
         <div class="-my-2 sm:-mx-6 lg:-mx-8">

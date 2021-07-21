@@ -26,6 +26,8 @@ use Illuminate\Database\Eloquent\Model;
  * @method static Builder|Service whereId($value)
  * @method static Builder|Service whereNames($value)
  * @method static Builder|Service whereUpdatedAt($value)
+ * @property string $name
+ * @method static Builder|Service whereName($value)
  */
 class Service extends Model
 {
