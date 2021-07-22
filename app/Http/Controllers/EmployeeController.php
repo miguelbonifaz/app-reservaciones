@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\EmployeeCreateRequest;
 use App\Models\Employee;
+use App\Models\RestSchedule;
 use App\Models\Schedule;
 use App\Models\Service;
 use Carbon\Carbon;
@@ -66,24 +67,11 @@ class EmployeeController extends Controller
         /** @var Employee $employee */
         $employee = request()->employee;
 
-        $schedules = $employee->schedules;
-
-        $daysOfWeek = [
-            1 => 'Lunes',
-            2 => 'Martes',
-            3 => 'Miercoles',
-            4 => 'Jueves',
-            5 => 'Viernes',
-            6 => 'Sábado',
-            0 => 'Domingo'
-        ];
-
         $services = Service::query()->latest()->get();
 
         return view('employees.edit', [
             'employee' => $employee,
             'services' => $services,
-            'daysOfWeek' => $daysOfWeek,
         ]);
     }
 
@@ -112,7 +100,7 @@ class EmployeeController extends Controller
 
             $employee->services()->sync($servicesId);
 
-            collect(request()->start_time)->each(function($hour,$day) use ($employee) {
+            collect(request()->start_time)->each(function ($hour, $day) use ($employee) {
                 if ($hour == null) {
                     return;
                 }
@@ -143,6 +131,33 @@ class EmployeeController extends Controller
                     'end_time' => $endTime,
                 ]);
             });
+
+            collect(request()->restStartTime)->each(function ($data, $day) {
+                collect($data)->each(function ($hours, $scheduleId) {
+                    collect($hours)->each(function ($hour) use ($scheduleId) {
+                        RestSchedule::updateOrCreate(
+                            [
+                                'schedule_id' => $scheduleId,
+                                'start_time' => $hour,
+                            ],
+                        );
+                    });
+                });
+            });
+
+            collect(request()->restEndTime)->each(function ($data, $day) {
+                collect($data)->each(function ($hours, $scheduleId) {
+                    collect($hours)->each(function ($hour) use ($scheduleId) {
+                        RestSchedule::updateOrCreate(
+                            [
+                                'schedule_id' => $scheduleId,
+                                'end_time' => $hour,
+                            ],
+                        );
+                    });
+                });
+            });
+
         });
 
         return redirect()

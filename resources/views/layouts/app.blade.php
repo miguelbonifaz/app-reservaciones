@@ -27,5 +27,6 @@
 </div>
 
 <livewire:scripts />
+<livewire:livewire-ui-modal/>
 </body>
 </html>
