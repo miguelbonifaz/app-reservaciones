@@ -39,8 +39,8 @@ class RestSchedule extends Model
         'schedule_id'
     ];
 
-    protected $cast = [
-        'start_time' => 'timestamp',
-        'end_time' => 'timestamp'
+    protected $casts = [
+      'start_time' => 'timestamp',
+      'end_time' => 'timestamp'
     ];
 }

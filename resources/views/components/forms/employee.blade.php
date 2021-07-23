@@ -73,7 +73,7 @@
                             <button
                                 type="button"
                                 class="inline-flex font-bold items-center px-3 py-0.5 rounded-full text-sm bg-indigo-100 text-indigo-800"
-                                onclick="Livewire.emit('openModal', 'create-break-time-livewire')">
+                                onclick="Livewire.emit('openModal', 'create-break-time-livewire', {{ json_encode(["scheduleId" => $schedule->id]) }})">
                                 Agregar Descanso
                             </button>
                         </div>
