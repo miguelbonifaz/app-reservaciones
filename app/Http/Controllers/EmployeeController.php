@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\EmployeeCreateRequest;
 use App\Models\Employee;
+use App\Models\RestSchedule;
 use App\Models\Schedule;
 use App\Models\Service;
 use Carbon\Carbon;
@@ -66,22 +67,14 @@ class EmployeeController extends Controller
         /** @var Employee $employee */
         $employee = request()->employee;
 
-        $daysOfWeek = [
-            1 => 'Lunes',
-            2 => 'Martes',
-            3 => 'Miercoles',
-            4 => 'Jueves',
-            5 => 'Viernes',
-            6 => 'Sábado',
-            0 => 'Domingo'
-        ];
+        $schedules = $employee->schedules->load('rests');
 
         $services = Service::query()->latest()->get();
 
         return view('employees.edit', [
             'employee' => $employee,
             'services' => $services,
-            'daysOfWeek' => $daysOfWeek,
+            'schedules' => $schedules,
         ]);
     }
 
@@ -99,7 +92,6 @@ class EmployeeController extends Controller
                 Rule::unique('employees', 'email')->ignoreModel($employee)
             ],
             'phone' => 'required|numeric',
-
         ]);
 
         DB::transaction(function () use ($servicesId, $employee) {
@@ -112,6 +104,9 @@ class EmployeeController extends Controller
             $employee->services()->sync($servicesId);
 
             collect(request()->start_time)->each(function ($hour, $day) use ($employee) {
+                if ($hour == null) {
+                    return;
+                }
                 $schedule = Schedule::query()
                     ->where('day', $day)
                     ->where('employee_id', $employee->id)
@@ -125,6 +120,9 @@ class EmployeeController extends Controller
             });
 
             collect(request()->end_time)->each(function ($hour, $day) use ($employee) {
+                if ($hour == null) {
+                    return;
+                }
                 $schedule = Schedule::query()
                     ->where('day', $day)
                     ->where('employee_id', $employee->id)
@@ -135,6 +133,32 @@ class EmployeeController extends Controller
                 $schedule->update([
                     'end_time' => $endTime,
                 ]);
+            });
+
+            collect(request()->restStartTime)->each(function ($data, $day) {
+                collect($data)->each(function ($hours, $scheduleId) {
+                    collect($hours)->each(function ($hour) use ($scheduleId) {
+                        RestSchedule::updateOrCreate(
+                            [
+                                'schedule_id' => $scheduleId,
+                                'start_time' => $hour,
+                            ],
+                        );
+                    });
+                });
+            });
+
+            collect(request()->restEndTime)->each(function ($data, $day) {
+                collect($data)->each(function ($hours, $scheduleId) {
+                    collect($hours)->each(function ($hour) use ($scheduleId) {
+                        RestSchedule::updateOrCreate(
+                            [
+                                'schedule_id' => $scheduleId,
+                                'end_time' => $hour,
+                            ],
+                        );
+                    });
+                });
             });
 
         });

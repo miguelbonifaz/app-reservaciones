@@ -5,16 +5,18 @@
     "keywords": ["framework", "laravel"],
     "license": "MIT",
     "require": {
-        "php": "^7.3|^8.0",
+        "php": "^7.4|^8.0",
         "fideloper/proxy": "^4.4",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
         "laravel/framework": "^8.40",
         "laravel/tinker": "^2.5",
+        "livewire-ui/modal": "^1.0",
         "livewire/livewire": "^2.5",
         "spatie/laravel-medialibrary": "9.0.0"
     },
     "require-dev": {
+        "barryvdh/laravel-debugbar": "^3.6",
         "barryvdh/laravel-ide-helper": "^2.10",
         "facade/ignition": "^2.5",
         "fakerphp/faker": "^1.9.1",
@@ -24,6 +26,7 @@
         "nunomaduro/collision": "^5.0",
         "pestphp/pest": "^1.8",
         "pestphp/pest-plugin-laravel": "^1.0",
+        "pestphp/pest-plugin-livewire": "^1.0",
         "phpunit/phpunit": "^9.3.3"
     },
     "autoload": {

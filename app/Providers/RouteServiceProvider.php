@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Models\Employee;
+use App\Models\RestSchedule;
 use App\Models\Service;
 use App\Models\User;
 use Illuminate\Cache\RateLimiting\Limit;
@@ -41,6 +42,7 @@ class RouteServiceProvider extends ServiceProvider
         Route::model('user', User::class);
         Route::model('employee', Employee::class);
         Route::model('service', Service::class);
+        Route::model('restSchedule', RestSchedule::class);
 
         $this->configureRateLimiting();
 

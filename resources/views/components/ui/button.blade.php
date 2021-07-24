@@ -1,4 +1,6 @@
-<button type="submit"
-        class="{{ $theme }}">
+<button
+    {{ $attributes }}
+    type="submit"
+    class="{{ $theme }}">
     {{ $slot }}
 </button>

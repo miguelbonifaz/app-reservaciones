@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CalendarController;
+use App\Http\Controllers\DeleteBreakTimeController;
 use App\Http\Controllers\UserPhotoController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\ServiceController;
@@ -26,6 +27,8 @@ Route::prefix('/employees')->group(function () {
     Route::get('/{employee}/edit', [EmployeeController::class, 'edit'])->name('employees.edit');
     Route::post('/{employee}', [EmployeeController::class, 'update'])->name('employees.update');
     Route::delete('/{employee}', [EmployeeController::class, 'destroy'])->name('employees.destroy');
+
+    Route::get('/{employee}/breakTime/{restSchedule}', [DeleteBreakTimeController::class, '__invoke'])->name('employess.break-time.destroy');
 });
 
 Route::prefix('/services')->group(function () {

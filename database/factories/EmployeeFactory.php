@@ -29,18 +29,15 @@ class EmployeeFactory extends Factory
         ];
     }
 
-    public function configure()
+    public function configure(): EmployeeFactory
     {
         return $this->afterCreating(function (Employee $employee) {
-            
             collect(range(0, 6))->each(function ($number) use ($employee) {
                 $employee->schedules()->create([
-                    'day' => $number,                    
+                    'day' => $number,
                     'employee_id' => $employee->id
-                ]);                    
-                        
+                ]);
             });
-            
         });
     }
 }

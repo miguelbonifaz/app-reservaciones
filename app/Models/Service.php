@@ -30,6 +30,10 @@ use Illuminate\Support\Carbon;
  * @method static Builder|Service whereUpdatedAt($value)
  * @property string $name
  * @method static Builder|Service whereName($value)
+ * @property float $value
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Employee[] $employees
+ * @property-read int|null $employees_count
+ * @method static Builder|Service whereValue($value)
  */
 class Service extends Model
 {

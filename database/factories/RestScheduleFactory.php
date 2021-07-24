@@ -2,7 +2,9 @@
 
 namespace Database\Factories;
 
+use App\Models\Employee;
 use App\Models\RestSchedule;
+use App\Models\Schedule;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class RestScheduleFactory extends Factory
@@ -19,10 +21,16 @@ class RestScheduleFactory extends Factory
      *
      * @return array
      */
-    public function definition()
+    public function definition(): array
     {
+        $startTime = today()->setTime(range(10,20), 0);
+
+        $employee = Employee::factory()->create();
+
         return [
-            //
+            'start_time' => $startTime,
+            'end_time' => $startTime->copy()->addHour(),
+            'schedule_id' => $employee->schedules->random()->id,
         ];
     }
 }

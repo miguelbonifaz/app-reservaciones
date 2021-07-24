@@ -30,6 +30,10 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @method static Builder|Employee whereUpdatedAt($value)
  * @property string $phone
  * @method static Builder|Employee wherePhone($value)
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Schedule[] $schedules
+ * @property-read int|null $schedules_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Service[] $services
+ * @property-read int|null $services_count
  */
 class Employee extends Model
 {
