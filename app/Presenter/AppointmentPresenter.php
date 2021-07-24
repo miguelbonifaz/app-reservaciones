@@ -13,12 +13,12 @@ class AppointmentPresenter
         $this->appointment = $appointment;
     }
 
-    public function date()
+    public function date(): string
     {
-        return $this->appointment->date;
+        return $this->appointment->date->format('F j Y');
     }
 
-    public function note()
+    public function note(): ?string
     {
         return $this->appointment->note;
     }

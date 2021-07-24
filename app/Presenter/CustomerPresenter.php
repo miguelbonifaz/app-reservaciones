@@ -13,20 +13,22 @@ class CustomerPresenter
         $this->customer = $customer;
     }
 
-    public function name()
+    public function name(): string
     {
         return $this->customer->name;
     }
 
-    public function email()
+    public function email(): string
     {
         return $this->customer->email;
     }
-    public function phone()
+
+    public function phone(): string
     {
         return $this->customer->phone;
     }
-    public function identification_number()
+
+    public function identificationNumber(): string
     {
         return $this->customer->identification_number;
     }

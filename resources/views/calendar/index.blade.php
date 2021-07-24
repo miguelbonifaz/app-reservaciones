@@ -1,4 +1,4 @@
-<x-app-layout header-title="Calendario">
+<x-app-layout max-width="''" header-title="Calendario">
     <x-ui.flash />
 
 

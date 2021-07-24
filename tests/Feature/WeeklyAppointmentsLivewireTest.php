@@ -1,16 +1,15 @@
 <?php
 
 use App\Http\Livewire\WeeklyCalendarLivewire;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
-use Livewire\Livewire;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Testing\TestableLivewire;
-use Tests\TestCase;
+use function Pest\Livewire\livewire;
 
-uses(DatabaseTransactions::class);
+uses(RefreshDatabase::class);
 
-function buildComponent(): TestableLivewire
+function livewireComponent(): TestableLivewire
 {
-    return Livewire::test(WeeklyCalendarLivewire::class, [
+    return livewire(WeeklyCalendarLivewire::class, [
         'startingHour' => 8,
         'endingHour' => 20,
         'interval' => 15,
@@ -18,10 +17,10 @@ function buildComponent(): TestableLivewire
 }
 
 test('can create component', function () {
-    // Arrange    
+    // Arrange
 
     // Act
-    $component = buildComponent();
+    $component = livewireComponent();
 
     // Assert
     $this->assertNotNull($component);
@@ -29,7 +28,7 @@ test('can create component', function () {
 
 test('can navigate to the next week', function () {
     // Arrange
-    $component = buildComponent();
+    $component = livewireComponent();
 
     // Act
     $component->call('goToNextWeek');
@@ -43,9 +42,9 @@ test('can navigate to the next week', function () {
 
 test('can navigate to the previous week', function () {
     // Arrange
-    $component = buildComponent();
+    $component = livewireComponent();
 
-    // Act    
+    // Act
     $component->call('goToPreviousWeek');
 
     //Assert
@@ -57,7 +56,7 @@ test('can navigate to the previous week', function () {
 
 test('can navigate to the current week from the Previous Week', function () {
     // Arrange
-    $component = buildComponent();
+    $component = livewireComponent();
 
     $component->call('goToPreviousWeek');
 
@@ -73,7 +72,7 @@ test('can navigate to the current week from the Previous Week', function () {
 
 test('can navigate to the current week from the Next Week', function () {
     // Arrange
-    $component = buildComponent();
+    $component = livewireComponent();
 
     $component->call('goToNextWeek');
 

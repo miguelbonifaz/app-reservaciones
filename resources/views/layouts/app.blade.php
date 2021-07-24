@@ -10,25 +10,24 @@
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
-    @livewireScripts
     @livewireResourceTimeGridScripts
-    <livewire:styles />
+    @livewireStyles
 </head>
-<body>
+<body class="bg-gray-50">
 
 <div>
     <x-navbar/>
 
     <x-header :headerTitle="$headerTitle"/>
 
-    <main class="bg-gray-50 h-screen">
-        <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+    <main>
+        <div class="{{ $maxWidth }} mx-auto py-6 sm:px-6 lg:px-8">
             {{ $slot }}
         </div>
     </main>
 </div>
 
-<livewire:scripts />
+@livewireScripts
 <livewire:livewire-ui-modal/>
 </body>
 </html>
