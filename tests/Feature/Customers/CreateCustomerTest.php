@@ -13,8 +13,8 @@ function createCustomer($data = [])
 }
 
 test('can see create customer form', function () {
-
     // Arrange
+
     // Act
     $url = route('customers.create');
 
@@ -57,6 +57,7 @@ test('can create a customer', function () {
 
 test('fields are required', function () {
     // Arrange
+
     //Act
     $response = createCustomer([
         'name' => null,
@@ -76,6 +77,7 @@ test('fields are required', function () {
 
 test('field email must be valid', function () {
     // Arrange
+
     // Act
     $response = createCustomer([
         'email' => 'not-email',
@@ -89,6 +91,7 @@ test('field email must be valid', function () {
 
 test('phone must be number', function () {
     // Arrange
+
     // Act
     $response = createCustomer([
         'phone' => 'this is a number',
