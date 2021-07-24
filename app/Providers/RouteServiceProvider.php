@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\Customer;
 use App\Models\Employee;
 use App\Models\RestSchedule;
 use App\Models\Service;
@@ -43,6 +44,7 @@ class RouteServiceProvider extends ServiceProvider
         Route::model('employee', Employee::class);
         Route::model('service', Service::class);
         Route::model('restSchedule', RestSchedule::class);
+        Route::model('customer', Customer::class);
 
         $this->configureRateLimiting();
 

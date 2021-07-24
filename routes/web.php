@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\DeleteBreakTimeController;
+use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\UserPhotoController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\ServiceController;
@@ -38,4 +39,8 @@ Route::prefix('/services')->group(function () {
     Route::get('/{service}/edit', [ServiceController::class, 'edit'])->name('services.edit');
     Route::post('/{service}', [ServiceController::class, 'update'])->name('services.update');
     Route::delete('/{service}', [ServiceController::class, 'destroy'])->name('services.destroy');
+});
+
+Route::prefix('/customers')->group(function () {
+    Route::get('/', [CustomerController::class, 'index'])->name('customers.index');
 });
