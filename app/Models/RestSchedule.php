@@ -6,6 +6,7 @@ use Database\Factories\RestScheduleFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
 
 /**
@@ -40,7 +41,12 @@ class RestSchedule extends Model
     ];
 
     protected $casts = [
-      'start_time' => 'timestamp',
-      'end_time' => 'timestamp'
+        'start_time' => 'timestamp',
+        'end_time' => 'timestamp'
     ];
+
+    public function schedule(): BelongsTo
+    {
+        return $this->belongsTo(Schedule::class);
+    }
 }

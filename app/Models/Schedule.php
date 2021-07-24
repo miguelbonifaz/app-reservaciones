@@ -47,7 +47,7 @@ class Schedule extends Model
         'employee_id'
     ];
 
-    protected $cast = [
+    protected $casts = [
         'start_time' => 'timestamp',
         'end_time' => 'timestamp'
     ];

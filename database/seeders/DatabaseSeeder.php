@@ -2,8 +2,11 @@
 
 namespace Database\Seeders;
 
+use App\Models\Employee;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Artisan;
+
 class DatabaseSeeder extends Seeder
 {
     /**
@@ -13,6 +16,8 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
+        Employee::factory()->create();
 
+        Artisan::call('create:user');
     }
 }

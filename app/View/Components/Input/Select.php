@@ -10,6 +10,7 @@ class Select extends Component
     public $placeholder;
     public $type;
     public $name;
+    public $old;
 
     public function __construct($name, $placeholder = 'Escoja una opción...', $label = false)
     {

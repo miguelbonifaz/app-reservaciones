@@ -67,11 +67,14 @@ class EmployeeController extends Controller
         /** @var Employee $employee */
         $employee = request()->employee;
 
+        $schedules = $employee->schedules->load('rests');
+
         $services = Service::query()->latest()->get();
 
         return view('employees.edit', [
             'employee' => $employee,
             'services' => $services,
+            'schedules' => $schedules,
         ]);
     }
 

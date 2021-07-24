@@ -57,3 +57,41 @@ test('can create a break time', function () {
         Carbon::createFromTimestamp($rest->end_time)->format('H:i')
     );
 });
+
+test('fields are required', function () {
+    // Arrange
+    Employee::factory()->create();
+    $schedule = Schedule::first();
+
+    $component = buildComponent($schedule);
+    $component->set('startTime', null);
+    $component->set('endTime', null);
+
+    // Act
+    $component->call('createBreakTime');
+
+    // Assert
+    $component->assertHasErrors([
+        'startTime' => 'required',
+        'endTime' => 'required',
+    ]);
+});
+
+
+test('field endTime must be greater than startTime', function () {
+    // Arrange
+    Employee::factory()->create();
+    $schedule = Schedule::first();
+
+    $component = buildComponent($schedule);
+    $component->set('startTime', '08:00');
+    $component->set('endTime', '08:00');
+
+    // Act
+    $component->call('createBreakTime');
+
+    // Assert
+    $component->assertHasErrors([
+        'endTime',
+    ]);
+});

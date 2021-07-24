@@ -4,6 +4,7 @@ namespace App\Http\Livewire;
 
 use App\Models\RestSchedule;
 use App\Models\Schedule;
+use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use LivewireUI\Modal\ModalComponent;
 
@@ -20,6 +21,27 @@ class CreateBreakTimeLivewire extends ModalComponent
 
     public function createBreakTime()
     {
+        $this->validate([
+            'startTime' => 'required',
+            'endTime' => [
+                'required',
+                function($attr, $value, $fail) {
+                    $startTime = Carbon::createFromTime(
+                        explode(':', $this->startTime)[0],
+                        explode(':', $this->startTime)[1],
+                    );
+                    $endTime = Carbon::createFromTime(
+                        explode(':', $this->endTime)[0],
+                        explode(':', $this->endTime)[1],
+                    );
+
+                    if ($endTime <= $startTime) {
+                        $fail("Escoja una hora mayor a hora de inicio");
+                    }
+                }
+            ],
+        ]);
+
         RestSchedule::create([
             'schedule_id' => $this->scheduleId,
             'start_time' => $this->startTime,
