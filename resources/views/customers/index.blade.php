@@ -46,7 +46,23 @@
                                     {{ $customer->present()->identificationNumber() }}
                                 </td>
                                 <td class="px-6 py-4 text-sm whitespace-nowrap">
-
+                                    <div class="flex items-center justify-end space-x-8">
+                                        <a href="{{ route('customers.edit',$customer) }}">
+                                            Editar
+                                        </a>
+                                        <form
+                                            action="{{ route('customers.destroy', $customer) }}"
+                                            method="POST"
+                                            onclick="return confirm('¿Seguro desea eliminar este cliente?');">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button
+                                                type="submit"
+                                                class="font-medium text-teal-600 hover:text-teal-900 focus:outline-none focus:underline">
+                                                Eliminar
+                                            </button>
+                                        </form>
+                                    </div>
                                 </td>
                             </tr>
                         @endforeach
