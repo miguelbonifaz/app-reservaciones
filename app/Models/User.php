@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Notifications\PasswordResetNotification;
 use App\Presenter\UserPresenter;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Builder;
@@ -47,6 +48,13 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
  * @method static Builder|User withoutTheUserConnected()
  * @mixin \Eloquent
  */
+
+/**
+ * Send the password reset notification.
+ *
+ * @param  string  $token
+ * @return void
+ */
 class User extends Authenticatable implements HasMedia
 {
     use HasFactory, Notifiable, InteractsWithMedia;
@@ -91,5 +99,10 @@ class User extends Authenticatable implements HasMedia
     public function scopeWithoutTheUserConnected($query)
     {
         $query->where('id', '!=', auth()->id());
+    }
+
+    public function sendPasswordResetNotification($token)
+    {
+        $this->notify(new PasswordResetNotification($token));
     }
 }
