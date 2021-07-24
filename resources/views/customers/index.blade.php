@@ -1,7 +1,7 @@
 <x-app-layout header-title="Clientes">
     <x-ui.flash />
     <div class="flex justify-end space-x-2">
-        <x-input.link href="">
+        <x-input.link href="{{ route('customers.create') }}">
             Crear Cliente
         </x-input.link>
     </div>
