@@ -13,9 +13,9 @@ function updateCustomer(Customer $customer ,$data = [])
 }
 
 test('can see update customer form', function () {
-
     // Arrange
     $customer = Customer::factory()->create();
+
     // Act
     $url = route('customers.edit', $customer);
 
@@ -29,7 +29,6 @@ test('can see update customer form', function () {
 });
 
 test('can update an customer', function () {
-
     // Arrange
     $customer = Customer::factory()->create();
 
@@ -56,12 +55,12 @@ test('can update an customer', function () {
     $this->assertEquals($data->email, $customer->email);
     $this->assertEquals($data->phone, $customer->phone);
     $this->assertEquals($data->identification_number, $customer->identification_number);
-
 });
 
 test('fields are required', function () {
     // Arrange
     $customer = Customer::factory()->create();
+
     //Act
     $response = updateCustomer($customer,[
         'name' => null,
