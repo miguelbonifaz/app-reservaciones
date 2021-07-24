@@ -74,7 +74,7 @@ class User extends Authenticatable implements HasMedia
         'email_verified_at' => 'datetime',
     ];
 
-    public function present()
+    public function present(): UserPresenter
     {
         return new UserPresenter($this);
     }
