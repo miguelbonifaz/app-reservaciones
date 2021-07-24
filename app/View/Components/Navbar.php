@@ -31,14 +31,14 @@ class Navbar extends Component
                 'isActive' => request()->routeIs('services.index')
             ],
             [
-                'title' => 'Usuarios',
-                'route' => route('users.index'),
-                'isActive' => request()->routeIs('users.index')
-            ],
-            [
                 'title' => 'Clientes',
                 'route' => route('customers.index'),
                 'isActive' => request()->routeIs('customers.index')
+            ],
+            [
+                'title' => 'Usuarios',
+                'route' => route('users.index'),
+                'isActive' => request()->routeIs('users.index')
             ],
         ]);
     }
