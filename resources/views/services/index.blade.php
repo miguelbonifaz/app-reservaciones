@@ -3,8 +3,8 @@
     <div class="flex justify-end space-x-2">
         <x-input.link href="{{ route('services.create') }}">
             Crear Servicio
-        </x-input.link> 
-    </div>   
+        </x-input.link>
+    </div>
     <div class="h-4"></div>
     <div class="flex flex-col">
         <div class="-my-2 sm:-mx-6 lg:-mx-8">
@@ -19,10 +19,10 @@
                                 <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
                                     Duración
                                 </th>
-                                <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">                                    
+                                <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
                                     Valor
                                 </th>
-                                <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">                                    
+                                <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
                                 </th>
                             </tr>
                         </thead>
@@ -42,7 +42,7 @@
                                         <div class="flex items-center justify-end space-x-8">
                                             <a href="{{ route('services.edit',$service) }}">
                                                 Editar
-                                            </a>                                    
+                                            </a>
                                             <form
                                                 action="{{ route('services.destroy', $service) }}"
                                                 method="POST"
@@ -53,10 +53,10 @@
                                                     type="submit"
                                                     class="font-medium text-teal-600 hover:text-teal-900 focus:outline-none focus:underline">
                                                     Eliminar
-                                                </button>                                     
+                                                </button>
                                             </form>
                                         </div>
-                                    </td>                                  
+                                    </td>
                                 </tr>
                             @endforeach
                         </tbody>

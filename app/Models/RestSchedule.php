@@ -29,6 +29,7 @@ use Illuminate\Support\Carbon;
  * @method static Builder|RestSchedule whereEndTime($value)
  * @method static Builder|RestSchedule whereScheduleId($value)
  * @method static Builder|RestSchedule whereStartTime($value)
+ * @property-read \App\Models\Schedule $schedule
  */
 class RestSchedule extends Model
 {

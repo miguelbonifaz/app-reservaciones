@@ -35,6 +35,7 @@ use Illuminate\Support\Carbon;
  * @method static Builder|Schedule whereStartTime($value)
  * @method static Builder|Schedule whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property-read \App\Models\Employee $employee
  */
 class Schedule extends Model
 {

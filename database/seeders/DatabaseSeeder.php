@@ -2,8 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\Employee;
-use Carbon\Carbon;
+use App\Models\Appointment;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Artisan;
 
@@ -16,8 +15,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        Employee::factory()->create();
-
+        Appointment::factory()->count(5)->create();
         Artisan::call('create:user');
     }
 }
