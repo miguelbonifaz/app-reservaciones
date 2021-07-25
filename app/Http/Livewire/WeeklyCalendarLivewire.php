@@ -82,6 +82,11 @@ class WeeklyCalendarLivewire extends LivewireResourceTimeGrid
         $this->currentDay = $this->currentDay->addDays(7);
     }
 
+    public function onEventClick($event)
+    {
+        $this->emit('openModal','appointment-detail-livewire',[$event]);
+    }
+
     public function styles(): array
     {
         return [
