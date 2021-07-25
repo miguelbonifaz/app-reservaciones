@@ -17,10 +17,15 @@ class UserPresenter
     {
         return $this->user->name;
     }
-    
+
     public function email()
     {
         return $this->user->email;
+    }
+
+    public function avatarUrl()
+    {
+        return optional($this->user->avatar())->getFullUrl() ?? "https://ui-avatars.com/api/?name={$this->user->name}";
     }
 
 }

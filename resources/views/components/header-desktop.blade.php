@@ -45,9 +45,9 @@
                             class="flex items-center max-w-xs text-sm text-white bg-gray-800 rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"
                             id="user-menu-button" aria-expanded="false" aria-haspopup="true">
                             <span class="sr-only">Open user menu</span>
-                            <img class="w-8 h-8 rounded-full"
-                                 src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                                 alt="">
+                            <img class="w-8 h-8 object-cover rounded-full"
+                                 src="{{ auth()->user()->present()->avatarUrl() }}"
+                                 alt="{{ auth()->user()->present()->name() }}">
                         </button>
                     </div>
                     <div
@@ -62,9 +62,21 @@
                         class="absolute right-0 py-1 mt-2 w-48 bg-white rounded-md ring-1 ring-black ring-opacity-5 shadow-lg origin-top-right focus:outline-none"
                         role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button"
                         tabindex="-1">
-                        <a href="#" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100"
+                        <a href="{{ route('profile.edit', ['user' => auth()->user(),'redirectUrl' => url()->full()]) }}"
+                           class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100"
                            role="menuitem" tabindex="-1"
                            id="user-menu-item-0">Tu Perfil</a>
+                        <form action="{{route('logout')}}"
+                              method="post">
+                            @csrf
+                            <a class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100"
+                               role="menuitem" tabindex="-1"
+                               id="user-menu-item-0">
+                                <button type="submit">
+                                    Cerrar Sesión
+                                </button>
+                            </a>
+                        </form>
                     </div>
                 </div>
             </div>

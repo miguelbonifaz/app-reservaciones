@@ -1,12 +1,12 @@
 <x-app-layout header-title="{{ $user->present()->name() }}">
     <div class="px-4">
         <div class="mx-auto max-w-7xl">
-            <x-ui.flash />
+            <x-ui.flash/>
             <div class="py-4">
                 <x-forms.user
-                    :route="route('users.update',$user)"
+                    :route="route('profile.update',[$user, 'redirectUrl' => request('redirectUrl')])"
                     :user="$user"
-                    :redirectUrl="request('redirectUrl')"
+                    :redirectUrl="$redirectUrl"
                 />
             </div>
         </div>

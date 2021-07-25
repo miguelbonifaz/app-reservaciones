@@ -1,9 +1,9 @@
 <x-app-layout header-title="Usuarios">
     <x-ui.flash />
     <div class="flex justify-end space-x-2">
-        <x-input.link href="{{ route('users.create') }}">
+        <x-input.link href="{{ route('users.create',['redirectUrl' => url()->full()]) }}">
             Crear Usuario
-        </x-input.link> 
+        </x-input.link>
     </div>
     <div class="h-4"></div>
     <div class="flex flex-col">
@@ -14,12 +14,12 @@
                         <thead class="bg-gray-50 sm:rounded-t-lg">
                             <tr>
                                 <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
-                                    Nombre 
+                                    Nombre
                                 </th>
                                 <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
-                                    Email 
+                                    Email
                                 </th>
-                                <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">                                    
+                                <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
                                 </th>
                             </tr>
                         </thead>
@@ -34,9 +34,9 @@
                                     </td>
                                     <td class="px-6 py-4 text-sm whitespace-nowrap">
                                         <div class="flex items-center justify-end space-x-8">
-                                            <a href="{{ route('users.edit',$user) }}">
+                                            <a href="{{ route('users.edit',[$user,'redirectUrl' => url()->full()]) }}">
                                                 Editar
-                                            </a>                                    
+                                            </a>
                                             <form
                                                 action="{{ route('users.destroy', $user) }}"
                                                 method="POST"
@@ -47,17 +47,17 @@
                                                     type="submit"
                                                     class="font-medium text-teal-600 hover:text-teal-900 focus:outline-none focus:underline">
                                                     Eliminar
-                                                </button>                                     
+                                                </button>
                                             </form>
                                         </div>
-                                    </td>                                                                        
+                                    </td>
                                 </tr>
                             @endforeach
                         </tbody>
                     </table>
                     <x-ui.empty-list :count="$users->count()">
                         No se encuentra ningún usuario registrado.
-                    </x-ui.empty-list>                
+                    </x-ui.empty-list>
                 </div>
             </div>
         </div>

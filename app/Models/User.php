@@ -81,19 +81,20 @@ class User extends Authenticatable implements HasMedia
 
     public function registerMediaCollections(): void
     {
-        $this->addMediaCollection('avatar')
+        $this->addMediaCollection('avatars')
+            ->useDisk('public')
             ->singleFile();
     }
 
     public function saveAvatar(UploadedFile $file)
     {
         $this->addMedia($file)
-            ->toMediaCollection('avatar');
+            ->toMediaCollection('avatars');
     }
 
-    public function avatar()
+    public function avatar(): ?Media
     {
-        return optional($this->getFirstMedia('avatar'))->getFullUrl() ?? "https://ui-avatars.com/api/?name={$this->user->name}";
+        return $this->getFirstMedia('avatars');
     }
 
     public function scopeWithoutTheUserConnected($query)
