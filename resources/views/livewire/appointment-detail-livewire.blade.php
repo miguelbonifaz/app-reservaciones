@@ -1,4 +1,4 @@
-<div>
+<div style="z-index: 9999">
     <div class="border-double border-4 border-gray-500">
         <div class="mt-3 text-center sm:mt-5">
             <h3 class="text-lg font-medium leading-6 text-gray-900" id="modal-headline">

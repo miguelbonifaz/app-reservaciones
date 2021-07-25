@@ -84,7 +84,7 @@ class WeeklyCalendarLivewire extends LivewireResourceTimeGrid
 
     public function onEventClick($event)
     {
-        $this->emit('openModal','appointment-detail-livewire',[$event]);
+        $this->emit('openModal', 'appointment-detail-livewire', [$event]);
     }
 
     public function styles(): array
