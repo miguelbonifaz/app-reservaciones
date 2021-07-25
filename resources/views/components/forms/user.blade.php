@@ -16,27 +16,22 @@
     />
     <div>
         <x-input.text
-        label="Foto"
-        name="avatar"
-        type="file" />
-        @if ($user->getFirstMedia('avatar') != null)
+            label="Foto"
+            name="avatar"
+            type="file"/>
+        @if ($user->getFirstMedia('avatars'))
             <a href="{{ route('users.remove',$user) }}" onclick="return confirm('¿Seguro desea eliminar esta foto?');">
-                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800">
+                <span
+                    class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800">
                     Eliminar foto
                 </span>
             </a>
         @endif
     </div>
     <x-slot name="footer">
-        @if($redirectUrl != null)
-            <x-input.link theme="white" href="{{ $redirectUrl }}">
-                Cancelar
-            </x-input.link>
-        @else
-            <x-input.link theme="white" href="{{ route('calendar.index') }}">
-                Cancelar
-            </x-input.link>
-        @endif
+        <x-input.link theme="white" href="{{ $redirectUrl ?? route('calendar.index') }}">
+            Cancelar
+        </x-input.link>
         <x-input.button>
             Guardar
         </x-input.button>

@@ -8,7 +8,7 @@ class UserPhotoController extends Controller
     {
         $user = request()->user;
 
-        $avatar = $user->getFirstMedia('avatar');
+        $avatar = $user->getFirstMedia('avatars');
 
         $avatar->delete();
 

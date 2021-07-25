@@ -10,11 +10,10 @@ class MyProfileController extends Controller
     {
         $user = auth()->user();
 
-        $redirectUrl=request('redirectUrl');
+        $redirectUrl = request('redirectUrl');
 
-        return view('me.edit',[
-            'user' => $user,$redirectUrl
-        ])->with([
+        return view('me.edit', [
+            'user' => $user,
             'redirectUrl' => $redirectUrl,
         ]);
     }
@@ -46,7 +45,7 @@ class MyProfileController extends Controller
         }
 
         return redirect()
-            ->route('profile.edit',$user)
+            ->route('profile.edit', [$user, 'redirectUrl' => request('redirectUrl')])
             ->with('flash_success', 'Se actualizó con éxito su perfil.');
     }
 }
