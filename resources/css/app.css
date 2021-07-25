@@ -193,3 +193,8 @@ Usage:
     src: url("./../fonts/Inter.var.woff2?v=3.19") format("woff2");
 }
 
+@layer base {
+    body {
+        font-family: 'PT Sans', sans-serif;
+    }
+}

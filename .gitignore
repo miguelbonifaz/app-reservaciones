@@ -1,6 +1,7 @@
 /node_modules
 /public/hot
 /public/css
+/public/website/css
 /public/js
 /public/assets
 /public/mix-manifest.json
