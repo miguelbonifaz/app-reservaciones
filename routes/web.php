@@ -3,6 +3,7 @@
 use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\DeleteBreakTimeController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\MyProfileController;
 use App\Http\Controllers\UserPhotoController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\ServiceController;
@@ -48,4 +49,9 @@ Route::prefix('/customers')->group(function () {
     Route::get('/{customer}/edit', [CustomerController::class, 'edit'])->name('customers.edit');
     Route::post('/{customer}', [CustomerController::class, 'update'])->name('customers.update');
     Route::delete('/{customer}', [CustomerController::class, 'destroy'])->name('customers.destroy');
+});
+
+Route::prefix('/profile')->group(function () {
+    Route::get('/{user}/edit', [MyProfileController::class, 'edit'])->name('profile.edit');
+    Route::post('/{user}/', [MyProfileController::class, 'update'])->name('profile.update');
 });

@@ -8,7 +8,7 @@
         name="email"
         label="email"
         value="{{old('email', $user->email)}}"
-    />                
+    />
     <x-input.text
         name="password"
         label="Password"
@@ -17,7 +17,7 @@
     <div>
         <x-input.text
         label="Foto"
-        name="avatar"                        
+        name="avatar"
         type="file" />
         @if ($user->getFirstMedia('avatar') != null)
             <a href="{{ route('users.remove',$user) }}" onclick="return confirm('¿Seguro desea eliminar esta foto?');">
@@ -25,13 +25,18 @@
                     Eliminar foto
                 </span>
             </a>
-        @endif                      
+        @endif
     </div>
-
     <x-slot name="footer">
-        <x-input.link theme="white" href="{{ route('users.index') }}">
-            Cancelar
-        </x-input.link>
+        @if($redirectUrl != null)
+            <x-input.link theme="white" href="{{ $redirectUrl }}">
+                Cancelar
+            </x-input.link>
+        @else
+            <x-input.link theme="white" href="{{ route('calendar.index') }}">
+                Cancelar
+            </x-input.link>
+        @endif
         <x-input.button>
             Guardar
         </x-input.button>

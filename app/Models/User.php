@@ -93,7 +93,7 @@ class User extends Authenticatable implements HasMedia
 
     public function avatar()
     {
-        return optional($this->getFirstMedia('avatar'))->getFullUrl() ?? "https://ui-avatars.com/api/?name={$this->user->name}";
+        return $this->getFirstMedia('avatar');
     }
 
     public function scopeWithoutTheUserConnected($query)

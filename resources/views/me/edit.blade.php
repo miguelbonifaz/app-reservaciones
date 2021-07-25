@@ -4,9 +4,9 @@
             <x-ui.flash />
             <div class="py-4">
                 <x-forms.user
-                    :route="route('users.update',$user)"
+                    :route="route('profile.update',[$user,$redirectUrl])"
                     :user="$user"
-                    :redirectUrl="request('redirectUrl')"
+                    :redirectUrl="$redirectUrl"
                 />
             </div>
         </div>
