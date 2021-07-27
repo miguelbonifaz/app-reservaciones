@@ -7,9 +7,11 @@ use Illuminate\View\Component;
 class BaseForm extends Component
 {
     public $route;
+    public $footer;
 
     public function __construct($route)
     {
+        $this->footer = null;
         $this->route = $route;
     }
 

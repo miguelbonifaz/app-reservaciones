@@ -11,7 +11,6 @@ module.exports = {
         extend: {
             fontFamily: {
                 sans: ['Inter var', ...defaultTheme.fontFamily.sans],
-                PTsans: "'PT Sans', sans-serif"
             },
             colors: {
                 mariajose_gray: '#373737'

@@ -8,12 +8,19 @@
     {!! app('seotools')->generate() !!}
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=PT+Sans:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=PT+Sans:wght@400;700" rel="stylesheet">
+    <style>
+        * {
+            font-family: 'PT Sans', sans-serif;
+            font-weight: 400;
+            letter-spacing: .3px;
+        }
+    </style>
     <link rel="stylesheet" href="{{ mix('css/app.css') }}">
 </head>
 <body
-    class="h-screen font-PTsans">
- {{ $slot }}
- <script src="{{ mix('js/app.js')  }}"></script>
+    class="h-screen antialiased">
+{{ $slot }}
+<script src="{{ mix('js/app.js')  }}"></script>
 </body>
 </html>

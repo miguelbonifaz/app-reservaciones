@@ -21,7 +21,7 @@ class ServiceFactory extends Factory
      */
     public function definition(): array
     {
-        $duration = collect([10, 20, 30, 40, 50, 60, 70,])->random();
+        $duration = collect([30, 60, 120, 150])->random();
 
         return [
             'name' => $this->faker->name(),

@@ -24,8 +24,8 @@ class CustomerFactory extends Factory
         return [
             'name' => $this->faker->name(),
             'email' => $this->faker->unique()->safeEmail(),
-            'phone' => $this->faker->numberBetween(0000000000,9999999999),
-            'identification_number' => $this->faker->numberBetween(0000000000,9999999999),
+            'phone' => (string)$this->faker->numberBetween(0000000000, 9999999999),
+            'identification_number' => (string)$this->faker->numberBetween(0000000000, 9999999999),
         ];
     }
 }

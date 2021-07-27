@@ -1,4 +1,4 @@
-<form action="{{ $route }}" method="POST" enctype="multipart/form-data">
+<form {{ $attributes }} action="{{ $route }}" method="POST" enctype="multipart/form-data">
     @csrf
     <div class="shadow overflow-hidden sm:rounded-md">
         <div class="px-4 py-5 bg-white sm:p-6">

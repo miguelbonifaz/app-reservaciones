@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\Presenter\AppointmentPresenter;
-use Database\Factories\AppointmentFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -13,31 +12,33 @@ use Illuminate\Support\Carbon;
 /**
  * App\Models\Appointment
  *
- * @method static AppointmentFactory factory(...$parameters)
- * @method static Builder|Appointment newModelQuery()
- * @method static Builder|Appointment newQuery()
- * @method static Builder|Appointment query()
- * @mixin \Eloquent
  * @property int $id
- * @property Carbon|null $created_at
- * @property Carbon|null $updated_at
- * @method static Builder|Appointment whereCreatedAt($value)
- * @method static Builder|Appointment whereId($value)
- * @method static Builder|Appointment whereUpdatedAt($value)
  * @property int $customer_id
  * @property int $employee_id
+ * @property int $service_id
  * @property Carbon $date
  * @property int $start_time
  * @property int $end_time
  * @property string|null $note
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
  * @property-read \App\Models\Customer $customer
  * @property-read \App\Models\Employee $employee
+ * @property-read \App\Models\Service $service
+ * @method static \Database\Factories\AppointmentFactory factory(...$parameters)
+ * @method static Builder|Appointment newModelQuery()
+ * @method static Builder|Appointment newQuery()
+ * @method static Builder|Appointment query()
+ * @method static Builder|Appointment whereCreatedAt($value)
  * @method static Builder|Appointment whereCustomerId($value)
  * @method static Builder|Appointment whereDate($value)
  * @method static Builder|Appointment whereEmployeeId($value)
  * @method static Builder|Appointment whereEndTime($value)
+ * @method static Builder|Appointment whereId($value)
  * @method static Builder|Appointment whereNote($value)
  * @method static Builder|Appointment whereStartTime($value)
+ * @method static Builder|Appointment whereUpdatedAt($value)
+ * @mixin \Eloquent
  */
 class Appointment extends Model
 {
@@ -46,6 +47,7 @@ class Appointment extends Model
     protected $fillable = [
         'employee_id',
         'customer_id',
+        'service_id',
         'date',
         'start_time',
         'end_time',
@@ -58,6 +60,13 @@ class Appointment extends Model
         'end_time' => 'timestamp',
     ];
 
+    protected static function booted()
+    {
+        static::saving(function (self $appointment) {
+            $appointment->end_time = $appointment->endTime();
+        });
+    }
+
     public function present(): AppointmentPresenter
     {
         return new AppointmentPresenter($this);
@@ -68,8 +77,18 @@ class Appointment extends Model
         return $this->belongsTo(Employee::class);
     }
 
+    public function service(): BelongsTo
+    {
+        return $this->belongsTo(Service::class);
+    }
+
     public function customer(): BelongsTo
     {
         return $this->belongsTo(Customer::class);
+    }
+
+    public function endTime(): string
+    {
+        return Carbon::createFromTimestamp($this->start_time)->addMinutes($this->service->duration)->format('H:i');
     }
 }
