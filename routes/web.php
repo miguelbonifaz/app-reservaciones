@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\DeleteBreakTimeController;
 use App\Http\Controllers\CustomerController;
@@ -55,4 +56,8 @@ Route::prefix('/customers')->group(function () {
 Route::prefix('/profile')->group(function () {
     Route::get('/{user}/edit', [MyProfileController::class, 'edit'])->name('profile.edit');
     Route::post('/{user}/', [MyProfileController::class, 'update'])->name('profile.update');
+});
+
+Route::prefix('/appointments')->group(function () {
+    Route::get('/create', [AppointmentController::class, 'create'])->name('appointments.create');
 });

@@ -32,6 +32,7 @@ use Illuminate\Support\Carbon;
  * @method static Builder|Service whereName($value)
  * @property float $value
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Employee[] $employees
+ * * @method static \Illuminate\Database\Eloquent\Builder|Service searchByName($name)
  * @property-read int|null $employees_count
  * @method static Builder|Service whereValue($value)
  */
@@ -53,5 +54,12 @@ class Service extends Model
     public function employees(): BelongsToMany
     {
         return $this->belongsToMany(Employee::class);
+    }
+
+    public function scopeSearchByName($query, $name)
+    {
+        $query->when($name, function ($query, $name) {
+            $query->where('name', 'like', "%{$name}%");
+        });
     }
 }

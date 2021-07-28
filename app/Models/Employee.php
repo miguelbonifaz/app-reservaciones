@@ -36,6 +36,7 @@ use Illuminate\Support\Collection;
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Schedule[] $schedules
  * @property-read int|null $schedules_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Service[] $services
+ * * @method static \Illuminate\Database\Eloquent\Builder|Employee searchByName($name)
  * @property-read int|null $services_count
  */
 class Employee extends Model
