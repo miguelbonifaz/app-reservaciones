@@ -9,7 +9,7 @@ use function Pest\Livewire\livewire;
 
 uses(RefreshDatabase::class);
 
-function buildComponent($cancelUrl = null, $appointmentId = null, $returnUrl = null): TestableLivewire
+function buildAppointmentComponent($cancelUrl = null, $appointmentId = null, $returnUrl = null): TestableLivewire
 {
     test()->actingAsUser();
 
@@ -38,7 +38,7 @@ test('can see create appointment form', function () {
 test('can create component', function () {
     // Arrange
     // Act
-    $component = buildComponent();
+    $component = buildAppointmentComponent();
     // Assert
     $this->assertNotNull($component);
 });
@@ -48,7 +48,7 @@ test('can create an appointment', function () {
     $data = Appointment::factory()->make();
 
     // Act
-    $component = buildComponent();
+    $component = buildAppointmentComponent();
 
     $component->set('customer_id', $data->customer_id);
     $component->set('service_id', $data->service_id);
@@ -79,7 +79,7 @@ test('can create an appointment', function () {
 
 test('fields are required', function () {
     // Arrange
-    $component = buildComponent();
+    $component = buildAppointmentComponent();
 
     $component->set('customer_id', null);
     $component->set('service_id', null);
