@@ -16,6 +16,11 @@ mix.js('resources/js/app.js', 'public/js')
         require('postcss-import'),
         require('tailwindcss'),
         require('autoprefixer'),
+    ])
+    .postCss('resources/css/website/app.css', 'public/website/css', [
+        require('postcss-import'),
+        require('tailwindcss'),
+        require('autoprefixer'),
     ]);
 
 mix.browserSync({
