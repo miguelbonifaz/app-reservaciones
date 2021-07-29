@@ -40,6 +40,8 @@ class AppointmentReservationLivewire extends Component
 
     public $currentStep = self::STEP_SERVICE_AND_EMPLOYEE;
 
+    public $queryString = ['currentStep'];
+
     public function mount()
     {
         $this->employees = collect();

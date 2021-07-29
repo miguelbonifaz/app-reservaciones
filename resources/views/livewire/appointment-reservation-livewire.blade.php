@@ -30,7 +30,9 @@
                 @endif
 
                 @if ($currentStep == AppointmentReservationLivewire::STEP_DATE_AND_HOUR)
-                    date and hour
+                    <div class="sm:col-span-2">
+                        <livewire:date-picker-livewire/>
+                    </div>
                     <x-website.reservation.footer
                         :stepBack="AppointmentReservationLivewire::STEP_SERVICE_AND_EMPLOYEE"
                         :nextStep="AppointmentReservationLivewire::STEP_DETAILS"
@@ -52,3 +54,4 @@
             </div>
         </div>
     </div>
+</div>
