@@ -1,5 +1,7 @@
 <?php
 
+namespace Tests\Feature\Livewire;
+
 use App\Http\Livewire\CreateBreakTimeLivewire;
 use App\Models\Employee;
 use App\Models\RestSchedule;

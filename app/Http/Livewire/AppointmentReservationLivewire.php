@@ -90,7 +90,7 @@ class AppointmentReservationLivewire extends Component
 
             Appointment::create([
                 'employee_id' => $this->form['employee_id'],
-                'service_id' => $this->form['service'],
+                'service_id' => $this->form['service_id'],
                 'customer_id' => $customer->id,
                 'date' => $this->form['date'],
                 'start_time' => $this->form['start_time'],
