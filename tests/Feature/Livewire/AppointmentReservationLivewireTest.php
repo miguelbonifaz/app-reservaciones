@@ -29,39 +29,64 @@ test('can create component', function () {
     expect($component)->not()->toBeNull();
 });
 
-test('can creat an appointment', function () {
-    // Arrange
-    $dataAppointment = Appointment::factory()->make();
-    $dataCustomer = Customer::factory()->make();
-    $component = buildComponent();
-
-    // STEP ONE
+function stepOne(TestableLivewire $component, $dataAppointment): void
+{
     $component->assertSet('currentStep', AppointmentReservationLivewire::STEP_SERVICE_AND_EMPLOYEE);
     $component->set('form.service_id', $dataAppointment->service_id);
     $component->set('form.employee_id', $dataAppointment->employee_id);
     $component->call('nextStep', AppointmentReservationLivewire::STEP_DATE_AND_HOUR);
+}
 
-    // STEP TWO
+function stepTwo(TestableLivewire $component, $dataAppointment): void
+{
     $component->assertSet('currentStep', AppointmentReservationLivewire::STEP_DATE_AND_HOUR);
     $component->set('form.date', $dataAppointment->date->format('Y-m-d'));
     $component->set('form.start_time', Carbon::createFromTimestamp($dataAppointment->start_time)->format('H:i'));
     $component->call('nextStep', AppointmentReservationLivewire::STEP_DETAILS);
+}
 
-    // STEP THREE
+function stepThree(TestableLivewire $component): void
+{
     $component->assertSet('currentStep', AppointmentReservationLivewire::STEP_DETAILS);
-    $component->call('nextStep', AppointmentReservationLivewire::STEP_FORM_DETAIL);
+    $component->call('nextStep', AppointmentReservationLivewire::STEP_FORM_CUSTOMER);
+}
 
-    // STEP FOURTH
-    $component->assertSet('currentStep', AppointmentReservationLivewire::STEP_FORM_DETAIL);
+function stepFourth(TestableLivewire $component, $dataCustomer, $dataAppointment): void
+{
+    $component->assertSet('currentStep', AppointmentReservationLivewire::STEP_FORM_CUSTOMER);
     $component->set('form.name', $dataCustomer->name);
     $component->set('form.phone', $dataCustomer->phone);
     $component->set('form.email', $dataCustomer->email);
     $component->set('form.identification_number', $dataCustomer->identification_number);
     $component->set('form.note', $dataAppointment->note);
     $component->call('nextStep', AppointmentReservationLivewire::STEP_FAREWELL);
+}
+
+function stepFive(TestableLivewire $component): void
+{
+    $component->assertSet('currentStep', AppointmentReservationLivewire::STEP_FAREWELL);
+}
+
+test('can create an appointment', function () {
+    // Arrange
+    $dataAppointment = Appointment::factory()->make();
+    $dataCustomer = Customer::factory()->make();
+    $component = buildComponent();
+
+    // STEP ONE
+    stepOne($component, $dataAppointment);
+
+    // STEP TWO
+    stepTwo($component, $dataAppointment);
+
+    // STEP THREE
+    stepThree($component);
+
+    // STEP FOURTH
+    stepFourth($component, $dataCustomer, $dataAppointment);
 
     // STEP FIVE
-    $component->assertSet('currentStep', AppointmentReservationLivewire::STEP_FAREWELL);
+    stepFive($component);
 
     // Act
     $component->call('createAppointment');
@@ -86,6 +111,24 @@ test('can creat an appointment', function () {
     expect($dataAppointment->date->format('Y-m-d'))->toBe($appointment->date->format('Y-m-d'));
     expect($dataAppointment->start_time)->toBe($appointment->start_time);
     expect($endTime)->toBe($appointment->end_time);
+});
+
+test('fields are required in the step one', function () {
+    // Arrange
+    $component = buildComponent();
+
+    // STEP ONE
+    $component->set('form.service_id', '');
+    $component->set('form.employee_id', '');
+
+    // Act
+    $component->call('nextStep', AppointmentReservationLivewire::STEP_DATE_AND_HOUR);
+
+    // Assert
+    $component->assertHasErrors([
+       'form.service_id' => 'required',
+       'form.employee_id' => 'required'
+    ]);
 });
 
 
