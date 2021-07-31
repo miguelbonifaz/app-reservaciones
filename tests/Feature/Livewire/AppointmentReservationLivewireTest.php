@@ -1,16 +1,15 @@
 <?php
 
 use App\Http\Livewire\AppointmentReservationLivewire;
-use App\Http\Livewire\CreateBreakTimeLivewire;
 use App\Models\Appointment;
 use App\Models\Customer;
-use App\Models\Employee;
-use App\Models\RestSchedule;
-use App\Models\Schedule;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Testing\TestableLivewire;
 use function Pest\Livewire\livewire;
+use function PHPUnit\Framework\assertCount;
+use function PHPUnit\Framework\assertEquals;
+use function PHPUnit\Framework\assertNull;
 
 uses(RefreshDatabase::class);
 
@@ -31,40 +30,79 @@ test('can create component', function () {
 
 function stepOne(TestableLivewire $component, $dataAppointment): void
 {
+    assertCount(1, $component->viewData('steps'));
+
     $component->assertSet('currentStep', AppointmentReservationLivewire::STEP_SERVICE_AND_EMPLOYEE);
     $component->set('form.service_id', $dataAppointment->service_id);
     $component->set('form.employee_id', $dataAppointment->employee_id);
+    assertNull($component->get('firstStepProgressBarClass'));
+    assertEquals('opacity-30', $component->get('secondStepProgressBarClass'));
+    assertEquals('opacity-30', $component->get('thirdStepProgressBarClass'));
+    assertEquals('opacity-30', $component->get('fourthStepProgressBarClass'));
+    assertEquals('opacity-30', $component->get('fifthStepProgressBarClass'));
+
     $component->call('nextStep', AppointmentReservationLivewire::STEP_DATE_AND_HOUR);
 }
 
 function stepTwo(TestableLivewire $component, $dataAppointment): void
 {
+    assertCount(2, $component->viewData('steps'));
+
     $component->assertSet('currentStep', AppointmentReservationLivewire::STEP_DATE_AND_HOUR);
     $component->set('form.date', $dataAppointment->date->format('Y-m-d'));
     $component->set('form.start_time', Carbon::createFromTimestamp($dataAppointment->start_time)->format('H:i'));
+    assertNull($component->get('firstStepProgressBarClass'));
+    assertNull($component->get('secondStepProgressBarClass'));
+    assertEquals('opacity-30', $component->get('thirdStepProgressBarClass'));
+    assertEquals('opacity-30', $component->get('fourthStepProgressBarClass'));
+    assertEquals('opacity-30', $component->get('fifthStepProgressBarClass'));
+
     $component->call('nextStep', AppointmentReservationLivewire::STEP_DETAILS);
 }
 
 function stepThree(TestableLivewire $component): void
 {
+    assertCount(3, $component->viewData('steps'));
+
     $component->assertSet('currentStep', AppointmentReservationLivewire::STEP_DETAILS);
+    assertNull($component->get('firstStepProgressBarClass'));
+    assertNull($component->get('secondStepProgressBarClass'));
+    assertNull($component->get('thirdStepProgressBarClass'));
+    assertEquals('opacity-30', $component->get('fourthStepProgressBarClass'));
+    assertEquals('opacity-30', $component->get('fifthStepProgressBarClass'));
+
     $component->call('nextStep', AppointmentReservationLivewire::STEP_FORM_CUSTOMER);
 }
 
 function stepFourth(TestableLivewire $component, $dataCustomer, $dataAppointment): void
 {
+    assertCount(4, $component->viewData('steps'));
+
     $component->assertSet('currentStep', AppointmentReservationLivewire::STEP_FORM_CUSTOMER);
     $component->set('form.name', $dataCustomer->name);
     $component->set('form.phone', $dataCustomer->phone);
     $component->set('form.email', $dataCustomer->email);
     $component->set('form.identification_number', $dataCustomer->identification_number);
     $component->set('form.note', $dataAppointment->note);
+    assertNull($component->get('firstStepProgressBarClass'));
+    assertNull($component->get('secondStepProgressBarClass'));
+    assertNull($component->get('thirdStepProgressBarClass'));
+    assertNull($component->get('fourthStepProgressBarClass'));
+    assertEquals('opacity-30', $component->get('fifthStepProgressBarClass'));
+
     $component->call('nextStep', AppointmentReservationLivewire::STEP_FAREWELL);
 }
 
 function stepFive(TestableLivewire $component): void
 {
+    assertCount(5, $component->viewData('steps'));
+
     $component->assertSet('currentStep', AppointmentReservationLivewire::STEP_FAREWELL);
+    assertNull($component->get('firstStepProgressBarClass'));
+    assertNull($component->get('secondStepProgressBarClass'));
+    assertNull($component->get('thirdStepProgressBarClass'));
+    assertNull($component->get('fourthStepProgressBarClass'));
+    assertNull($component->get('fifthStepProgressBarClass'));
 }
 
 test('can create an appointment', function () {
@@ -113,7 +151,7 @@ test('can create an appointment', function () {
     expect($endTime)->toBe($appointment->end_time);
 });
 
-test('fields are required in the step one', function () {
+test('fields are required in the first step', function () {
     // Arrange
     $component = buildComponent();
 
@@ -125,9 +163,33 @@ test('fields are required in the step one', function () {
     $component->call('nextStep', AppointmentReservationLivewire::STEP_DATE_AND_HOUR);
 
     // Assert
+    $this->assertFalse(
+        collect($component->get('steps'))->contains(AppointmentReservationLivewire::STEP_DATE_AND_HOUR)
+    );
     $component->assertHasErrors([
-       'form.service_id' => 'required',
-       'form.employee_id' => 'required'
+        'form.service_id' => 'required',
+        'form.employee_id' => 'required'
+    ]);
+});
+
+test('fields are required in the second step', function () {
+    // Arrange
+    $component = buildComponent();
+
+    // STEP ONE
+    $component->set('form.service_id', '');
+    $component->set('form.employee_id', '');
+
+    // Act
+    $component->call('nextStep', AppointmentReservationLivewire::STEP_DATE_AND_HOUR);
+
+    // Assert
+    $this->assertFalse(
+        collect($component->get('steps'))->contains(AppointmentReservationLivewire::STEP_DATE_AND_HOUR)
+    );
+    $component->assertHasErrors([
+        'form.service_id' => 'required',
+        'form.employee_id' => 'required'
     ]);
 });
 

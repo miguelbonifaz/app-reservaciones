@@ -16,14 +16,6 @@ class AppointmentReservationLivewire extends Component
     public const STEP_FORM_CUSTOMER = 'step_form_customer';
     public const STEP_FAREWELL = 'step_farewell';
 
-    public const STEPS = [
-        self::STEP_SERVICE_AND_EMPLOYEE,
-        self::STEP_DATE_AND_HOUR,
-        self::STEP_DETAILS,
-        self::STEP_FORM_CUSTOMER,
-        self::STEP_FAREWELL,
-    ];
-
     public $form = [
         'service_id' => '',
         'employee_id' => '',
@@ -38,11 +30,17 @@ class AppointmentReservationLivewire extends Component
 
     public $employees;
 
+    public $steps = [];
+
     public $currentStep = self::STEP_SERVICE_AND_EMPLOYEE;
+
+    public $queryString = ['currentStep'];
 
     public function mount()
     {
         $this->employees = collect();
+
+        array_push($this->steps, self::STEP_SERVICE_AND_EMPLOYEE);
     }
 
     public function nextStep($step)
@@ -52,7 +50,108 @@ class AppointmentReservationLivewire extends Component
             'form.employee_id' => 'required',
         ]);
 
+        array_push($this->steps, $step);
+
         $this->currentStep = $step;
+    }
+
+    public function isInTheFirstStep(): bool
+    {
+        if (collect($this->steps)->contains(self::STEP_SERVICE_AND_EMPLOYEE)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function isInTheSecondStep(): bool
+    {
+        if (collect($this->steps)->contains(self::STEP_DATE_AND_HOUR)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function isInTheThirdStep(): bool
+    {
+        if (collect($this->steps)->contains(self::STEP_DETAILS)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function isInTheFourthStep(): bool
+    {
+        if (collect($this->steps)->contains(self::STEP_FORM_CUSTOMER)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function isInTheFifthStep(): bool
+    {
+        if (collect($this->steps)->contains(self::STEP_FAREWELL)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function getFirstStepProgressBarClassProperty(): ?string
+    {
+        if ($this->isInTheFirstStep()) {
+            return null;
+        }
+
+        return 'opacity-30';
+    }
+
+    public function getSecondStepProgressBarClassProperty(): ?string
+    {
+        if ($this->isInTheFirstStep() && $this->isInTheSecondStep()) {
+            return null;
+        }
+
+        return 'opacity-30';
+    }
+
+    public function getThirdStepProgressBarClassProperty(): ?string
+    {
+        if ($this->isInTheFirstStep() && $this->isInTheSecondStep() && $this->isInTheThirdStep()) {
+            return null;
+        }
+
+        return 'opacity-30';
+    }
+
+    public function getFourthStepProgressBarClassProperty(): ?string
+    {
+        if (
+            $this->isInTheFirstStep() &&
+            $this->isInTheSecondStep() &&
+            $this->isInTheThirdStep() &&
+            $this->isInTheFourthStep()) {
+            return null;
+        }
+
+        return 'opacity-30';
+    }
+
+    public function getFifthStepProgressBarClassProperty(): ?string
+    {
+        if (
+            $this->isInTheFirstStep() &&
+            $this->isInTheSecondStep() &&
+            $this->isInTheThirdStep() &&
+            $this->isInTheFourthStep() &&
+            $this->isInTheFifthStep()) {
+            return null;
+        }
+
+        return 'opacity-30';
     }
 
     public function stepBack($step)
