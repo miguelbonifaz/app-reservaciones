@@ -39,7 +39,7 @@ function stepOne(TestableLivewire $component, $dataAppointment): void
     assertEquals('opacity-30', $component->get('secondStepProgressBarClass'));
     assertEquals('opacity-30', $component->get('thirdStepProgressBarClass'));
     assertEquals('opacity-30', $component->get('fourthStepProgressBarClass'));
-    assertEquals('opacity-30', $component->get('fithStepProgressBarClass'));
+    assertEquals('opacity-30', $component->get('fifthStepProgressBarClass'));
 
     $component->call('nextStep', AppointmentReservationLivewire::STEP_DATE_AND_HOUR);
 }
@@ -55,7 +55,7 @@ function stepTwo(TestableLivewire $component, $dataAppointment): void
     assertNull($component->get('secondStepProgressBarClass'));
     assertEquals('opacity-30', $component->get('thirdStepProgressBarClass'));
     assertEquals('opacity-30', $component->get('fourthStepProgressBarClass'));
-    assertEquals('opacity-30', $component->get('fithStepProgressBarClass'));
+    assertEquals('opacity-30', $component->get('fifthStepProgressBarClass'));
 
     $component->call('nextStep', AppointmentReservationLivewire::STEP_DETAILS);
 }
@@ -69,7 +69,7 @@ function stepThree(TestableLivewire $component): void
     assertNull($component->get('secondStepProgressBarClass'));
     assertNull($component->get('thirdStepProgressBarClass'));
     assertEquals('opacity-30', $component->get('fourthStepProgressBarClass'));
-    assertEquals('opacity-30', $component->get('fithStepProgressBarClass'));
+    assertEquals('opacity-30', $component->get('fifthStepProgressBarClass'));
 
     $component->call('nextStep', AppointmentReservationLivewire::STEP_FORM_CUSTOMER);
 }
@@ -88,7 +88,7 @@ function stepFourth(TestableLivewire $component, $dataCustomer, $dataAppointment
     assertNull($component->get('secondStepProgressBarClass'));
     assertNull($component->get('thirdStepProgressBarClass'));
     assertNull($component->get('fourthStepProgressBarClass'));
-    assertEquals('opacity-30', $component->get('fithStepProgressBarClass'));
+    assertEquals('opacity-30', $component->get('fifthStepProgressBarClass'));
 
     $component->call('nextStep', AppointmentReservationLivewire::STEP_FAREWELL);
 }
@@ -102,7 +102,7 @@ function stepFive(TestableLivewire $component): void
     assertNull($component->get('secondStepProgressBarClass'));
     assertNull($component->get('thirdStepProgressBarClass'));
     assertNull($component->get('fourthStepProgressBarClass'));
-    assertNull($component->get('fithStepProgressBarClass'));
+    assertNull($component->get('fifthStepProgressBarClass'));
 }
 
 test('can create an appointment', function () {
