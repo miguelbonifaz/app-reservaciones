@@ -58,7 +58,39 @@
 
                 @if ($currentStep == AppointmentReservationLivewire::STEP_DATE_AND_HOUR)
                     <div class="sm:col-span-2">
-                        <livewire:date-picker-livewire/>
+                        <div class="flex space-x-2">
+                            <div>
+                                <livewire:date-picker-livewire
+                                    :employeeId="$this->form['employee_id']"
+                                />
+                                <x-ui.error :type="$this->form['date']"/>
+                            </div>
+                            <div>
+                                <div class="mb-1 border px-3 py-2 border-gray-200 rounded-lg bg-mariajose_gray text-white w-32 text-center">
+                                    {{ $this->selectedDay }}
+                                </div>
+                                <div class="flex flex-col flex-wrap h-72">
+                                    @forelse ($this->availableHours as $data)
+                                        <label class="mr-2 w-full text-center border border-gray-200 text-center py-2 rounded-lg mb-1 flex items-center justify-center {{ $this->hourNotAvailableClasses($data['isAvailable']) }}">
+                                            <input
+                                                @if (!$data['isAvailable'])
+                                                    disabled
+                                                @else
+                                                    wire:model="form.start_time"
+                                                @endif
+                                                class="focus:ring-mariajose_gray mr-1 h-4 w-4 text-mariajose_gray border-gray-300"
+                                                name="start_time"
+                                                type="radio"
+                                                value="{{ $data['hour'] }}">
+                                            {{ $data['hour'] }}
+                                        </label>
+                                    @empty
+                                        <p>Lo sentimos, no existen horarios disponibles para el día de hoy.</p>
+                                    @endforelse
+                                    <x-ui.error :type="$this->form['start_time']"/>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <x-website.reservation.footer
                         :stepBack="AppointmentReservationLivewire::STEP_SERVICE_AND_EMPLOYEE"

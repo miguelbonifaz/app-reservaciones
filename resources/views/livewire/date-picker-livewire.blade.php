@@ -1,5 +1,5 @@
 <div>
-    <div class="max-w-sm space-y-2 bg-white border border-gray-200 rounded-xl pb-5">
+    <div class="w-80 space-y-2 bg-white border border-gray-200 rounded-xl pb-5">
         <div class="p-1 space-y-4">
             <header class="flex justify-between p-2">
                 @if (!$this->isThePreviousMonth)
@@ -39,14 +39,14 @@
                 <li>Sáb</li>
                 <li>Dom</li>
             </ul>
+
             <div class="pb-3 grid grid-cols-7 gap-y-3 text-sm justify-items-center text-700">
                 @foreach ($this->daysOfMonth as $date => $day)
-                    <p
-                        wire:key="{{ \Illuminate\Support\Str::uuid() }}"
-                        @if (!$this->isLessThanOrEqualToToday($date))
-                        wire:click="selectDay('{{ $date }}')"
+                    <p wire:key="{{ \Illuminate\Support\Str::uuid() }}"
+                        @if ($this->isThisDayAvailable($date))
+                            wire:click="selectDay('{{ $date }}')"
                         @endif
-                        class="{{ $this->dayStyles($date) }} {{ $this->selectedDayStyles($date) }}">
+                        class="font-bold flex justify-center items-center w-6 h-6 {{ $this->dayStyles($date) }} {{ $this->selectedDayStyles($date) }}">
                         {{ $day }}
                     </p>
                 @endforeach

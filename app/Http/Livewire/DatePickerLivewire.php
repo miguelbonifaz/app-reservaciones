@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire;
 
+use App\Models\Employee;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Livewire\Component;
@@ -10,14 +11,19 @@ class DatePickerLivewire extends Component
 {
     public $currentDay;
     public $selectedDay;
+    public $employeeId;
 
-    public function mount()
+    protected $listeners = ['selectDefaultDay'];
+
+    public function mount($employeeId)
     {
+        $this->employeeId = $employeeId;
+
         $this->selectedDay = '';
         $this->currentDay = today()->format('Y-m-d');
     }
 
-    public function isLessThanOrEqualToToday($date): bool
+    public function isLessThanToday($date): bool
     {
         $date = Carbon::createFromDate($date);
 
@@ -33,17 +39,62 @@ class DatePickerLivewire extends Component
         return 'bg-gray-800 text-white rounded-full flex';
     }
 
+    public function isInBusinessDays($date): bool
+    {
+        $employee = Employee::find($this->employeeId);
+
+        $selectedDay = Carbon::createFromDate($date);
+
+        if (!$selectedDay || !$employee) {
+            return false;
+        }
+
+        if (!collect($employee->businessDays())->contains($selectedDay->dayOfWeek)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function isThisDayAvailable($date): bool
+    {
+        if ($this->isLessThanToday($date)) {
+            return false;
+        }
+
+        if ($this->isInBusinessDays($date)) {
+            return false;
+        }
+
+        return true;
+    }
+
     public function dayStyles($date): string
     {
-        if ($this->isLessThanOrEqualToToday($date)) {
-            return 'font-bold text-gray-400 w-6 h-6';
+        if ($this->isLessThanToday($date) || $this->isInBusinessDays($date)) {
+            return 'text-gray-400';
         }
 
         if ($this->selectedDay != $date) {
-            return "font-bold cursor-pointer text-gray-700 flex justify-center items-center w-6 h-6";
+            return "cursor-pointer text-gray-700";
         }
 
-        return "font-bold cursor-pointer flex justify-center items-center w-6 h-6";
+        return "cursor-pointer";
+    }
+
+    public function selectDefaultDay()
+    {
+        $employee = Employee::find($this->employeeId);
+
+        $date = today();
+
+        while (!$employee->businessDays()->contains($date->dayOfWeek)) {
+            $date->addDay();
+        }
+
+        $this->selectedDay = $date->format('Y-m-d');
+
+        $this->emit('updatedDay', $date);
     }
 
     public function nextMonth()
@@ -77,6 +128,8 @@ class DatePickerLivewire extends Component
     public function selectDay($date)
     {
         $this->selectedDay = $date;
+
+        $this->emitUp('updatedDay', $date);
     }
 
     public function getDaysOfMonthProperty(): Collection

@@ -15,14 +15,17 @@ class SelectWithHours extends Component
     public $name;
     public $value;
 
-    public function __construct($name, $placeholder = 'Escoja una opción...', $label = false, $startTime = [8, 0], $endTime = [21, 0], $minuteSteps = 30, $value = false)
+    public function __construct($name, $placeholder = 'Escoja una opción...', $label = false, $startTime = [8, 0], $endTime = [21, 0], $minuteSteps = 30, $value = null)
     {
         $this->startTime = today()->setTime($startTime[0], $startTime[1]);
         $this->endTime = today()->setTime($endTime[0], $endTime[1]);
         $this->label = $label;
         $this->placeholder = $placeholder;
         $this->name = $name;
-        $this->value = Carbon::createFromTimestamp($value)->format('H:i');
+
+        if ($value) {
+            $this->value = Carbon::createFromTimestamp($value)->format('H:i');
+        }
 
         while ($this->startTime <= $this->endTime) {
             $this->hours = collect($this->hours)

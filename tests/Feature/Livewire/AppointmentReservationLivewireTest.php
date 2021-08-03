@@ -174,22 +174,19 @@ test('fields are required in the first step', function () {
 
 test('fields are required in the second step', function () {
     // Arrange
+    $dataAppointment = Appointment::factory()->create();
     $component = buildComponent();
 
     // STEP ONE
-    $component->set('form.service_id', '');
-    $component->set('form.employee_id', '');
+    stepOne($component, $dataAppointment);
 
     // Act
-    $component->call('nextStep', AppointmentReservationLivewire::STEP_DATE_AND_HOUR);
+    $component->call('nextStep', AppointmentReservationLivewire::STEP_DETAILS);
 
     // Assert
-    $this->assertFalse(
-        collect($component->get('steps'))->contains(AppointmentReservationLivewire::STEP_DATE_AND_HOUR)
-    );
     $component->assertHasErrors([
-        'form.service_id' => 'required',
-        'form.employee_id' => 'required'
+        'form.date' => 'required',
+        'form.start_time' => 'required',
     ]);
 });
 

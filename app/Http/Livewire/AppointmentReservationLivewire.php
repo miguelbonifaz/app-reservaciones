@@ -4,7 +4,9 @@ namespace App\Http\Livewire;
 
 use App\Models\Appointment;
 use App\Models\Customer;
+use App\Models\Employee;
 use App\Models\Service;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 
@@ -30,11 +32,15 @@ class AppointmentReservationLivewire extends Component
 
     public $employees;
 
+    public $selectedDay;
+
     public $steps = [];
 
     public $currentStep = self::STEP_SERVICE_AND_EMPLOYEE;
 
     public $queryString = ['currentStep'];
+
+    protected $listeners = ['updatedDay'];
 
     public function mount()
     {
@@ -43,12 +49,31 @@ class AppointmentReservationLivewire extends Component
         array_push($this->steps, self::STEP_SERVICE_AND_EMPLOYEE);
     }
 
+    public function updatedDay($date)
+    {
+        $this->form['date'] = $date;
+        $this->form['start_time'] = '';
+        $date = Carbon::createFromDate($date);
+        $this->selectedDay = $date->format('l j');
+    }
+
     public function nextStep($step)
     {
         $this->validate([
             'form.service_id' => 'required',
             'form.employee_id' => 'required',
         ]);
+
+        if ($step == self::STEP_DETAILS) {
+            $this->validate([
+                'form.date' => 'required',
+                'form.start_time' => 'required',
+            ]);
+        }
+
+        if (self::STEP_DATE_AND_HOUR) {
+            $this->emit('selectDefaultDay');
+        }
 
         array_push($this->steps, $step);
 
@@ -98,6 +123,21 @@ class AppointmentReservationLivewire extends Component
         }
 
         return false;
+    }
+
+    public function getEmployeeProperty()
+    {
+        return Employee::find($this->form['employee_id']);
+    }
+
+    public function getServiceProperty()
+    {
+        return Service::find($this->form['service_id']);
+    }
+
+    public function getAvailableHoursProperty()
+    {
+        return $this->employee->workingHours($this->form['date'], $this->service);
     }
 
     public function getFirstStepProgressBarClassProperty(): ?string
@@ -152,6 +192,15 @@ class AppointmentReservationLivewire extends Component
         }
 
         return 'opacity-30';
+    }
+
+    public function hourNotAvailableClasses($bool): ?string
+    {
+        if ($bool) {
+            return 'cursor-pointer';
+        }
+
+        return 'bg-gray-100 text-gray-400 line-through';
     }
 
     public function stepBack($step)
