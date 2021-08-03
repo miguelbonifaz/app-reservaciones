@@ -90,8 +90,7 @@ class Employee extends Model
                         ->addMinutes(self::MINUTE_INTERVALS),
                     'end_time' => Carbon::createFromTimestamp($appointment->end_time)
                         ->setDateFrom($date->format('Y-m-d'))
-                        ->subMinutes($service->duration)
-                        ->addMinutes(self::MINUTE_INTERVALS),
+                        ->subMinutes($service->duration),
                 ];
             });
 
