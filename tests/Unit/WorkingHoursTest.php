@@ -57,8 +57,7 @@ test('se debe descartar las horas posteriores a la hora actual', function () {
     $this->assertCount(0, $hours);
 });
 
-test("las horas que no esten disponible en un día, estas deben venir con el valor 'false'", function () {
-    $this->markTestSkipped('Debe solucionarse');
+test("las horas que no esten disponible en un día, estas deben venir con el valor 'false' (servicio de 30 minutos)", function () {
     // Arrange
     $employee = Employee::factory()
         ->hasAttached($service = Service::factory()->create([
@@ -70,33 +69,36 @@ test("las horas que no esten disponible en un día, estas deben venir con el val
 
     $schedule->update([
         'start_time' => '10:00',
-        'end_time' => '11:30',
+        'end_time' => '12:00',
     ]);
 
     Appointment::factory()->create([
         'service_id' => $service->id,
         'employee_id' => $employee->id,
         'date' => today()->addDay(),
-        'start_time' => '10:00',
+        'start_time' => '10:30',
     ]);
 
     // Act
-    $hours = $employee->workingHours(today()->addDay()->format('Y-m-d'), $service);
+    $hours = $employee->workingHours(today()->addDay()->format('Y-m-d'), $service)->values();
 
     // Assert
-    $this->assertCount(3, $hours);
+    $this->assertCount(4, $hours);
 
     expect('10:00')->toBe($hours[0]['hour']);
-    $this->assertFalse($hours[0]['isAvailable']);
+    $this->assertTrue($hours[0]['isAvailable']);
 
     expect('10:30')->toBe($hours[1]['hour']);
-    $this->assertTrue($hours[1]['isAvailable']);
+    $this->assertFalse($hours[1]['isAvailable']);
 
     expect('11:00')->toBe($hours[2]['hour']);
     $this->assertTrue($hours[2]['isAvailable']);
+
+    expect('11:30')->toBe($hours[3]['hour']);
+    $this->assertTrue($hours[3]['isAvailable']);
 });
 
-test("Si existe un espacio ocupado, debe restarse la cantidad de minutos para que el servicio pueda ser agendado", function () {
+test("las horas que no esten disponible en un día, estas deben venir con el valor 'false' (servicio de 60 minutos)", function () {
     // Arrange
     $employee = Employee::factory()
         ->hasAttached($service = Service::factory()->create([
@@ -122,11 +124,18 @@ test("Si existe un espacio ocupado, debe restarse la cantidad de minutos para qu
     $hours = $employee->workingHours(today()->addDay()->format('Y-m-d'), $service)->values();
 
     // Assert
-    $this->assertCount(2, $hours);
+    $this->assertCount(4, $hours);
 
     expect('10:00')->toBe($hours[0]['hour']);
     $this->assertTrue($hours[0]['isAvailable']);
 
-    expect('12:00')->toBe($hours[1]['hour']);
-    $this->assertTrue($hours[1]['isAvailable']);
+    expect('11:00')->toBe($hours[1]['hour']);
+    $this->assertFalse($hours[1]['isAvailable']);
+
+    expect('11:30')->toBe($hours[2]['hour']);
+    $this->assertFalse($hours[2]['isAvailable']);
+
+    expect('12:00')->toBe($hours[3]['hour']);
+    $this->assertTrue($hours[3]['isAvailable']);
 });
+

@@ -56,8 +56,8 @@ class Appointment extends Model
 
     protected $casts = [
         'date' => 'datetime',
-        'start_time' => 'timestamp',
-        'end_time' => 'timestamp',
+        'start_time' => 'datetime',
+        'end_time' => 'datetime',
     ];
 
     protected static function booted()
@@ -89,6 +89,6 @@ class Appointment extends Model
 
     public function endTime(): string
     {
-        return Carbon::createFromTimestamp($this->start_time)->addMinutes($this->service->duration)->format('H:i');
+        return $this->start_time->addMinutes($this->service->duration)->format('H:i');
     }
 }

@@ -75,49 +75,60 @@ class Employee extends Model
 
         $startTime = Carbon::createFromTimestamp($schedule->start_time)
             ->setDateFrom($date->format('Y-m-d'));
+
         $endTime = Carbon::createFromTimestamp($schedule->end_time)
             ->setDateFrom($date->format('Y-m-d'))
             ->subMinutes($service->duration);
-
-        $hoursNotAvailable = Appointment::query()
-            ->whereDate('date', $date)
-            ->get()
-            ->map(function (Appointment $appointment) use ($service, $date) {
-                return [
-                    'start_time' => Carbon::createFromTimestamp($appointment->start_time)
-                        ->setDateFrom($date->format('Y-m-d'))
-                        ->subMinutes($service->duration)
-                        ->addMinutes(self::MINUTE_INTERVALS),
-                    'end_time' => Carbon::createFromTimestamp($appointment->end_time)
-                        ->setDateFrom($date->format('Y-m-d'))
-                        ->subMinutes($service->duration),
-                ];
-            });
 
         $slots = collect(CarbonInterval::minutes(self::MINUTE_INTERVALS)
             ->toPeriod(
                 $startTime, $endTime
             ))
-            ->reject(function (Carbon $slot) use ($service, $hoursNotAvailable) {
+            ->map(function (Carbon $slot) use ($service, $date) {
+                $appointment = Appointment::query()
+                    ->whereDate('date', $date)
+                    ->where(function ($query) use ($slot) {
+                        $query->whereTime('start_time', '>=', $slot);
+                        $query->orWhereTime('end_time', '>=', $slot);
+                    })
+                    ->where(function ($query) use ($slot) {
+                        $query->whereTime('start_time', '<=', $slot);
+                        $query->orWhereTime('end_time', '<=', $slot);
+                    })
+                    ->first();
 
-                foreach ($hoursNotAvailable as $hour) {
-                    $bool = $slot->between(
-                        $hour['start_time'],
-                        $hour['end_time'],
-                    );
+                if ($appointment) {
+                    $horasNoDisponibles = collect(CarbonInterval::minutes(self::MINUTE_INTERVALS)
+                        ->toPeriod(
+                            $appointment->start_time->setDateFrom($date),
+                            $appointment->end_time->setDateFrom($date)
+                        ));
+                    $horasNoDisponibles->pop();
 
-                    if ($bool) {
-                        return true;
-                    }
+                    $bool = !$horasNoDisponibles->contains($slot);
                 }
 
-                return $slot->lessThan(now());
-            })
-            ->map(function (Carbon $slot) use ($date, $hoursNotAvailable) {
                 return [
                     'hour' => $slot->format('H:i'),
-                    'isAvailable' => true
+                    'isAvailable' => $bool ?? true
                 ];
+            })->reject(function ($data) use ($date) {
+                $hour = explode(':', $data['hour']);
+                $slot = $date->setTime($hour[0], $hour[1]);
+
+                $appointment = Appointment::query()
+                    ->whereDate('date', $date)
+                    ->where(function ($query) use ($slot) {
+                        $query->whereTime('start_time', '>=', $slot);
+                        $query->orWhereTime('end_time', '>=', $slot);
+                    })
+                    ->where(function ($query) use ($slot) {
+                        $query->whereTime('start_time', '<=', $slot);
+                        $query->orWhereTime('end_time', '<=', $slot);
+                    })
+                    ->first();
+
+                return $slot->lessThan(now());
             });
 
         return $slots;
