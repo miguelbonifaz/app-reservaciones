@@ -84,6 +84,30 @@ class Employee extends Model
             ->toPeriod(
                 $startTime, $endTime
             ))
+            ->reject(function (Carbon $slot) use ($service, $date) {
+                if ($slot->lessThan(now())) {
+                    return true;
+                }
+
+                if (self::MINUTE_INTERVALS == $service->duration) {
+                    return false;
+                }
+
+                $minutes = $service->duration - self::MINUTE_INTERVALS;
+                $appointment = Appointment::query()
+                    ->whereDate('date', $date)
+                    ->whereTime(
+                        'start_time',
+                        $slot->copy()->addMinutes($minutes)
+                    )
+                    ->first();
+
+                if (!$appointment) {
+                    return false;
+                }
+
+                return true;
+            })
             ->map(function (Carbon $slot) use ($service, $date) {
                 $appointment = Appointment::query()
                     ->whereDate('date', $date)
@@ -112,24 +136,25 @@ class Employee extends Model
                     'hour' => $slot->format('H:i'),
                     'isAvailable' => $bool ?? true
                 ];
-            })->reject(function ($data) use ($date) {
-                $hour = explode(':', $data['hour']);
-                $slot = $date->setTime($hour[0], $hour[1]);
-
-                $appointment = Appointment::query()
-                    ->whereDate('date', $date)
-                    ->where(function ($query) use ($slot) {
-                        $query->whereTime('start_time', '>=', $slot);
-                        $query->orWhereTime('end_time', '>=', $slot);
-                    })
-                    ->where(function ($query) use ($slot) {
-                        $query->whereTime('start_time', '<=', $slot);
-                        $query->orWhereTime('end_time', '<=', $slot);
-                    })
-                    ->first();
-
-                return $slot->lessThan(now());
             });
+//            ->reject(function ($data) use ($date) {
+//                $hour = explode(':', $data['hour']);
+//                $slot = $date->setTime($hour[0], $hour[1]);
+//
+//                $appointment = Appointment::query()
+//                    ->whereDate('date', $date)
+//                    ->where(function ($query) use ($slot) {
+//                        $query->whereTime('start_time', '>=', $slot);
+//                        $query->orWhereTime('end_time', '>=', $slot);
+//                    })
+//                    ->where(function ($query) use ($slot) {
+//                        $query->whereTime('start_time', '<=', $slot);
+//                        $query->orWhereTime('end_time', '<=', $slot);
+//                    })
+//                    ->first();
+//
+//                return $slot->lessThan(now());
+//            });
 
         return $slots;
     }

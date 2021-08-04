@@ -50,7 +50,7 @@ function stepTwo(TestableLivewire $component, $dataAppointment): void
 
     $component->assertSet('currentStep', AppointmentReservationLivewire::STEP_DATE_AND_HOUR);
     $component->set('form.date', $dataAppointment->date->format('Y-m-d'));
-    $component->set('form.start_time', Carbon::createFromTimestamp($dataAppointment->start_time)->format('H:i'));
+    $component->set('form.start_time', $dataAppointment->start_time->format('H:i'));
     assertNull($component->get('firstStepProgressBarClass'));
     assertNull($component->get('secondStepProgressBarClass'));
     assertEquals('opacity-30', $component->get('thirdStepProgressBarClass'));
@@ -141,14 +141,14 @@ test('can create an appointment', function () {
 
     $appointment = Appointment::first();
 
-    $endTime = Carbon::createFromTimestamp($appointment->start_time)->addMinutes($dataAppointment->service->duration)->timestamp;
+    $endTime = $appointment->start_time->addMinutes($dataAppointment->service->duration);
 
     expect($dataAppointment->service_id)->toBe($appointment->service_id);
     expect($dataAppointment->employee_id)->toBe($appointment->employee_id);
     expect($customer->id)->toBe($appointment->customer_id);
     expect($dataAppointment->date->format('Y-m-d'))->toBe($appointment->date->format('Y-m-d'));
-    expect($dataAppointment->start_time)->toBe($appointment->start_time);
-    expect($endTime)->toBe($appointment->end_time);
+    expect($dataAppointment->start_time->format('H:i'))->toBe($appointment->start_time->format('H:i'));
+    expect($endTime->format('H:i'))->toBe($appointment->end_time->format('H:i'));
 });
 
 test('fields are required in the first step', function () {
