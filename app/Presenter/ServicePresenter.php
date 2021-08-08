@@ -25,6 +25,6 @@ class ServicePresenter
 
     public function value(): string
     {
-        return "$ {$this->service->value}";
+        return "$" . $this->service->value;
     }
 }

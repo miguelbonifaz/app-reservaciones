@@ -80,20 +80,33 @@ class Employee extends Model
             ->setDateFrom($date->format('Y-m-d'))
             ->subMinutes($service->duration);
 
-        $slots = collect(CarbonInterval::minutes(self::MINUTE_INTERVALS)
+        return collect(CarbonInterval::minutes(self::MINUTE_INTERVALS)
             ->toPeriod(
                 $startTime, $endTime
             ))
-            ->reject(function (Carbon $slot) use ($service, $date) {
+            ->reject(function (Carbon $slot) use ($schedule, $service, $date) {
                 if ($slot->lessThan(now())) {
                     return true;
                 }
+
+                foreach ($schedule->rests as $rest) {
+                    $restHours = collect(CarbonInterval::minutes(self::MINUTE_INTERVALS)
+                        ->toPeriod(
+                            $rest->start_time->setDateFrom($date),
+                            $rest->end_time->setDateFrom($date),
+                        ));
+                    $restHours->pop();
+
+                    return $restHours->contains($slot);
+                }
+
 
                 if (self::MINUTE_INTERVALS == $service->duration) {
                     return false;
                 }
 
                 $minutes = $service->duration - self::MINUTE_INTERVALS;
+
                 $appointment = Appointment::query()
                     ->whereDate('date', $date)
                     ->whereTime(
@@ -137,26 +150,6 @@ class Employee extends Model
                     'isAvailable' => $bool ?? true
                 ];
             });
-//            ->reject(function ($data) use ($date) {
-//                $hour = explode(':', $data['hour']);
-//                $slot = $date->setTime($hour[0], $hour[1]);
-//
-//                $appointment = Appointment::query()
-//                    ->whereDate('date', $date)
-//                    ->where(function ($query) use ($slot) {
-//                        $query->whereTime('start_time', '>=', $slot);
-//                        $query->orWhereTime('end_time', '>=', $slot);
-//                    })
-//                    ->where(function ($query) use ($slot) {
-//                        $query->whereTime('start_time', '<=', $slot);
-//                        $query->orWhereTime('end_time', '<=', $slot);
-//                    })
-//                    ->first();
-//
-//                return $slot->lessThan(now());
-//            });
-
-        return $slots;
     }
 
     public function businessDays(): Collection

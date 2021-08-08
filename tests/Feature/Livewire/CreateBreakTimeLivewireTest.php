@@ -53,10 +53,10 @@ test('can create a break time', function () {
     $rest = RestSchedule::first();
     expect($schedule->id)->toEqual($rest->schedule_id);
     expect($startTime)->toEqual(
-        Carbon::createFromTimestamp($rest->start_time)->format('H:i')
+        $rest->start_time->format('H:i')
     );
     expect($endTime)->toEqual(
-        Carbon::createFromTimestamp($rest->end_time)->format('H:i')
+        $rest->end_time->format('H:i')
     );
 });
 

@@ -2,6 +2,8 @@
 
 use App\Models\Appointment;
 use App\Models\Employee;
+use App\Models\RestSchedule;
+use App\Models\Schedule;
 use App\Models\Service;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -137,5 +139,38 @@ test("las horas que no esten disponible en un día, estas deben venir con el val
 
     expect('12:00')->toBe($hours[3]['hour']);
     $this->assertTrue($hours[3]['isAvailable']);
+});
+
+test('Debe filtrar las horas de trabajo si el empleado tiene horas de descanso ', function () {
+    // Arrange
+    $employee = Employee::factory()
+        ->hasAttached($service = Service::factory()->create([
+            'duration' => 30
+        ]))
+        ->create();
+
+    $schedule = $employee->schedules()->firstWhere('day', today()->addDay()->dayOfWeek);
+
+    $schedule->update([
+        'start_time' => '10:00',
+        'end_time' => '13:00',
+    ]);
+
+    RestSchedule::factory()->create([
+        'start_time' => '11:00',
+        'end_time' => '12:00',
+        'schedule_id' => $schedule->id,
+    ]);
+
+    // Act
+    $hours = $employee->workingHours(today()->addDay()->format('Y-m-d'), $service)->values();
+
+    // Assert
+    $this->assertCount(4, $hours);
+
+    expect('10:00')->toBe($hours[0]['hour']);
+    expect('10:30')->toBe($hours[1]['hour']);
+    expect('12:00')->toBe($hours[2]['hour']);
+    expect('12:30')->toBe($hours[3]['hour']);
 });
 

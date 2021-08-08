@@ -39,7 +39,6 @@ class Customer extends Model
         'name',
         'email',
         'phone',
-        'identification_number',
     ];
 
     public function present(): CustomerPresenter

@@ -1,5 +1,5 @@
 <div>
-    <div class="w-80 space-y-2 bg-white border border-gray-200 rounded-xl pb-5">
+    <div class="space-y-2 bg-white border border-gray-200 rounded-xl pb-5">
         <div class="p-1 space-y-4">
             <header class="flex justify-between p-2">
                 @if (!$this->isThePreviousMonth)

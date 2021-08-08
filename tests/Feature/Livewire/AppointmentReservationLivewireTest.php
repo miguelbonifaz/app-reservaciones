@@ -82,7 +82,6 @@ function stepFourth(TestableLivewire $component, $dataCustomer, $dataAppointment
     $component->set('form.name', $dataCustomer->name);
     $component->set('form.phone', $dataCustomer->phone);
     $component->set('form.email', $dataCustomer->email);
-    $component->set('form.identification_number', $dataCustomer->identification_number);
     $component->set('form.note', $dataAppointment->note);
     assertNull($component->get('firstStepProgressBarClass'));
     assertNull($component->get('secondStepProgressBarClass'));
@@ -137,7 +136,6 @@ test('can create an appointment', function () {
     expect($dataCustomer->name)->toBe($customer->name);
     expect($dataCustomer->phone)->toBe($customer->phone);
     expect($dataCustomer->email)->toBe($customer->email);
-    expect($dataCustomer->identification_number)->toBe($customer->identification_number);
 
     $appointment = Appointment::first();
 

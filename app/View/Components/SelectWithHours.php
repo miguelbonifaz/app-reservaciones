@@ -22,10 +22,7 @@ class SelectWithHours extends Component
         $this->label = $label;
         $this->placeholder = $placeholder;
         $this->name = $name;
-
-        if ($value) {
-            $this->value = Carbon::createFromTimestamp($value)->format('H:i');
-        }
+        $this->value = $value;
 
         while ($this->startTime <= $this->endTime) {
             $this->hours = collect($this->hours)

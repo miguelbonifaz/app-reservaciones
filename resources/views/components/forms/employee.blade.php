@@ -56,14 +56,14 @@
                                 <x-select-with-hours
                                     label="Hora de inicio"
                                     name="start_time[{{ $schedule->day }}]"
-                                    :value="$schedule->start_time"
+                                    :value="\Carbon\Carbon::createFromTimestamp($schedule->start_time)->format('H:i')"
                                 />
                             </div>
                             <div>
                                 <x-select-with-hours
                                     label="Hora de salida"
                                     name="end_time[{{ $schedule->day }}]"
-                                    :value="$schedule->end_time"
+                                    :value="\Carbon\Carbon::createFromTimestamp($schedule->end_time)->format('H:i')"
                                 />
                             </div>
                         </div>
@@ -76,14 +76,14 @@
                                     <x-select-with-hours
                                         label="Hora inicio"
                                         name="''"
-                                        :value="$rest->start_time"
+                                        :value="$rest->start_time->format('H:i')"
                                     />
                                 </div>
                                 <div class="flex space-x-1 items-center">
                                     <x-select-with-hours
                                         label="Hora fin"
                                         name="''"
-                                        :value="$rest->end_time"
+                                        :value="$rest->end_time->format('H:i')"
                                     />
                                     <a
                                         href="{{ route('employess.break-time.destroy', [$employee, $rest]) }}"
