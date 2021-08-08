@@ -39,7 +39,6 @@ test('can update an customer', function () {
         'name' => $data->name,
         'email' => $data->email,
         'phone' => $data->phone,
-        'identification_number' => $data->identification_number
     ]);
 
     // Assert
@@ -54,7 +53,6 @@ test('can update an customer', function () {
     $this->assertEquals($data->name, $customer->name);
     $this->assertEquals($data->email, $customer->email);
     $this->assertEquals($data->phone, $customer->phone);
-    $this->assertEquals($data->identification_number, $customer->identification_number);
 });
 
 test('fields are required', function () {
@@ -66,7 +64,6 @@ test('fields are required', function () {
         'name' => null,
         'email' => null,
         'phone' => null,
-        'identification_number' => null,
     ]);
 
     //Assert
@@ -74,7 +71,6 @@ test('fields are required', function () {
         'name',
         'email',
         'phone',
-        'identification_number'
     ]);
 });
 

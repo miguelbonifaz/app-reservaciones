@@ -32,7 +32,6 @@ class CustomerController extends Controller
             'name' => request()->name,
             'email' => request()->email,
             'phone' => request()->phone,
-            'identification_number' => request()->identification_number
         ]);
 
         return redirect()
@@ -61,14 +60,12 @@ class CustomerController extends Controller
                 Rule::unique('customers', 'email')->ignoreModel($customer)
             ],
             'phone' => 'required|numeric',
-            'identification_number' => 'required',
         ]);
 
         $customer->update([
             'name' => request()->name,
             'email' => request()->email,
             'phone' => request()->phone,
-            'identification_number' => request()->identification_number
         ]);
 
         return redirect()

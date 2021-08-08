@@ -12,7 +12,6 @@ class CustomerCreateRequest extends FormRequest
             'name' => 'required',
             'email' => 'required|email|unique:customers,email',
             'phone' => 'required|numeric',
-            'identification_number' => 'required',
         ];
     }
 
