@@ -3,7 +3,7 @@
         @if ($label)
             <label
                 for="{{ $name }}"
-                class="block text-sm font-medium text-left text-gray-700">{{ $label }}</label>
+                class="block text-sm text-left text-gray-700 {{ $labelBold ? 'font-bold' : '' }}">{{ $label }}</label>
         @endif
         <input
             {{ $attributes }}

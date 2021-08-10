@@ -3,7 +3,6 @@
 use App\Http\Livewire\AppointmentReservationLivewire;
 use App\Models\Appointment;
 use App\Models\Customer;
-use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Testing\TestableLivewire;
 use function Pest\Livewire\livewire;
@@ -83,6 +82,7 @@ function stepFourth(TestableLivewire $component, $dataCustomer, $dataAppointment
     $component->set('form.phone', $dataCustomer->phone);
     $component->set('form.email', $dataCustomer->email);
     $component->set('form.note', $dataAppointment->note);
+    $component->set('form.terms_and_conditions', true);
     assertNull($component->get('firstStepProgressBarClass'));
     assertNull($component->get('secondStepProgressBarClass'));
     assertNull($component->get('thirdStepProgressBarClass'));
@@ -124,9 +124,6 @@ test('can create an appointment', function () {
 
     // STEP FIVE
     stepFive($component);
-
-    // Act
-    $component->call('createAppointment');
 
     // Assert
     $this->assertCount(1, Appointment::all());
@@ -187,5 +184,193 @@ test('fields are required in the second step', function () {
         'form.start_time' => 'required',
     ]);
 });
+
+test('fields are required in the fourth step', function () {
+    // Arrange
+    $dataAppointment = Appointment::factory()->make();
+    $component = buildComponent();
+
+    // STEP ONE
+    stepOne($component, $dataAppointment);
+
+    // STEP TWO
+    stepTwo($component, $dataAppointment);
+
+    // STEP THREE
+    stepThree($component);
+
+    // STEP FOURTH
+    assertCount(4, $component->viewData('steps'));
+
+    $component->assertSet('currentStep', AppointmentReservationLivewire::STEP_FORM_CUSTOMER);
+    $component->set('form.name', '');
+    $component->set('form.phone', '');
+    $component->set('form.email', '');
+    $component->set('form.terms_and_conditions');
+    $component->set('form.note', $dataAppointment->note);
+
+
+    // Act
+    $component->call('nextStep', AppointmentReservationLivewire::STEP_FAREWELL);
+
+    // Assert
+    $component->assertHasErrors([
+        'form.name' => 'required',
+        'form.phone' => 'required',
+        'form.email' => 'required',
+        'form.terms_and_conditions',
+    ]);
+
+    $component->assertHasNoErrors([
+       'form.note'
+    ]);
+});
+
+test('field phone must be a number', function () {
+    // Arrange
+    $dataAppointment = Appointment::factory()->make();
+    $component = buildComponent();
+
+    // STEP ONE
+    stepOne($component, $dataAppointment);
+
+    // STEP TWO
+    stepTwo($component, $dataAppointment);
+
+    // STEP THREE
+    stepThree($component);
+
+    // STEP FOURTH
+    assertCount(4, $component->viewData('steps'));
+
+    $component->assertSet('currentStep', AppointmentReservationLivewire::STEP_FORM_CUSTOMER);
+    $component->set('form.phone', 'string');
+
+    // Act
+    $component->call('nextStep', AppointmentReservationLivewire::STEP_FAREWELL);
+
+    // Assert
+    $component->assertHasErrors([
+       'form.phone'  => 'numeric'
+    ]);
+});
+
+test('field phone must contain at least 10 numbers', function () {
+    // Arrange
+    $dataAppointment = Appointment::factory()->make();
+    $component = buildComponent();
+
+    // STEP ONE
+    stepOne($component, $dataAppointment);
+
+    // STEP TWO
+    stepTwo($component, $dataAppointment);
+
+    // STEP THREE
+    stepThree($component);
+
+    // STEP FOURTH
+    assertCount(4, $component->viewData('steps'));
+
+    $component->assertSet('currentStep', AppointmentReservationLivewire::STEP_FORM_CUSTOMER);
+    $component->set('form.phone', '096820430');
+
+    // Act
+    $component->call('nextStep', AppointmentReservationLivewire::STEP_FAREWELL);
+
+    // Assert
+    $component->assertHasErrors([
+       'form.phone'
+    ]);
+});
+
+test('field phone must not contain more than 10 numbers', function () {
+    // Arrange
+    $dataAppointment = Appointment::factory()->make();
+    $component = buildComponent();
+
+    // STEP ONE
+    stepOne($component, $dataAppointment);
+
+    // STEP TWO
+    stepTwo($component, $dataAppointment);
+
+    // STEP THREE
+    stepThree($component);
+
+    // STEP FOURTH
+    assertCount(4, $component->viewData('steps'));
+
+    $component->assertSet('currentStep', AppointmentReservationLivewire::STEP_FORM_CUSTOMER);
+    $component->set('form.phone', '09682043000');
+
+    // Act
+    $component->call('nextStep', AppointmentReservationLivewire::STEP_FAREWELL);
+
+    // Assert
+    $component->assertHasErrors([
+       'form.phone'
+    ]);
+});
+
+test('field email must be valid', function () {
+    // Arrange
+    $dataAppointment = Appointment::factory()->make();
+    $component = buildComponent();
+
+    // STEP ONE
+    stepOne($component, $dataAppointment);
+
+    // STEP TWO
+    stepTwo($component, $dataAppointment);
+
+    // STEP THREE
+    stepThree($component);
+
+    // STEP FOURTH
+    assertCount(4, $component->viewData('steps'));
+
+    $component->assertSet('currentStep', AppointmentReservationLivewire::STEP_FORM_CUSTOMER);
+    $component->set('form.email', 'not-email');
+
+    // Act
+    $component->call('nextStep', AppointmentReservationLivewire::STEP_FAREWELL);
+
+    // Assert
+    $component->assertHasErrors([
+       'form.email' => 'email'
+    ]);
+});
+
+test('field terms_and_conditions is required', function () {
+    // Arrange
+    $dataAppointment = Appointment::factory()->make();
+    $component = buildComponent();
+
+    // STEP ONE
+    stepOne($component, $dataAppointment);
+
+    // STEP TWO
+    stepTwo($component, $dataAppointment);
+
+    // STEP THREE
+    stepThree($component);
+
+    // STEP FOURTH
+    assertCount(4, $component->viewData('steps'));
+
+    $component->assertSet('currentStep', AppointmentReservationLivewire::STEP_FORM_CUSTOMER);
+    $component->set('form.terms_and_conditions', false);
+
+    // Act
+    $component->call('nextStep', AppointmentReservationLivewire::STEP_FAREWELL);
+
+    // Assert
+    $component->assertHasErrors([
+       'form.terms_and_conditions'
+    ]);
+});
+
+
 
 

@@ -1,8 +1,8 @@
-<div class="border-t border-gray-200 lg:mt-8 sm:col-span-2">
+<div class="border-t border-gray-200 lg:mt-4 sm:col-span-2">
     <div class="flex justify-between mt-8">
         @if ($stepBack ?? false)
             <button
-                wire:click="stepBack('{{ $stepBack }}')"
+                wire:click="stepBack('{{ $stepBack[0] }}', {{ $stepBack[1] }})"
                 type="button"
                 class="inline-flex justify-center items-center py-2 pr-4 pl-2 font-bold leading-4 text-white rounded-md border border-transparent shadow-sm text-md bg-mariajose_gray hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
                 <svg
@@ -20,7 +20,7 @@
         @if ($nextStep ?? false)
             <button
                 type="button"
-                wire:click.defer="nextStep('{{ $nextStep }}')"
+                wire:click="nextStep('{{ $nextStep }}')"
                 class="inline-flex justify-center items-center py-2 pr-2 pl-4 font-bold leading-4 text-white rounded-md border border-transparent shadow-sm text-md bg-mariajose_gray hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
                 Siguiente
                 <svg class="w-6 h-6 relative" style="top: 1px" fill="currentColor" viewBox="0 0 20 20"

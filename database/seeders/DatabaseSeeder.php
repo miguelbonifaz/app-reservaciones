@@ -16,24 +16,24 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        Appointment::factory()->create([
-            'employee_id' => Employee::first()->id,
-            'service_id' => Service::first()->id,
-            'date' => today()->addDay(),
-            'start_time' => '12:00',
+//        Appointment::factory()->create([
+//            'employee_id' => Employee::first()->id,
+//            'service_id' => Service::first()->id,
+//            'date' => today()->addDay(),
+//            'start_time' => '12:00',
+//        ]);
+        $employee = Employee::factory()
+            ->hasAttached(Service::factory())
+            ->create();
+
+        $employee->schedules->first()->update([
+           'start_time' => '10:00',
+           'end_time' => '18:00',
         ]);
-//        $employee = Employee::factory()
-//            ->hasAttached(Service::factory())
-//            ->create();
-//
-//        $employee->schedules->first()->update([
-//           'start_time' => '10:00',
-//           'end_time' => '18:00',
-//        ]);
-//
-//        $employee->schedules->get(3)->update([
-//           'start_time' => '10:00',
-//           'end_time' => '18:00',
-//        ]);
+
+        $employee->schedules->get(3)->update([
+           'start_time' => '10:00',
+           'end_time' => '18:00',
+        ]);
     }
 }

@@ -39,7 +39,6 @@ test('can create a customer', function () {
     ]);
 
     // Assert
-
     $response->assertRedirect(route('customers.index'));
 
     $response->assertSessionHas('flash_success', 'Se creó con éxito el cliente.');

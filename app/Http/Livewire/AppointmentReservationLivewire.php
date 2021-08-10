@@ -8,6 +8,7 @@ use App\Models\Employee;
 use App\Models\Service;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use Livewire\Component;
 
 class AppointmentReservationLivewire extends Component
@@ -27,6 +28,7 @@ class AppointmentReservationLivewire extends Component
         'phone' => '',
         'email' => '',
         'note' => '',
+        'terms_and_conditions' => false,
     ];
 
     public $employees;
@@ -46,11 +48,13 @@ class AppointmentReservationLivewire extends Component
         array_push($this->steps, self::STEP_SERVICE_AND_EMPLOYEE);
 
         // para proposito de desarrollo
+        return;
         if (config('app.env') == 'testing') {
             return;
         }
 
         $this->form['service_id'] = 1;
+        $this->updatedFormServiceId(1);
         $this->form['employee_id'] = 1;
         array_push($this->steps, self::STEP_DATE_AND_HOUR);
         $this->currentStep = self::STEP_DATE_AND_HOUR;
@@ -61,14 +65,42 @@ class AppointmentReservationLivewire extends Component
         $this->currentStep = self::STEP_DETAILS;
         array_push($this->steps, self::STEP_FORM_CUSTOMER);
         $this->currentStep = self::STEP_FORM_CUSTOMER;
+        array_push($this->steps, self::STEP_FAREWELL);
+        $this->currentStep = self::STEP_FAREWELL;
     }
 
-    public function updatedDay($date)
+    protected $messages = [
+        'form.service_id.required' => 'Seleccione un servicio',
+        'form.employee_id.required' => 'Seleccione un profesional',
+
+        'form.start_time.required' => 'Escoje una hora',
+
+        'form.name.required' => 'El campo nombre es requerido',
+        'form.email.required' => 'El campo email es requerido',
+        'form.email.email' => 'El campo email debe ser valido',
+        'form.phone.required' => 'El campo teléfono es requerido',
+        'form.phone.numeric' => 'El campo teléfono debe solo contener números',
+    ];
+
+    public function updatedDay($date, $dontSetHour = true)
     {
         $this->form['date'] = $date;
-        $this->form['start_time'] = '';
+        if ($dontSetHour) {
+            $this->form['start_time'] = '';
+        }
         $date = Carbon::createFromDate($date);
         $this->selectedDay = $date->format('l j');
+    }
+
+    public function stepBack($stepName, $stepIndex)
+    {
+        $this->currentStep = $stepName;
+
+        $this->steps = collect($this->steps)->forget($stepIndex)->toArray();
+
+        if ($stepName == self::STEP_DATE_AND_HOUR) {
+            $this->emit('selectDefaultDay', $this->form['date']);
+        }
     }
 
     public function nextStep($step)
@@ -78,6 +110,10 @@ class AppointmentReservationLivewire extends Component
             'form.employee_id' => 'required',
         ]);
 
+        if ($step == self::STEP_DATE_AND_HOUR) {
+            $this->emit('selectDefaultDay', '');
+        }
+
         if ($step == self::STEP_DETAILS) {
             $this->validate([
                 'form.date' => 'required',
@@ -85,8 +121,35 @@ class AppointmentReservationLivewire extends Component
             ]);
         }
 
-        if (self::STEP_DATE_AND_HOUR) {
-            $this->emit('selectDefaultDay');
+        if ($step == self::STEP_FAREWELL) {
+            $this->validate([
+                'form.name' => 'required',
+                'form.phone' => [
+                    'required',
+                    'numeric',
+                    function ($attr, $value, $fail) {
+                        if (Str::of($value)->length() < 10) {
+                            $fail('El campo debe tener al menos 10 digitos');
+                        }
+
+                        if (Str::of($value)->length() > 10) {
+                            $fail('El campo no debe tener mas de 10 digitos');
+                        }
+                    }
+                ],
+                'form.email' => 'required|email',
+                'form.terms_and_conditions' => [
+                    function ($attr, $value, $fail) {
+                        if (!$value) {
+                            $fail('Por favor, antes de seguir, debes aceptar los terminos y condiciones');
+                        }
+                    }
+                ]
+            ]);
+        }
+
+        if ($step == self::STEP_FAREWELL) {
+            $this->createAppointment();
         }
 
         array_push($this->steps, $step);
@@ -242,11 +305,6 @@ class AppointmentReservationLivewire extends Component
         return 'bg-gray-100 text-gray-400 line-through';
     }
 
-    public function stepBack($step)
-    {
-        $this->currentStep = $step;
-    }
-
     public function updatedFormServiceId($serviceId)
     {
         $this->form['employee_id'] = '';
@@ -262,12 +320,16 @@ class AppointmentReservationLivewire extends Component
     public function createAppointment()
     {
         DB::transaction(function () {
-            $customer = Customer::create([
-                'name' => $this->form['name'],
-                'phone' => $this->form['phone'],
-                'email' => $this->form['email'],
-                'note' => $this->form['note'],
-            ]);
+            $customer = Customer::updateOrCreate(
+                [
+                    'email' => $this->form['email']
+                ],
+                [
+                    'phone' => $this->form['phone'],
+                    'name' => $this->form['name'],
+                    'note' => $this->form['note']
+                ]
+            );
 
             Appointment::create([
                 'employee_id' => $this->form['employee_id'],
