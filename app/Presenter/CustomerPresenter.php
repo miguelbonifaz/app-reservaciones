@@ -27,9 +27,4 @@ class CustomerPresenter
     {
         return $this->customer->phone;
     }
-
-    public function identificationNumber(): string
-    {
-        return $this->customer->identification_number;
-    }
 }

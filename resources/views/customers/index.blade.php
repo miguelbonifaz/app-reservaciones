@@ -43,9 +43,6 @@
                                     {{ $customer->present()->phone() }}
                                 </td>
                                 <td class="px-6 py-4 text-sm whitespace-nowrap">
-                                    {{ $customer->present()->identificationNumber() }}
-                                </td>
-                                <td class="px-6 py-4 text-sm whitespace-nowrap">
                                     <div class="flex items-center justify-end space-x-8">
                                         <a href="{{ route('customers.edit',$customer) }}">
                                             Editar
