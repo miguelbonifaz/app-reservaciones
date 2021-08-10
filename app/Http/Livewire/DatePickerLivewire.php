@@ -82,11 +82,13 @@ class DatePickerLivewire extends Component
         return "cursor-pointer";
     }
 
-    public function selectDefaultDay()
+    public function selectDefaultDay($date)
     {
         $employee = Employee::find($this->employeeId);
 
-        $date = today();
+        $date = $date == ''
+            ? today()
+            : Carbon::createFromDate($date);
 
         while (!$employee->businessDays()->contains($date->dayOfWeek)) {
             $date->addDay();
@@ -94,7 +96,7 @@ class DatePickerLivewire extends Component
 
         $this->selectedDay = $date->format('Y-m-d');
 
-        $this->emit('updatedDay', $date);
+        $this->emit('updatedDay', $date->format('Y-m-d'), $dontSetHour = false);
     }
 
     public function nextMonth()

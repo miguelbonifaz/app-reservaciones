@@ -36,7 +36,7 @@
                     <x-input.select
                         label="Escoje un servicio"
                         name="form.service_id"
-                        wire:model="form.service_id"
+                        wire:model.lazy="form.service_id"
                         placeholder="Servicio">
                         @foreach ($this->services as $service)
                             <option value="{{ $service->id }}">{{ $service->present()->name() }}</option>
@@ -45,7 +45,7 @@
                     <x-input.select
                         label="Escoje un profesional"
                         name="form.employee_id"
-                        wire:model="form.employee_id"
+                        wire:model.lazy="form.employee_id"
                         placeholder="Profesional">
                         @foreach ($employees as $employee)
                             <option value="{{ $employee->id }}">{{ $employee->present()->name() }}</option>
@@ -67,7 +67,7 @@
                             </div>
                             <div>
                                 <div
-                                    class="mb-1 border px-3 py-2 border-gray-200 rounded-lg bg-mariajose_gray text-white w-32 text-center">
+                                    class="px-3 py-2 mb-1 w-32 text-center text-white rounded-lg border border-gray-200 bg-mariajose_gray">
                                     {{ $this->selectedDay }}
                                 </div>
                                 <div class="grid grid-cols-2 gap-2 lg:flex lg:flex-col lg:h-72 lg:flex-wrap lg:gap-0">
@@ -78,9 +78,9 @@
                                                 @if (!$data['isAvailable'])
                                                 disabled
                                                 @else
-                                                wire:model="form.start_time"
+                                                wire:model.lazy="form.start_time"
                                                 @endif
-                                                class="focus:ring-mariajose_gray mr-1 h-4 w-4 text-mariajose_gray border-gray-300"
+                                                class="mr-1 w-4 h-4 border-gray-300 focus:ring-mariajose_gray text-mariajose_gray"
                                                 name="start_time"
                                                 type="radio"
                                                 value="{{ $data['hour'] }}">
@@ -89,13 +89,13 @@
                                     @empty
                                         <p>Lo sentimos, no existen horarios disponibles para el día de hoy.</p>
                                     @endforelse
-                                    <x-ui.error :type="$this->form['start_time']"/>
                                 </div>
+                                <x-ui.error type="form.start_time"/>
                             </div>
                         </div>
                     </div>
                     <x-website.reservation.footer
-                        :stepBack="AppointmentReservationLivewire::STEP_SERVICE_AND_EMPLOYEE"
+                        :stepBack="[AppointmentReservationLivewire::STEP_SERVICE_AND_EMPLOYEE,1]"
                         :nextStep="AppointmentReservationLivewire::STEP_DETAILS"
                     />
                 @endif
@@ -103,15 +103,15 @@
                 @if ($currentStep == AppointmentReservationLivewire::STEP_DETAILS)
                     <div class="col-span-2">
                         <div class="lg:hidden">
-                            <div class="bg-white shadow overflow-hidden sm:rounded-lg">
+                            <div class="overflow-hidden bg-white shadow sm:rounded-lg">
                                 <div class="px-4 py-5 sm:px-6">
-                                    <h3 class="text-lg leading-6 font-bold text-gray-900">
+                                    <h3 class="text-lg font-bold leading-6 text-gray-900">
                                         Este es el resumen de tu reservación
                                     </h3>
                                 </div>
                                 <div class="border-t border-gray-200">
                                     <dl>
-                                        <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                                        <div class="px-4 py-5 bg-gray-50 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                                             <dt class="font-medium text-gray-500">
                                                 Servicio
                                             </dt>
@@ -119,7 +119,7 @@
                                                 Margot Foster
                                             </dd>
                                         </div>
-                                        <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                                        <div class="px-4 py-5 bg-white sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                                             <dt class="font-medium text-gray-500">
                                                 Fecha
                                             </dt>
@@ -127,7 +127,7 @@
                                                 Backend Developer
                                             </dd>
                                         </div>
-                                        <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                                        <div class="px-4 py-5 bg-gray-50 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                                             <dt class="font-medium text-gray-500">
                                                 Hora
                                             </dt>
@@ -135,7 +135,7 @@
                                                 margotfoster@example.com
                                             </dd>
                                         </div>
-                                        <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                                        <div class="px-4 py-5 bg-white sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                                             <dt class="font-medium text-gray-500">
                                                 Valor
                                             </dt>
@@ -143,7 +143,7 @@
                                                 -
                                             </dd>
                                         </div>
-                                        <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                                        <div class="px-4 py-5 bg-gray-50 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                                             <dt class="font-medium text-gray-500">
                                                 Profesional
                                             </dt>
@@ -159,49 +159,49 @@
                             <p class="mb-4">Este es el resumen de tu reservación</p>
 
                             <div class="flex flex-col">
-                                <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-                                    <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
+                                <div class="overflow-x-auto -my-2 sm:-mx-6 lg:-mx-8">
+                                    <div class="inline-block py-2 min-w-full align-middle sm:px-6 lg:px-8">
                                         <table class="min-w-full divide-y divide-gray-200">
                                             <thead>
                                             <tr>
                                                 <th scope="col"
-                                                    class="pr-6 pb-2 pt-3 text-left text-lg font-medium font-bold text-mariajose_gray tracking-wider">
+                                                    class="pt-3 pr-6 pb-2 text-lg font-medium font-bold tracking-wider text-left text-mariajose_gray">
                                                     Servicio
                                                 </th>
                                                 <th scope="col"
-                                                    class="px-6 pb-2 pt-3 text-left text-lg font-medium font-bold text-mariajose_gray tracking-wider">
+                                                    class="px-6 pt-3 pb-2 text-lg font-medium font-bold tracking-wider text-left text-mariajose_gray">
                                                     Fecha
                                                 </th>
                                                 <th scope="col"
-                                                    class="px-6 pb-2 pt-3 text-left text-lg font-medium font-bold text-mariajose_gray tracking-wider">
+                                                    class="px-6 pt-3 pb-2 text-lg font-medium font-bold tracking-wider text-left text-mariajose_gray">
                                                     Hora
                                                 </th>
                                                 <th scope="col"
-                                                    class="px-6 pb-2 pt-3 text-left text-lg font-medium font-bold text-mariajose_gray tracking-wider">
+                                                    class="px-6 pt-3 pb-2 text-lg font-medium font-bold tracking-wider text-left text-mariajose_gray">
                                                     Valor
                                                 </th>
                                                 <th scope="col"
-                                                    class="px-6 pb-2 pt-3 text-left text-lg font-medium font-bold text-mariajose_gray tracking-wider">
+                                                    class="px-6 pt-3 pb-2 text-lg font-medium font-bold tracking-wider text-left text-mariajose_gray">
                                                     Profesional
                                                 </th>
                                             </tr>
                                             </thead>
                                             <tbody class="bg-white divide-y divide-gray-200">
                                             <tr>
-                                                <td class="pr-6 py-4 whitespace-nowrap font-medium text-gray-900">
+                                                <td class="py-4 pr-6 font-medium text-gray-900 whitespace-nowrap">
                                                     {{ $this->service->present()->name() }}
                                                 </td>
-                                                <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-500">
+                                                <td class="px-6 py-4 font-medium text-gray-500 whitespace-nowrap">
                                                     {{ $this->appointmentDate }}
                                                 </td>
-                                                <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-500">
+                                                <td class="px-6 py-4 font-medium text-gray-500 whitespace-nowrap">
 
                                                     {{ $this->appointmentHour }}
                                                 </td>
-                                                <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-500">
+                                                <td class="px-6 py-4 font-medium text-gray-500 whitespace-nowrap">
                                                     {{ $this->appointmentValue }}
                                                 </td>
-                                                <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-500">
+                                                <td class="px-6 py-4 font-medium text-gray-500 whitespace-nowrap">
                                                     {{ $this->employee->present()->name() }}
                                                 </td>
                                             </tr>
@@ -214,42 +214,79 @@
                         </div>
                     </div>
                     <x-website.reservation.footer
-                        :stepBack="AppointmentReservationLivewire::STEP_DATE_AND_HOUR"
+                        :stepBack="[AppointmentReservationLivewire::STEP_DATE_AND_HOUR, 2]"
                         :nextStep="AppointmentReservationLivewire::STEP_FORM_CUSTOMER"
                     />
                 @endif
 
                 @if ($currentStep == AppointmentReservationLivewire::STEP_FORM_CUSTOMER)
                     <div class="sm:col-span-2">
-                        <div class="grid gap-4">
+                        <div class="grid gap-4 sm:grid-cols-3">
                             <x-input.text
+                                :labelBold="true"
+                                wire:model.lazy="form.name"
                                 label="Nombres"
-                                :name="$this->form['name']"
+                                name="form.name"
                             />
                             <x-input.text
+                                :labelBold="true"
+                                wire:model.lazy="form.phone"
                                 label="Teléfono"
-                                :name="$this->form['phone']"
+                                name="form.phone"
                             />
                             <x-input.text
+                                :labelBold="true"
+                                wire:model.lazy="form.email"
                                 label="Email"
                                 type="email"
-                                :name="$this->form['email']"
+                                name="form.email"
                             />
-                            <x-input.textarea
-                                label="Nota"
-                                :name="$this->form['note']"
-                            />
+                            <div class="sm:col-span-3">
+                                <x-input.textarea
+                                    :labelBold="true"
+                                    wire:model.lazy="form.note"
+                                    label="Nota"
+                                    name="form.note"
+                                />
+                            </div>
+                        </div>
+
+                        <div class="mt-6">
+                            <div class="flex items-center">
+                                <input
+                                    wire:model="form.terms_and_conditions"
+                                    id="termsAndConditions"
+                                    name="termsAndConditions"
+                                    type="checkbox"
+                                    class="w-4 h-4 text-indigo-600 rounded border-gray-300 focus:ring-indigo-500">
+                                <label class="ml-2 text-gray-600" for="termsAndConditions">Para continuar, debes aceptar
+                                    nuestro <a class="font-bold underline" href="">Terminos y Condiciones</a> y nuestra
+                                    <a class="font-bold underline" href="">Política de Devolución.</a></label>
+                            </div>
+                            <x-ui.error type="form.terms_and_conditions"/>
                         </div>
                     </div>
 
                     <x-website.reservation.footer
-                        :stepBack="AppointmentReservationLivewire::STEP_DETAILS"
+                        :stepBack="[AppointmentReservationLivewire::STEP_DETAILS, 3]"
                         :nextStep="AppointmentReservationLivewire::STEP_FAREWELL"
                     />
                 @endif
 
                 @if ($currentStep == AppointmentReservationLivewire::STEP_FAREWELL)
-                    Farewell
+                    <div class="sm:col-span-2">
+                        <p class="py-16 mx-auto max-w-2xl text-3xl text-center text-gray-700">
+                            Gracias por su reserva en linea, se le ha enviado un correo con los detalles de su
+                            reservación
+                        </p>
+                        <div class="flex justify-center">
+                            <x-input.button>
+                                <span class="font-bold text-lg">
+                                    Ir a la página de inicio
+                                </span>
+                            </x-input.button>
+                        </div>
+                    </div>
                 @endif
 
             </div>
