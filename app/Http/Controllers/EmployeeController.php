@@ -92,6 +92,28 @@ class EmployeeController extends Controller
                 Rule::unique('employees', 'email')->ignoreModel($employee)
             ],
             'phone' => 'required|numeric',
+            'start_time.*' => function ($attr, $value, $fail) {
+                $key = (int)explode('.', $attr)[1];
+
+                if (!request()->start_time[$key] && !request()->end_time[$key]) {
+                    return;
+                }
+
+                if (request()->end_time[$key] == null) {
+                    $fail('Por favor, ingrese una hora de salida');
+                }
+            },
+            'end_time.*' => function ($attr, $value, $fail) {
+                $key = (int)explode('.', $attr)[1];
+
+                if (!request()->start_time[$key] && !request()->end_time[$key]) {
+                    return;
+                }
+
+                if (request()->start_time[$key] == null) {
+                    $fail('Por favor, ingrese una hora de inicio');
+                }
+            }
         ]);
 
         DB::transaction(function () use ($servicesId, $employee) {

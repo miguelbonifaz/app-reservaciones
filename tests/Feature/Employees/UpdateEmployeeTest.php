@@ -3,6 +3,7 @@
 use App\Models\Employee;
 use App\Models\Schedule;
 use App\Models\Service;
+use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(RefreshDatabase::class);
@@ -63,8 +64,14 @@ test('can update an employee', function () {
     $this->assertEquals($data->name, $employee->name);
     $this->assertEquals($data->email, $employee->email);
     $this->assertEquals($data->phone, $employee->phone);
-    $this->assertEquals('10:00:00', $employeeSchedule->start_time);
-    $this->assertEquals('15:00:00', $employeeSchedule->end_time);
+    $this->assertEquals(
+        '10:00',
+        Carbon::createFromTimestamp($employeeSchedule->start_time)->format('H:i')
+    );
+    $this->assertEquals(
+        '15:00',
+        Carbon::createFromTimestamp($employeeSchedule->end_time)->format('H:i')
+    );
 
     $this->assertCount(1, $employee->services);
     $this->assertEquals($service->id, $employee->services->first()->id);
@@ -92,6 +99,7 @@ test('can update an employee with the same email', function () {
 test('fields are required', function () {
     // Arrange
     $employee = Employee::factory()->create();
+
     //Act
     $response = updateEmployee($employee, [
         'name' => null,
@@ -104,6 +112,46 @@ test('fields are required', function () {
         'name',
         'email',
         'phone',
+    ]);
+});
+
+test('Si se escoje una hora de inicio, la hora fin debe ser requerida', function () {
+    // Arrange
+    $employee = Employee::factory()->create();
+
+    //Act
+    $response = updateEmployee($employee, [
+        'start_time' => [
+            0 => '10:00'
+        ],
+        'end_time' => [
+            0 => null
+        ],
+    ]);
+
+    //Assert
+    $response->assertSessionHasErrors([
+        'start_time.0',
+    ]);
+});
+
+test('Si se escoje una hora de salida, la hora de inicio debe ser requerida', function () {
+    // Arrange
+    $employee = Employee::factory()->create();
+
+    //Act
+    $response = updateEmployee($employee, [
+        'start_time' => [
+            0 => null,
+        ],
+        'end_time' => [
+            0 => '12:00'
+        ],
+    ]);
+
+    //Assert
+    $response->assertSessionHasErrors([
+        'end_time.0',
     ]);
 });
 

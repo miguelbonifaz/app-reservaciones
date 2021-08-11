@@ -58,6 +58,7 @@
                                     name="start_time[{{ $schedule->day }}]"
                                     :value="$schedule->start_time ? \Carbon\Carbon::createFromTimestamp($schedule->start_time)->format('H:i') : null"
                                 />
+                                <x-ui.error type="start_time.{{ $schedule->day }}"/>
                             </div>
                             <div>
                                 <x-select-with-hours
@@ -65,6 +66,7 @@
                                     name="end_time[{{ $schedule->day }}]"
                                     :value="$schedule->end_time ? \Carbon\Carbon::createFromTimestamp($schedule->end_time)->format('H:i') : null"
                                 />
+                                <x-ui.error type="end_time.{{ $schedule->day }}"/>
                             </div>
                         </div>
                         @foreach ($schedule->rests as $rest)

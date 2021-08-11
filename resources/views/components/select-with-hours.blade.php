@@ -2,7 +2,7 @@
     @if ($label)
         <label
             for="{{ $name }}"
-            class="block text-sm font-medium text-gray-700">{{ $label }} {{ $value }}</label>
+            class="block text-sm font-medium text-gray-700">{{ $label }}</label>
     @endif
     <select
         {{ $attributes }}
