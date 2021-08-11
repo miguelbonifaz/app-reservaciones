@@ -56,14 +56,14 @@
                                 <x-select-with-hours
                                     label="Hora de inicio"
                                     name="start_time[{{ $schedule->day }}]"
-                                    :value="\Carbon\Carbon::createFromTimestamp($schedule->start_time)->format('H:i')"
+                                    :value="$schedule->start_time ? \Carbon\Carbon::createFromTimestamp($schedule->start_time)->format('H:i') : null"
                                 />
                             </div>
                             <div>
                                 <x-select-with-hours
                                     label="Hora de salida"
                                     name="end_time[{{ $schedule->day }}]"
-                                    :value="\Carbon\Carbon::createFromTimestamp($schedule->end_time)->format('H:i')"
+                                    :value="$schedule->end_time ? \Carbon\Carbon::createFromTimestamp($schedule->end_time)->format('H:i') : null"
                                 />
                             </div>
                         </div>
