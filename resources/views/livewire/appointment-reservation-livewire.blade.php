@@ -68,10 +68,10 @@
                             <div>
                                 <div
                                     class="px-3 py-2 mb-1 w-32 text-center text-white rounded-lg border border-gray-200 bg-mariajose_gray">
-                                    {{ $this->selectedDay }}
+                                    {{ $this->selectedDay ?? 'Cargando...' }}
                                 </div>
                                 <div class="grid grid-cols-2 gap-2 lg:flex lg:flex-col lg:h-72 lg:flex-wrap lg:gap-0">
-                                    @forelse ($this->availableHours as $data)
+                                    @foreach ($this->availableHours as $data)
                                         <label
                                             class="mr-2 w-full lg:w-32 text-center border border-gray-200 text-center py-2 rounded-lg mb-1 flex items-center justify-center {{ $this->hourNotAvailableClasses($data['isAvailable']) }}">
                                             <input
@@ -86,9 +86,7 @@
                                                 value="{{ $data['hour'] }}">
                                             {{ $data['hour'] }}
                                         </label>
-                                    @empty
-                                        <p>Lo sentimos, no existen horarios disponibles para el día de hoy.</p>
-                                    @endforelse
+                                    @endforeach
                                 </div>
                                 <x-ui.error type="form.start_time"/>
                             </div>
