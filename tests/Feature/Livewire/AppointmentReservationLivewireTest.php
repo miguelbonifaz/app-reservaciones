@@ -3,6 +3,7 @@
 use App\Http\Livewire\AppointmentReservationLivewire;
 use App\Models\Appointment;
 use App\Models\Customer;
+use App\Notifications\AppointmentConfirmedNotification;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Testing\TestableLivewire;
 use function Pest\Livewire\livewire;
@@ -105,6 +106,8 @@ function stepFive(TestableLivewire $component): void
 }
 
 test('can create an appointment', function () {
+    Notification::fake();
+
     // Arrange
     $dataAppointment = Appointment::factory()->make();
     $dataCustomer = Customer::factory()->make();
@@ -144,6 +147,8 @@ test('can create an appointment', function () {
     expect($dataAppointment->date->format('Y-m-d'))->toBe($appointment->date->format('Y-m-d'));
     expect($dataAppointment->start_time->format('H:i'))->toBe($appointment->start_time->format('H:i'));
     expect($endTime->format('H:i'))->toBe($appointment->end_time->format('H:i'));
+
+    Notification::assertSentTo($customer, AppointmentConfirmedNotification::class);
 });
 
 test('fields are required in the first step', function () {

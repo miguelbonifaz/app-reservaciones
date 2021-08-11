@@ -6,8 +6,10 @@ use App\Models\Appointment;
 use App\Models\Customer;
 use App\Models\Employee;
 use App\Models\Service;
+use App\Notifications\AppointmentConfirmedNotification;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Str;
 use Livewire\Component;
 
@@ -331,7 +333,7 @@ class AppointmentReservationLivewire extends Component
                 ]
             );
 
-            Appointment::create([
+            $appointment = Appointment::create([
                 'employee_id' => $this->form['employee_id'],
                 'service_id' => $this->form['service_id'],
                 'customer_id' => $customer->id,
@@ -339,6 +341,8 @@ class AppointmentReservationLivewire extends Component
                 'start_time' => $this->form['start_time'],
                 'note' => $this->form['note'],
             ]);
+
+            $customer->notify(new AppointmentConfirmedNotification($appointment));
         });
     }
 
