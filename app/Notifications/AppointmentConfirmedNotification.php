@@ -7,6 +7,7 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Support\HtmlString;
 
 class AppointmentConfirmedNotification extends Notification implements ShouldQueue
 {
@@ -39,14 +40,15 @@ class AppointmentConfirmedNotification extends Notification implements ShouldQue
     public function toMail($notifiable): MailMessage
     {
         return (new MailMessage)
-            ->subject("Su cita en ". config('app.name'))
+            ->subject("Su cita en " . config('app.name'))
             ->greeting("Apreciado(a) {$this->appointment->customer->present()->name()}")
             ->line("Esta es la confirmación de su cita con los siguientes datos:")
             ->line("- Fecha: {$this->appointment->present()->date()}")
             ->line("- Hora: {$this->appointment->present()->startTime()}")
             ->line("- Servicio: {$this->appointment->service->present()->name()}")
             ->line("- Profesional: {$this->appointment->employee->present()->name()}")
-            ->line('Gracias por confiar en nosotros.');
+            ->line('Gracias por confiar en nosotros.')
+            ->line("<br>");
     }
 
     /**

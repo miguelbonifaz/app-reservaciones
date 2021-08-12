@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Appointment;
 use App\Models\Employee;
 use App\Models\Service;
+use App\Notifications\AppointmentConfirmedNotification;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -16,24 +17,9 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-//        Appointment::factory()->create([
-//            'employee_id' => Employee::first()->id,
-//            'service_id' => Service::first()->id,
-//            'date' => today()->addDay(),
-//            'start_time' => '12:00',
-//        ]);
-        $employee = Employee::factory()
-            ->hasAttached(Service::factory())
-            ->create();
+        $appointment = Appointment::first();
+        $customer = $appointment->customer;
 
-        $employee->schedules->first()->update([
-           'start_time' => '10:00',
-           'end_time' => '18:00',
-        ]);
-
-        $employee->schedules->get(3)->update([
-           'start_time' => '10:00',
-           'end_time' => '18:00',
-        ]);
+        $customer->notify(new AppointmentConfirmedNotification($appointment));
     }
 }
