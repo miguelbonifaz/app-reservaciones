@@ -3,99 +3,122 @@
 namespace App\Http\Livewire;
 
 use App\Models\Appointment;
+use App\Models\Employee;
 use App\Models\Service;
 use Carbon\Carbon;
+use Illuminate\Support\Collection;
 use Livewire\Component;
 
 class CreateAppointmentsLivewire extends Component
 {
+    public $employees = [];
 
-    public $customer_id;
-    public $service_id;
-    public $employee_id;
-
-    public $start_time;
-    public $date;
-    public $note;
-
-    public $cancelUrl;
-    public $returnUrl;
-    public $AppointmentId;
-
-    public $listeners = [
-        'customer_idUpdated',
-        'service_idUpdated',
-        'employee_idUpdated'
+    public $form = [
+        'customer_id' => '',
+        'service_id' => '',
+        'employee_id' => '',
+        'start_time' => '',
+        'date' => '',
+        'note' => '',
     ];
 
-    public function customer_idUpdated($data)
+    protected $listeners = ['updatedDay'];
+
+    public function updatedDay($date, $dontSetHour = true)
     {
-        $this->customer_id = $data['value'];
+        $this->form['date'] = $date;
+        $date = Carbon::createFromDate($date);
+        $this->selectedDay = $date->format('l j');
     }
 
-    public function service_idUpdated($data)
+    public function updatedFormServiceId($serviceId)
     {
-        $this->service_id = $data['value'];
+        $this->form['employee_id'] = '';
+
+        if (!$serviceId) {
+            $this->employees = collect();
+            return;
+        }
+
+        $this->employees = Service::find($this->form['service_id'])->employees;
     }
 
-    public function employee_idUpdated($data)
+    public function getAvailableHoursProperty(): Collection
     {
-        $this->employee_id = $data['value'];
+        if (!$this->form['employee_id']) {
+            return collect();
+        }
+
+        return $this->employee
+            ->workingHours($this->form['date'], $this->service)
+            ->filter(function ($hour) {
+                return $hour['isAvailable'];
+            });
     }
 
-
-    public function mount($cancelUrl = null, $AppointmentId = null, $returnUrl = null)
+    public function getEmployeeProperty()
     {
-        $this->cancelUrl = $cancelUrl ?? route('calendar.index');
-        $this->returnUrl = $returnUrl ?? route('calendar.index');
+        return Employee::find($this->form['employee_id']);
+    }
+
+    public function getServiceProperty()
+    {
+        return Service::find($this->form['service_id']);
+    }
+
+    public function getServicesProperty()
+    {
+        return Service::query()->latest()->get();
     }
 
     public function onSubmit()
     {
         $this->validate([
-            'customer_id' => [
+            'form.customer_id' => [
                 'required',
                 'exists:customers,id'
             ],
-            'service_id' => [
+            'form.service_id' => [
                 'required',
                 'exists:services,id'
             ],
-            'employee_id' => [
+            'form.employee_id' => [
                 'required',
                 'exists:employees,id'
             ],
-            'start_time' => [
+            'form.start_time' => [
                 'required',
             ],
-            'date' => [
+            'form.date' => [
                 'required',
             ],
         ]);
 
-        $service = Service::find($this->service_id);
-
-        $startTime = $this->start_time . ':00';
-
-        $endTime = Carbon::createFromFormat('H:i:s', $this->start_time . ':00')->addMinutes($service->duration)->format('H:i:s');
-
         Appointment::create([
-            'customer_id' => $this->customer_id,
-            'service_id' => $this->service_id,
-            'employee_id' => $this->employee_id,
-            'start_time' => $startTime,
-            'end_time' => $endTime,
-            'date' => $this->date,
-            'note' => $this->note,
+            'customer_id' => $this->form['customer_id'],
+            'service_id' => $this->form['service_id'],
+            'employee_id' => $this->form['employee_id'],
+            'start_time' => $this->form['start_time'],
+            'end_time' => $this->createEndTime($this->form['start_time']),
+            'date' => $this->form['date'],
+            'note' => $this->form['note'],
         ]);
 
         session()->flash('flash_success', 'Se creó con exito la reservación');
 
-        return redirect()->to($this->returnUrl);
+        return redirect()->to('calendar.index');
     }
 
     public function render()
     {
         return view('livewire.create-appointments-livewire');
+    }
+
+    private function createEndTime($startTime): string
+    {
+        $time = explode(':', $startTime);
+        $startTime = Carbon::createFromTime($time[0], $time[1]);
+
+        return $startTime->copy()->addMinutes($this->service->duration)->format('H:i');
     }
 }

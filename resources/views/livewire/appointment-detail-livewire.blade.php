@@ -1,18 +1,10 @@
-<div style="z-index: 9999">
-    <div class="border-double border-4 border-gray-500">
+<div style="z-index: 100">
+    <div>
         <div class="mt-3 text-center sm:mt-5">
             <h3 class="text-lg font-medium leading-6 text-gray-900" id="modal-headline">
-                Detalle de reservación en fecha {{ $this->appointment->date->format('Y-m-d') }}
+                Reservación {{ $this->appointment->date->format('F j Y') }}
             </h3>
             <div class="mt-2">
-                <div>
-                    <h3 class="text-lg leading-6 font-medium text-gray-900">
-                        Nombre cliente:
-                    </h3>
-                    <p class="mt-1 max-w-2xl text-sm text-gray-500">
-                        {{ $this->appointment->customer->present()->name() }}
-                    </p>
-                </div>
                 <div class="mt-5 border-t border-gray-200">
                     <dl class="sm:divide-y sm:divide-gray-200">
                         <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4">
@@ -20,12 +12,20 @@
                                 Servicio:
                             </dt>
                             <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                                AQUI IRIA EL SERVICIO
+                                {{ $this->appointment->service->present()->name() }}
                             </dd>
                         </div>
                         <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4">
                             <dt class="text-sm font-medium text-gray-500">
-                                Nombre encargado:
+                                Cliente:
+                            </dt>
+                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                                {{ $this->appointment->customer->present()->name() }}
+                            </dd>
+                        </div>
+                        <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4">
+                            <dt class="text-sm font-medium text-gray-500">
+                                Profesional:
                             </dt>
                             <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                                 {{ $this->appointment->employee->present()->name() }}

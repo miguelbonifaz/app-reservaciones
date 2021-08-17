@@ -21,15 +21,12 @@ class AppointmentPresenter
 
     public function startTime(): string
     {
-        $startTime = Carbon::createFromTimestamp($this->appointment->start_time);
-
-        return $startTime->format('H:m');
+        return $this->appointment->start_time->format('H:m A');
     }
 
     public function endTime(): string
     {
-        $endTime = Carbon::createFromTimestamp($this->appointment->end_time);
-        return $endTime->format('H:m');
+        return $this->appointment->end_time->format('H:m A');
     }
 
     public function note(): ?string

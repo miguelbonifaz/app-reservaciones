@@ -31,7 +31,7 @@
             </div>
         </div>
         <div class="bg-white">
-            <div class="grid gap-6 sm:grid-cols-2">
+            <div class="grid gap-6 sm:grid-cols-2 gap-4">
                 @if ($currentStep == AppointmentReservationLivewire::STEP_SERVICE_AND_EMPLOYEE)
                     <x-input.select
                         label="Escoje un servicio"
