@@ -278,11 +278,11 @@
                             reservación
                         </p>
                         <div class="flex justify-center">
-                            <x-input.button>
+                            <x-input.link href="{{ route('website.home') }}">
                                 <span class="font-bold text-lg">
                                     Ir a la página de inicio
                                 </span>
-                            </x-input.button>
+                            </x-input.link>
                         </div>
                     </div>
                 @endif
