@@ -13,28 +13,26 @@ use Illuminate\Support\Carbon;
 /**
  * App\Models\Service
  *
- * @method static ServiceFactory factory(...$parameters)
+ * @property int $id
+ * @property string $name
+ * @property int $duration
+ * @property float $value
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Employee[] $employees
+ * @property-read int|null $employees_count
+ * @method static \Database\Factories\ServiceFactory factory(...$parameters)
  * @method static Builder|Service newModelQuery()
  * @method static Builder|Service newQuery()
  * @method static Builder|Service query()
- * @mixin \Eloquent
- * @property int $id
- * @property string $names
- * @property int $duration
- * @property Carbon|null $created_at
- * @property Carbon|null $updated_at
+ * @method static Builder|Service searchByName($name)
  * @method static Builder|Service whereCreatedAt($value)
  * @method static Builder|Service whereDuration($value)
  * @method static Builder|Service whereId($value)
- * @method static Builder|Service whereNames($value)
- * @method static Builder|Service whereUpdatedAt($value)
- * @property string $name
  * @method static Builder|Service whereName($value)
- * @property float $value
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Employee[] $employees
- * * @method static \Illuminate\Database\Eloquent\Builder|Service searchByName($name)
- * @property-read int|null $employees_count
+ * @method static Builder|Service whereUpdatedAt($value)
  * @method static Builder|Service whereValue($value)
+ * @mixin \Eloquent
  */
 class Service extends Model
 {
