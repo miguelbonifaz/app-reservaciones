@@ -14,11 +14,6 @@
         label="Teléfono"
         value="{{old('phone', $customer->phone)}}"
     />
-    <x-input.text
-        name="identification_number"
-        label="Cédula"
-        value="{{old('identification_number', $customer->identification_number)}}"
-    />
 
     <x-slot name="footer">
         <x-input.link theme="white" href="{{ route('customers.index') }}">
