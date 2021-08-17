@@ -31,6 +31,9 @@ use Illuminate\Notifications\Notifiable;
  * @method static Builder|Customer whereIdentificationNumber($value)
  * @method static Builder|Customer whereName($value)
  * @method static Builder|Customer wherePhone($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Customer searchByName($name)
+ * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
+ * @property-read int|null $notifications_count
  */
 class Customer extends Model
 {
@@ -45,5 +48,12 @@ class Customer extends Model
     public function present(): CustomerPresenter
     {
         return new CustomerPresenter($this);
+    }
+
+    public function scopeSearchByName($query, $name)
+    {
+        $query->when($name, function ($query, $name) {
+            $query->where('name', 'like', "%{$name}%");
+        });
     }
 }

@@ -39,6 +39,7 @@ use Illuminate\Support\Carbon;
  * @method static Builder|Appointment whereStartTime($value)
  * @method static Builder|Appointment whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @method static Builder|Appointment whereServiceId($value)
  */
 class Appointment extends Model
 {

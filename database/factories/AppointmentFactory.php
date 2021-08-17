@@ -8,7 +8,6 @@ use App\Models\Employee;
 use App\Models\Service;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Collection;
 
 class AppointmentFactory extends Factory
 {

@@ -9,7 +9,6 @@ use App\Models\Service;
 use App\Notifications\AppointmentConfirmedNotification;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Str;
 use Livewire\Component;
 
@@ -48,27 +47,6 @@ class AppointmentReservationLivewire extends Component
         $this->employees = collect();
 
         array_push($this->steps, self::STEP_SERVICE_AND_EMPLOYEE);
-
-        // para proposito de desarrollo
-        return;
-        if (config('app.env') == 'testing') {
-            return;
-        }
-
-        $this->form['service_id'] = 1;
-        $this->updatedFormServiceId(1);
-        $this->form['employee_id'] = 1;
-        array_push($this->steps, self::STEP_DATE_AND_HOUR);
-        $this->currentStep = self::STEP_DATE_AND_HOUR;
-        $this->form['date'] = '2021-08-06';
-        $this->selectedDay = '2021-08-06';
-        $this->form['start_time'] = '09:00';
-        array_push($this->steps, self::STEP_DETAILS);
-        $this->currentStep = self::STEP_DETAILS;
-        array_push($this->steps, self::STEP_FORM_CUSTOMER);
-        $this->currentStep = self::STEP_FORM_CUSTOMER;
-        array_push($this->steps, self::STEP_FAREWELL);
-        $this->currentStep = self::STEP_FAREWELL;
     }
 
     protected $messages = [
@@ -342,7 +320,7 @@ class AppointmentReservationLivewire extends Component
                 'note' => $this->form['note'],
             ]);
 
-            $customer->notify(new AppointmentConfirmedNotification($appointment));
+            $appointment->customer->notify(new AppointmentConfirmedNotification($appointment));
         });
     }
 

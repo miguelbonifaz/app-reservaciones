@@ -7,7 +7,6 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Support\HtmlString;
 
 class AppointmentConfirmedNotification extends Notification implements ShouldQueue
 {
@@ -26,7 +25,7 @@ class AppointmentConfirmedNotification extends Notification implements ShouldQue
      * @param mixed $notifiable
      * @return array
      */
-    public function via($notifiable)
+    public function via($notifiable): array
     {
         return ['mail'];
     }

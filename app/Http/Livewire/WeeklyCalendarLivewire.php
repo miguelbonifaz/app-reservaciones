@@ -25,7 +25,7 @@ class WeeklyCalendarLivewire extends LivewireResourceTimeGrid
     {
         $today = $this->currentDay;
 
-        $startOfWeek = $today->copy()->startOfWeek(Carbon::MONDAY);
+        $startOfWeek = $today->copy()->startOfWeek();
 
         return collect([
             $startOfWeek->clone()->addDays(0),
@@ -46,9 +46,9 @@ class WeeklyCalendarLivewire extends LivewireResourceTimeGrid
     {
         $today = $this->currentDay;
 
-        $startOfWeek = $today->copy()->startOfWeek(Carbon::MONDAY);
+        $startOfWeek = $today->copy()->startOfWeek();
 
-        $endOfWeek = $today->copy()->endOfWeek(Carbon::SATURDAY);
+        $endOfWeek = $today->copy()->endOfWeek();
 
         return Appointment::query()
             ->whereDate('date', '<=', $endOfWeek)
@@ -60,8 +60,8 @@ class WeeklyCalendarLivewire extends LivewireResourceTimeGrid
                 return [
                     'id' => $appointment->id,
                     'title' => $appointment->customer->present()->name(),
-                    'starts_at' => Carbon::createFromTimestamp($appointment->start_time),
-                    'ends_at' => Carbon::createFromTimestamp($appointment->end_time),
+                    'starts_at' => $appointment->start_time,
+                    'ends_at' => $appointment->end_time,
                     'resource_id' => $appointment->date->format('Y-m-d'),
                 ];
             });
@@ -82,9 +82,9 @@ class WeeklyCalendarLivewire extends LivewireResourceTimeGrid
         $this->currentDay = $this->currentDay->addDays(7);
     }
 
-    public function onEventClick($event)
+    public function onEventClick($eventId)
     {
-        $this->emit('openModal', 'appointment-detail-livewire', [$event]);
+        $this->emit('openModal', 'appointment-detail-livewire', [$eventId]);
     }
 
     public function styles(): array
