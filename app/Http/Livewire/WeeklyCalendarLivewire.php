@@ -37,7 +37,7 @@ class WeeklyCalendarLivewire extends LivewireResourceTimeGrid
         ])->map(function (Carbon $date) {
             return [
                 'id' => $date->format('Y-m-d'),
-                'title' => $date->format('l d'),
+                'title' => $date->day_name(),
             ];
         });
     }

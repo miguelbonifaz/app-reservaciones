@@ -18,27 +18,27 @@ class Navbar extends Component
             [
                 'title' => 'Calendario',
                 'route' => route('calendar.index'),
-                'isActive' => request()->routeIs('calendar.index')
+                'isActive' => request()->routeIs('calendar.*')
             ],
             [
                 'title' => 'Empleados',
                 'route' => route('employees.index'),
-                'isActive' => request()->routeIs('employees.index')
+                'isActive' => request()->routeIs('employees.*')
             ],
             [
                 'title' => 'Servicios',
                 'route' => route('services.index'),
-                'isActive' => request()->routeIs('services.index')
+                'isActive' => request()->routeIs('services.*')
             ],
             [
                 'title' => 'Clientes',
                 'route' => route('customers.index'),
-                'isActive' => request()->routeIs('customers.index')
+                'isActive' => request()->routeIs('customers.*')
             ],
             [
                 'title' => 'Usuarios',
                 'route' => route('users.index'),
-                'isActive' => request()->routeIs('users.index')
+                'isActive' => request()->routeIs('users.*')
             ],
         ]);
     }

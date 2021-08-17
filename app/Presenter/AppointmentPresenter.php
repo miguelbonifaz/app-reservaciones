@@ -16,7 +16,9 @@ class AppointmentPresenter
 
     public function date(): string
     {
-        return $this->appointment->date->format('F j Y');
+        $date = $this->appointment->date;
+
+        return $date->format('d') . " de {$date->getTranslatedMonthName()} " . $date->format('Y');
     }
 
     public function startTime(): string

@@ -12,9 +12,9 @@
     </div>
 
     <x-calendar.date>
-        {{$currentDay->copy()->startOfweek(\Carbon\Carbon::MONDAY)->format('F j, Y')}}
+        {{$currentDay->copy()->startOfweek()->day_month_year()}}
         -
-        {{$currentDay->copy()->endOfWeek(\Carbon\Carbon::FRIDAY)->format('F j, Y')}}
+        {{$currentDay->copy()->endOfWeek()->day_month_year()}}
     </x-calendar.date>
 
 </div>
