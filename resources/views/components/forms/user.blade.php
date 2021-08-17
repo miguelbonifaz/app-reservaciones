@@ -4,16 +4,19 @@
         label="Nombre"
         value="{{old('name', $user->name)}}"
     />
+
     <x-input.text
+        label="Email"
         name="email"
-        label="email"
         value="{{old('email', $user->email)}}"
     />
+
     <x-input.text
         name="password"
         label="Password"
         type="password"
     />
+
     <div>
         <x-input.text
             label="Foto"

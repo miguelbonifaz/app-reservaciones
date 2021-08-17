@@ -5,6 +5,7 @@ namespace App\Http\Livewire;
 use App\Models\Employee;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 use Livewire\Component;
 
 class DatePickerLivewire extends Component
@@ -117,7 +118,7 @@ class DatePickerLivewire extends Component
     {
         $date = Carbon::createFromDate($this->currentDay);
 
-        return $date->format('F Y');
+        return Str::of($date->getTranslatedMonthName())->ucfirst() . " {$date->format('Y')}";
     }
 
     public function getIsThePreviousMonthProperty(): bool

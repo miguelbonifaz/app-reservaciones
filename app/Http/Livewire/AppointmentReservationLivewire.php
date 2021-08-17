@@ -69,7 +69,7 @@ class AppointmentReservationLivewire extends Component
             $this->form['start_time'] = '';
         }
         $date = Carbon::createFromDate($date);
-        $this->selectedDay = $date->format('l j');
+        $this->selectedDay = $date->day_name();
     }
 
     public function stepBack($stepName, $stepIndex)
@@ -184,7 +184,7 @@ class AppointmentReservationLivewire extends Component
 
     public function getAppointmentDateProperty(): string
     {
-        return Carbon::createFromDate($this->form['date'])->format('F j Y');
+        return Carbon::createFromDate($this->form['date'])->day_month_year();
     }
 
     public function getAppointmentHourProperty(): string
