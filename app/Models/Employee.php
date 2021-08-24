@@ -66,91 +66,108 @@ class Employee extends Model
         return $this->hasMany(Schedule::class);
     }
 
+    public function locations(): BelongsToMany
+    {
+        return $this->belongsToMany(Location::class);
+    }
+
     public function workingHours($date, Service $service): Collection
     {
         $date = Carbon::createFromDate($date);
 
-        /** @var Schedule $schedule */
-        $schedule = $this->schedules()
-            ->firstWhere('day', $date->dayOfWeek);
+        $schedules = $this->schedules()
+            ->where('day', $date->dayOfWeek)
+            ->whereNotNull('start_time')
+            ->whereNotNull('end_time')
+            ->get();
 
-        $startTime = Carbon::createFromTimestamp($schedule->start_time)
-            ->setDateFrom($date->format('Y-m-d'));
+        return $schedules->mapWithKeys(function (Schedule $schedule) use ($service, $date) {
+            $schedule->load('location', 'rests');
 
-        $endTime = Carbon::createFromTimestamp($schedule->end_time)
-            ->setDateFrom($date->format('Y-m-d'))
-            ->subMinutes($service->duration);
+            $startTime = $schedule->start_time
+                ->setDateFrom($date->format('Y-m-d'));
 
-        return collect(CarbonInterval::minutes(self::MINUTE_INTERVALS)
-            ->toPeriod(
-                $startTime, $endTime
-            ))
-            ->reject(function (Carbon $slot) use ($schedule, $service, $date) {
-                if ($slot->lessThan(now())) {
-                    return true;
-                }
+            $endTime = $schedule->end_time
+                ->setDateFrom($date->format('Y-m-d'))
+                ->subMinutes($service->duration);
 
-                foreach ($schedule->rests as $rest) {
-                    $restHours = collect(CarbonInterval::minutes(self::MINUTE_INTERVALS)
-                        ->toPeriod(
-                            $rest->start_time->setDateFrom($date),
-                            $rest->end_time->setDateFrom($date),
-                        ));
-                    $restHours->pop();
+            $location = $schedule->location;
 
-                    return $restHours->contains($slot);
-                }
+            return [
+                $location->name => collect(CarbonInterval::minutes(self::MINUTE_INTERVALS)
+                    ->toPeriod(
+                        $startTime, $endTime
+                    ))
+                    ->reject(function (Carbon $slot) use ($schedule, $service, $date) {
+                        if ($slot->lessThan(now())) {
+                            return true;
+                        }
+
+                        foreach ($schedule->rests as $rest) {
+                            $restHours = collect(CarbonInterval::minutes(self::MINUTE_INTERVALS)
+                                ->toPeriod(
+                                    $rest->start_time->setDateFrom($date),
+                                    $rest->end_time->setDateFrom($date),
+                                ));
+                            $restHours->pop();
+
+                            return $restHours->contains($slot);
+                        }
 
 
-                if (self::MINUTE_INTERVALS == $service->duration) {
-                    return false;
-                }
+                        if (self::MINUTE_INTERVALS == $service->duration) {
+                            return false;
+                        }
 
-                $minutes = $service->duration - self::MINUTE_INTERVALS;
+                        $minutes = $service->duration - self::MINUTE_INTERVALS;
 
-                $appointment = Appointment::query()
-                    ->whereDate('date', $date)
-                    ->whereTime(
-                        'start_time',
-                        $slot->copy()->addMinutes($minutes)
-                    )
-                    ->first();
+                        $appointment = Appointment::query()
+                            ->whereDate('date', $date)
+                            ->whereTime(
+                                'start_time',
+                                $slot->copy()->addMinutes($minutes)
+                            )
+                            ->first();
 
-                if (!$appointment) {
-                    return false;
-                }
+                        if (!$appointment) {
+                            return false;
+                        }
 
-                return true;
-            })
-            ->map(function (Carbon $slot) use ($service, $date) {
-                $appointment = Appointment::query()
-                    ->whereDate('date', $date)
-                    ->where(function ($query) use ($slot) {
-                        $query->whereTime('start_time', '>=', $slot);
-                        $query->orWhereTime('end_time', '>=', $slot);
+                        return true;
                     })
-                    ->where(function ($query) use ($slot) {
-                        $query->whereTime('start_time', '<=', $slot);
-                        $query->orWhereTime('end_time', '<=', $slot);
+                    ->map(function (Carbon $slot) use ($location, $schedule, $service, $date) {
+                        $appointment = Appointment::query()
+                            ->whereDate('date', $date)
+                            ->where(function ($query) use ($slot) {
+                                $query->whereTime('start_time', '>=', $slot);
+                                $query->orWhereTime('end_time', '>=', $slot);
+                            })
+                            ->where(function ($query) use ($slot) {
+                                $query->whereTime('start_time', '<=', $slot);
+                                $query->orWhereTime('end_time', '<=', $slot);
+                            })
+                            ->first();
+
+                        if ($appointment) {
+                            $horasNoDisponibles = collect(CarbonInterval::minutes(self::MINUTE_INTERVALS)
+                                ->toPeriod(
+                                    $appointment->start_time->setDateFrom($date),
+                                    $appointment->end_time->setDateFrom($date)
+                                ));
+                            $horasNoDisponibles->pop();
+
+                            $bool = !$horasNoDisponibles->contains($slot);
+                        }
+
+                        return [
+                            'location_id' => $location->id,
+                            'hour' => $slot->format('H:i'),
+                            'isAvailable' => $bool ?? true
+                        ];
                     })
-                    ->first();
+            ];
+        });
 
-                if ($appointment) {
-                    $horasNoDisponibles = collect(CarbonInterval::minutes(self::MINUTE_INTERVALS)
-                        ->toPeriod(
-                            $appointment->start_time->setDateFrom($date),
-                            $appointment->end_time->setDateFrom($date)
-                        ));
-                    $horasNoDisponibles->pop();
-
-                    $bool = !$horasNoDisponibles->contains($slot);
-                }
-
-                return [
-                    'hour' => $slot->format('H:i'),
-                    'isAvailable' => $bool ?? true
-                ];
-            });
     }
 
     public function businessDays(): Collection

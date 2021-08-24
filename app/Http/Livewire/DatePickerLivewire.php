@@ -83,7 +83,7 @@ class DatePickerLivewire extends Component
         return "cursor-pointer";
     }
 
-    public function selectDefaultDay($date)
+    public function selectDefaultDay($date = null)
     {
         $employee = Employee::find($this->employeeId);
 

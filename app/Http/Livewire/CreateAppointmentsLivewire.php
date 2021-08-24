@@ -14,11 +14,11 @@ class CreateAppointmentsLivewire extends Component
     public $employees = [];
 
     public $form = [
-        'customer_id' => '',
         'service_id' => '',
         'employee_id' => '',
         'start_time' => '',
         'date' => '',
+        'customer_id' => '',
         'note' => '',
     ];
 

@@ -16,11 +16,12 @@ use Illuminate\Support\Carbon;
  *
  * @property int $id
  * @property int $day
- * @property string|null $start_time
- * @property string|null $end_time
+ * @property int|null $start_time
+ * @property int|null $end_time
  * @property int $employee_id
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
+ * @property-read \App\Models\Employee $employee
  * @property-read Collection|\App\Models\RestSchedule[] $rests
  * @property-read int|null $rests_count
  * @method static \Database\Factories\ScheduleFactory factory(...$parameters)
@@ -35,7 +36,6 @@ use Illuminate\Support\Carbon;
  * @method static Builder|Schedule whereStartTime($value)
  * @method static Builder|Schedule whereUpdatedAt($value)
  * @mixin \Eloquent
- * @property-read \App\Models\Employee $employee
  */
 class Schedule extends Model
 {
@@ -45,12 +45,13 @@ class Schedule extends Model
         'day',
         'start_time',
         'end_time',
-        'employee_id'
+        'employee_id',
+        'location_id'
     ];
 
     protected $casts = [
-        'start_time' => 'timestamp',
-        'end_time' => 'timestamp'
+        'start_time' => 'datetime',
+        'end_time' => 'datetime'
     ];
 
     public function present(): SchedulePresenter
@@ -61,6 +62,11 @@ class Schedule extends Model
     public function employee(): BelongsTo
     {
         return $this->belongsTo(Employee::class);
+    }
+
+    public function location(): BelongsTo
+    {
+        return $this->belongsTo(Location::class);
     }
 
     public function rests(): HasMany

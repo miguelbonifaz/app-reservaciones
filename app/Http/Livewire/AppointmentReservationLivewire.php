@@ -5,6 +5,7 @@ namespace App\Http\Livewire;
 use App\Models\Appointment;
 use App\Models\Customer;
 use App\Models\Employee;
+use App\Models\Location;
 use App\Models\Service;
 use App\Notifications\AppointmentConfirmedNotification;
 use Carbon\Carbon;
@@ -25,6 +26,8 @@ class AppointmentReservationLivewire extends Component
         'employee_id' => '',
         'date' => '',
         'start_time' => '',
+        'start_time_and_location' => '',
+        'location_id' => '',
         'name' => '',
         'phone' => '',
         'email' => '',
@@ -47,6 +50,26 @@ class AppointmentReservationLivewire extends Component
         $this->employees = collect();
 
         array_push($this->steps, self::STEP_SERVICE_AND_EMPLOYEE);
+
+        // para proposito de desarrollo
+        if (config('app.env') == 'testing') {
+            return;
+        }
+
+        $this->form['service_id'] = 1;
+        $this->updatedFormServiceId(1);
+        $this->form['employee_id'] = 1;
+        array_push($this->steps, self::STEP_DATE_AND_HOUR);
+        $this->currentStep = self::STEP_DATE_AND_HOUR;
+        $this->form['date'] = '2021-08-24';
+        $this->form['start_time_and_location'] = '10:00, 1';
+        $this->updatedFormStartTimeAndLocation('10:00, 1');
+//        array_push($this->steps, self::STEP_DETAILS);
+//        $this->currentStep = self::STEP_DETAILS;
+//        array_push($this->steps, self::STEP_FORM_CUSTOMER);
+//        $this->currentStep = self::STEP_FORM_CUSTOMER;
+//        array_push($this->steps, self::STEP_FAREWELL);
+//        $this->currentStep = self::STEP_FAREWELL;
     }
 
     protected $messages = [
@@ -197,6 +220,11 @@ class AppointmentReservationLivewire extends Component
         )->format('H:i A');
     }
 
+    public function getAppointmentLocationProperty()
+    {
+        return Location::find($this->form['location_id'])->present()->name();
+    }
+
     public function getAppointmentValueProperty(): string
     {
         return $this->service->present()->value();
@@ -214,6 +242,10 @@ class AppointmentReservationLivewire extends Component
 
     public function getAvailableHoursProperty()
     {
+        if (!$this->form['date']) {
+            return [];
+        }
+
         return $this->employee->workingHours($this->form['date'], $this->service);
     }
 
@@ -297,6 +329,14 @@ class AppointmentReservationLivewire extends Component
         $this->employees = Service::find($this->form['service_id'])->employees;
     }
 
+    public function updatedFormStartTimeAndLocation($value)
+    {
+        $data = explode(',', $value);
+
+        $this->form['location_id'] = $data[1];
+        $this->form['start_time'] = $data[0];
+    }
+
     public function createAppointment()
     {
         DB::transaction(function () {
@@ -314,6 +354,7 @@ class AppointmentReservationLivewire extends Component
             $appointment = Appointment::create([
                 'employee_id' => $this->form['employee_id'],
                 'service_id' => $this->form['service_id'],
+                'location_id' => $this->form['location_id'],
                 'customer_id' => $customer->id,
                 'date' => $this->form['date'],
                 'start_time' => $this->form['start_time'],

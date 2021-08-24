@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Employee;
+use App\Models\Location;
 use App\Models\Schedule;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -32,12 +33,17 @@ class EmployeeFactory extends Factory
     public function configure(): EmployeeFactory
     {
         return $this->afterCreating(function (Employee $employee) {
-            collect(range(0, 6))->each(function ($number) use ($employee) {
-                $employee->schedules()->create([
-                    'day' => $number,
-                    'employee_id' => $employee->id
-                ]);
-            });
+            $locations = Location::all();
+
+            foreach ($locations as $location) {
+                collect(range(0, 6))->each(function ($number) use ($location, $employee) {
+                    $employee->schedules()->create([
+                        'day' => $number,
+                        'employee_id' => $employee->id,
+                        'location_id' => $location->id,
+                    ]);
+                });
+            }
         });
     }
 }

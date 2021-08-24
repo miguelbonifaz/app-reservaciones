@@ -31,7 +31,7 @@
             </div>
         </div>
         <div class="bg-white">
-            <div class="grid gap-6 sm:grid-cols-2 gap-4">
+            <div class="grid gap-4 gap-6 sm:grid-cols-2">
                 @if ($currentStep == AppointmentReservationLivewire::STEP_SERVICE_AND_EMPLOYEE)
                     <x-input.select
                         label="Escoje un servicio"
@@ -65,30 +65,38 @@
                                 />
                                 <x-ui.error :type="$this->form['date']"/>
                             </div>
-                            <div>
+                            <div class="lg:flex-grow">
                                 <div
                                     class="px-3 py-2 mb-1 w-32 text-center text-white rounded-lg border border-gray-200 bg-mariajose_gray">
                                     {{ $this->selectedDay ?? 'Cargando...' }}
                                 </div>
-                                <div class="grid grid-cols-2 gap-2 lg:flex lg:flex-col lg:h-72 lg:flex-wrap lg:gap-0">
-                                    @foreach ($this->availableHours as $data)
-                                        <label
-                                            class="mr-2 w-full lg:w-32 text-center border border-gray-200 text-center py-2 rounded-lg mb-1 flex items-center justify-center {{ $this->hourNotAvailableClasses($data['isAvailable']) }}">
-                                            <input
-                                                @if (!$data['isAvailable'])
-                                                disabled
-                                                @else
-                                                wire:model.lazy="form.start_time"
-                                                @endif
-                                                class="mr-1 w-4 h-4 border-gray-300 focus:ring-mariajose_gray text-mariajose_gray"
-                                                name="start_time"
-                                                type="radio"
-                                                value="{{ $data['hour'] }}">
-                                            {{ $data['hour'] }}
-                                        </label>
+                                <div class="lg:w-full lg:flex">
+                                    @foreach ($this->availableHours as $location => $hours)
+                                        <div
+                                            class="grid grid-cols-2 gap-1 lg:flex lg:flex-col lg:h-72 lg:flex-wrap lg:gap-0 lg:flex-grow lg:content-start">
+                                            <label
+                                                class="col-span-2 px-3 py-2 mt-8 w-32 text-center text-white rounded-lg border border-gray-200 lg:mb-1 lg:mt-0 bg-mariajose_gray"
+                                                for="">{{ $location }}</label>
+                                            @foreach ($hours as $data)
+                                                <label
+                                                    class="mr-2 w-full lg:w-32 text-center border border-gray-200 text-center py-2 rounded-lg mb-1 flex items-center justify-center {{ $this->hourNotAvailableClasses($data['isAvailable']) }}">
+                                                    <input
+                                                        @if (!$data['isAvailable'])
+                                                        disabled
+                                                        @else
+                                                        wire:model="form.start_time_and_location"
+                                                        @endif
+                                                        class="mr-1 w-4 h-4 border-gray-300 focus:ring-mariajose_gray text-mariajose_gray"
+                                                        name="form.start_time_and_location"
+                                                        type="radio"
+                                                        value="{{ $data['hour'] }}, {{ $data['location_id'] }}">
+                                                    {{ $data['hour'] }}
+                                                </label>
+                                            @endforeach
+                                        </div>
                                     @endforeach
                                 </div>
-                                <x-ui.error type="form.start_time"/>
+                                <x-ui.error type="form.start_time_and_location"/>
                             </div>
                         </div>
                     </div>
@@ -172,6 +180,10 @@
                                                 </th>
                                                 <th scope="col"
                                                     class="px-6 pt-3 pb-2 text-lg font-medium font-bold tracking-wider text-left text-mariajose_gray">
+                                                    Lugar
+                                                </th>
+                                                <th scope="col"
+                                                    class="px-6 pt-3 pb-2 text-lg font-medium font-bold tracking-wider text-left text-mariajose_gray">
                                                     Hora
                                                 </th>
                                                 <th scope="col"
@@ -191,6 +203,10 @@
                                                 </td>
                                                 <td class="px-6 py-4 font-medium text-gray-500 whitespace-nowrap">
                                                     {{ $this->appointmentDate }}
+                                                </td>
+                                                <td class="px-6 py-4 font-medium text-gray-500 whitespace-nowrap">
+
+                                                    {{ $this->appointmentLocation }}
                                                 </td>
                                                 <td class="px-6 py-4 font-medium text-gray-500 whitespace-nowrap">
 
@@ -279,7 +295,7 @@
                         </p>
                         <div class="flex justify-center">
                             <x-input.link href="{{ route('website.home') }}">
-                                <span class="font-bold text-lg">
+                                <span class="text-lg font-bold">
                                     Ir a la página de inicio
                                 </span>
                             </x-input.link>

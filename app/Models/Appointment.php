@@ -49,6 +49,7 @@ class Appointment extends Model
         'employee_id',
         'customer_id',
         'service_id',
+        'location_id',
         'date',
         'start_time',
         'end_time',
