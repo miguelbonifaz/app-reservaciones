@@ -3,8 +3,10 @@
 namespace Database\Factories;
 
 use App\Models\Employee;
+use App\Models\Location;
 use App\Models\RestSchedule;
 use App\Models\Schedule;
+use App\Models\Service;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class RestScheduleFactory extends Factory
@@ -25,7 +27,10 @@ class RestScheduleFactory extends Factory
     {
         $startTime = today()->setTime(range(10,20), 0);
 
-        $employee = Employee::factory()->create();
+        $employee = Employee::factory()
+            ->hasAttached(Service::factory())
+            ->hasAttached(Location::factory())
+            ->create();
 
         return [
             'start_time' => $startTime,

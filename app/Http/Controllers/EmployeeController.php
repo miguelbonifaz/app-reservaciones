@@ -38,9 +38,11 @@ class EmployeeController extends Controller
     {
         $servicesId = request()->servicesId;
 
+        $locationsId = request()->locationsId;
+
         $days = collect([0, 1, 2, 3, 4, 5, 6]);
 
-        DB::transaction(function () use ($servicesId, $days) {
+        DB::transaction(function () use ($servicesId, $days, $locationsId) {
             $employee = Employee::create([
                 'name' => request()->name,
                 'email' => request()->email,
@@ -48,13 +50,17 @@ class EmployeeController extends Controller
             ]);
 
             $employee->services()->attach($servicesId);
+            $employee->locations()->attach($locationsId);
 
-            $days->each(function ($day) use ($employee) {
-                $employee->schedules()->create([
-                    'day' => $day,
-                    'employee_id' => $employee->id,
-                ]);
-            });
+            foreach ($locationsId as $locationId) {
+                $days->each(function ($day) use ($locationId, $employee) {
+                    $employee->schedules()->create([
+                        'day' => $day,
+                        'employee_id' => $employee->id,
+                        'location_id' => $locationId
+                    ]);
+                });
+            }
         });
 
         return redirect()
@@ -82,6 +88,8 @@ class EmployeeController extends Controller
     {
         $servicesId = request()->servicesId;
 
+        $locationsId = request()->locationsId;
+
         $employee = request()->employee;
 
         request()->validate([
@@ -92,6 +100,8 @@ class EmployeeController extends Controller
                 Rule::unique('employees', 'email')->ignoreModel($employee)
             ],
             'phone' => 'required|numeric',
+            'servicesId' => 'required',
+            'locationsId' => 'required',
             'start_time.*' => function ($attr, $value, $fail) {
                 $key = (int)explode('.', $attr)[1];
 
@@ -116,30 +126,31 @@ class EmployeeController extends Controller
             }
         ]);
 
-        DB::transaction(function () use ($servicesId, $employee) {
+        DB::transaction(function () use ($locationsId, $servicesId, $employee) {
             $employee->update([
                 'name' => request()->name,
                 'email' => request()->email,
-                'phone' => request()->phone
+                'phone' => request()->phone,
             ]);
 
             $employee->services()->sync($servicesId);
 
-            collect(request()->start_time)->each(function ($hour, $day) use ($employee) {
-                if ($hour == null) {
-                    return;
-                }
-                $schedule = Schedule::query()
-                    ->where('day', $day)
-                    ->where('employee_id', $employee->id)
-                    ->first();
+            foreach ($locationsId as $locationId) {
+                collect(request()->start_time)->each(function ($hour, $day) use ($locationId, $employee) {
+                    if ($hour == null) {
+                        return;
+                    }
+                    $schedule = Schedule::query()
+                        ->where('day', $day)
+                        ->where('location_id', $locationId)
+                        ->where('employee_id', $employee->id)
+                        ->first();
 
-                $startTime = Carbon::createFromTimestamp(strtotime($hour))->format('H:i');
-
-                $schedule->update([
-                    'start_time' => $startTime,
-                ]);
-            });
+                    $schedule->update([
+                        'start_time' => $hour,
+                    ]);
+                });
+            }
 
             collect(request()->end_time)->each(function ($hour, $day) use ($employee) {
                 if ($hour == null) {

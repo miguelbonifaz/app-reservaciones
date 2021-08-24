@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Employee;
+use App\Models\Location;
 use App\Models\Schedule;
 use App\Models\Service;
 use Carbon\Carbon;
@@ -33,11 +34,12 @@ test('can see create employee form', function () {
 });
 
 test('can update an employee', function () {
+    $this->withoutExceptionHandling();
     // Arrange
-    /** @var Employee $data */
-    $service = Service::factory()->create();
-
-    $employee = Employee::factory()->create();
+    $employee = Employee::factory()
+        ->hasAttached($service = Service::factory()->create())
+        ->hasAttached($location = Location::factory()->create())
+        ->create();
 
     $data = Employee::factory()->make();
 
@@ -47,6 +49,7 @@ test('can update an employee', function () {
         'email' => $data->email,
         'phone' => $data->phone,
         'servicesId' => [$service->id],
+        'locationsId' => [$location->id],
         'start_time' => ['1' => '10:00'],
         'end_time' => ['1' => '15:00'],
     ]);
@@ -66,11 +69,11 @@ test('can update an employee', function () {
     $this->assertEquals($data->phone, $employee->phone);
     $this->assertEquals(
         '10:00',
-        Carbon::createFromTimestamp($employeeSchedule->start_time)->format('H:i')
+        $employeeSchedule->start_time->format('H:i')
     );
     $this->assertEquals(
         '15:00',
-        Carbon::createFromTimestamp($employeeSchedule->end_time)->format('H:i')
+        $employeeSchedule->end_time->format('H:i')
     );
 
     $this->assertCount(1, $employee->services);
@@ -81,7 +84,10 @@ test('can update an employee', function () {
 
 test('can update an employee with the same email', function () {
     // Arrange
-    $employee = Employee::factory()->create();
+    $employee = Employee::factory()
+        ->hasAttached($service = Service::factory()->create())
+        ->hasAttached($location = Location::factory()->create())
+        ->create();
 
     $data = Employee::factory()->make();
 
@@ -90,6 +96,8 @@ test('can update an employee with the same email', function () {
         'name' => $data->name,
         'email' => $employee->email,
         'phone' => $data->phone,
+        'servicesId' => [$service->id],
+        'locationsId' => [$location->id],
     ]);
 
     // Assert
@@ -98,7 +106,10 @@ test('can update an employee with the same email', function () {
 
 test('fields are required', function () {
     // Arrange
-    $employee = Employee::factory()->create();
+    $employee = Employee::factory()
+        ->hasAttached($service = Service::factory()->create())
+        ->hasAttached($location = Location::factory()->create())
+        ->create();
 
     //Act
     $response = updateEmployee($employee, [
@@ -115,9 +126,44 @@ test('fields are required', function () {
     ]);
 });
 
+test('field servicesId are required', function () {
+    // Arrange
+    $employee = Employee::factory()
+        ->hasAttached($service = Service::factory()->create())
+        ->hasAttached($location = Location::factory()->create())
+        ->create();
+
+    //Act
+    $response = updateEmployee($employee);
+
+    //Assert
+    $response->assertSessionHasErrors([
+        'servicesId',
+    ]);
+});
+
+test('field locationsId are required', function () {
+    // Arrange
+    $employee = Employee::factory()
+        ->hasAttached($service = Service::factory()->create())
+        ->hasAttached($location = Location::factory()->create())
+        ->create();
+
+    //Act
+    $response = updateEmployee($employee);
+
+    //Assert
+    $response->assertSessionHasErrors([
+        'locationsId',
+    ]);
+});
+
 test('Si se escoje una hora de inicio, la hora fin debe ser requerida', function () {
     // Arrange
-    $employee = Employee::factory()->create();
+    $employee = Employee::factory()
+        ->hasAttached($service = Service::factory()->create())
+        ->hasAttached($location = Location::factory()->create())
+        ->create();
 
     //Act
     $response = updateEmployee($employee, [
@@ -137,7 +183,10 @@ test('Si se escoje una hora de inicio, la hora fin debe ser requerida', function
 
 test('Si se escoje una hora de salida, la hora de inicio debe ser requerida', function () {
     // Arrange
-    $employee = Employee::factory()->create();
+    $employee = Employee::factory()
+        ->hasAttached($service = Service::factory()->create())
+        ->hasAttached($location = Location::factory()->create())
+        ->create();
 
     //Act
     $response = updateEmployee($employee, [
@@ -158,7 +207,10 @@ test('Si se escoje una hora de salida, la hora de inicio debe ser requerida', fu
 test('field phone must be a number', function () {
     // Arrange
     /** @var Employee $employee */
-    $employee = Employee::factory()->create();
+    $employee = Employee::factory()
+        ->hasAttached($service = Service::factory()->create())
+        ->hasAttached($location = Location::factory()->create())
+        ->create();
 
     // Act
     $response = updateEmployee($employee, [
@@ -173,7 +225,10 @@ test('field phone must be a number', function () {
 
 test('field email must be unique', function () {
     // Arrange
-    $anotherEmployee = Employee::factory()->create();
+    $anotherEmployee = Employee::factory()
+        ->hasAttached($service = Service::factory()->create())
+        ->hasAttached($location = Location::factory()->create())
+        ->create();
 
     $employee = Employee::factory()->create();
 
@@ -191,7 +246,10 @@ test('field email must be unique', function () {
 test('field email must be valid', function () {
     // Arrange
     /** @var Employee $employee */
-    $employee = Employee::factory()->create();
+    $employee = Employee::factory()
+        ->hasAttached($service = Service::factory()->create())
+        ->hasAttached($location = Location::factory()->create())
+        ->create();
 
     // Act
     $response = updateEmployee($employee, [
@@ -205,10 +263,12 @@ test('field email must be valid', function () {
 });
 
 test('email must be unique', function () {
-    $this->markTestIncomplete('Revisar test');
+    $this->markTestSkipped('Revisar test');
     // Arrange
-    /** @var Employee $employee */
-    $employee = Employee::factory()->create();
+    $employee = Employee::factory()
+        ->hasAttached($service = Service::factory()->create())
+        ->hasAttached($location = Location::factory()->create())
+        ->create();
 
     // Act
     $response = updateEmployee($employee,[

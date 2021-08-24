@@ -51,6 +51,7 @@ function stepTwo(TestableLivewire $component, $dataAppointment): void
     $component->assertSet('currentStep', AppointmentReservationLivewire::STEP_DATE_AND_HOUR);
     $component->set('form.date', $dataAppointment->date->format('Y-m-d'));
     $component->set('form.start_time', $dataAppointment->start_time->format('H:i'));
+    $component->set('form.location_id', $dataAppointment->location_id);
     assertNull($component->get('firstStepProgressBarClass'));
     assertNull($component->get('secondStepProgressBarClass'));
     assertEquals('opacity-30', $component->get('thirdStepProgressBarClass'));

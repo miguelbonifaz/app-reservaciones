@@ -13,8 +13,8 @@ class IdeHelperGeneratorCommand extends Command
 
     public function handle()
     {
-        Artisan::call('ide-helper:generate');
-        Artisan::call('ide-helper:meta');
         Artisan::call('ide-helper:models -W');
+        Artisan::call('ide-helper:meta');
+        Artisan::call('ide-helper:generate');
     }
 }

@@ -2,6 +2,7 @@
 
 use App\Models\Appointment;
 use App\Models\Employee;
+use App\Models\Location;
 use App\Models\RestSchedule;
 use App\Models\Schedule;
 use App\Models\Service;
@@ -9,13 +10,16 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(RefreshDatabase::class);
 
-test('puedo obtener las horas del trabajo del empleado en un día especifico', function () {
+test('puedo obtener las horas del trabajo del empleado en un día especifico con una sola localidad', function () {
     // Arrange
     $employee = Employee::factory()
+        ->hasAttached(Location::factory())
         ->hasAttached($service = Service::factory()->create([
             'duration' => 30
         ]))
         ->create();
+
+    $location = Location::first();
 
     $schedule = $employee->schedules()
         ->firstWhere('day', today()->addDay()->dayOfWeek);
@@ -29,8 +33,13 @@ test('puedo obtener las horas del trabajo del empleado en un día especifico', f
     $hours = $employee->workingHours(today()->addDay()->format('Y-m-d'), $service);
 
     // Assert
-    $this->assertCount(2, $hours);
+    $locationName = $hours->keys()->first();
 
+    $this->assertCount(1, $hours);
+    $this->assertEquals($locationName, $location->name);
+
+    $hours = $hours->first();
+    $this->assertCount(2, $hours);
     $this->assertEquals("10:00", $hours[0]['hour']);
     $this->assertTrue($hours[0]['isAvailable']);
     $this->assertEquals("10:30", $hours[1]['hour']);
@@ -40,6 +49,7 @@ test('puedo obtener las horas del trabajo del empleado en un día especifico', f
 test('se debe descartar las horas posteriores a la hora actual', function () {
     // Arrange
     $employee = Employee::factory()
+        ->hasAttached(Location::factory())
         ->hasAttached($service = Service::factory()->create([
             'duration' => 30
         ]))
@@ -56,12 +66,13 @@ test('se debe descartar las horas posteriores a la hora actual', function () {
     $hours = $employee->workingHours(today()->format('Y-m-d'), $service);
 
     // Assert
-    $this->assertCount(0, $hours);
+    $this->assertCount(0, $hours->first());
 });
 
 test("las horas que no esten disponible en un día, estas deben venir con el valor 'false' (servicio de 30 minutos)", function () {
     // Arrange
     $employee = Employee::factory()
+        ->hasAttached(Location::factory())
         ->hasAttached($service = Service::factory()->create([
             'duration' => 30
         ]))
@@ -85,6 +96,8 @@ test("las horas que no esten disponible en un día, estas deben venir con el val
     $hours = $employee->workingHours(today()->addDay()->format('Y-m-d'), $service)->values();
 
     // Assert
+    $hours = $hours->first();
+
     $this->assertCount(4, $hours);
 
     expect('10:00')->toBe($hours[0]['hour']);
@@ -103,6 +116,7 @@ test("las horas que no esten disponible en un día, estas deben venir con el val
 test("las horas que no esten disponible en un día, estas deben venir con el valor 'false' (servicio de 60 minutos)", function () {
     // Arrange
     $employee = Employee::factory()
+        ->hasAttached(Location::factory())
         ->hasAttached($service = Service::factory()->create([
             'duration' => 60
         ]))
@@ -123,9 +137,11 @@ test("las horas que no esten disponible en un día, estas deben venir con el val
     ]);
 
     // Act
-    $hours = $employee->workingHours(today()->addDay()->format('Y-m-d'), $service)->values();
+    $hours = $employee->workingHours(today()->addDay()->format('Y-m-d'), $service);
 
     // Assert
+    $hours = $hours->first()->values();
+
     $this->assertCount(4, $hours);
 
     expect('10:00')->toBe($hours[0]['hour']);
@@ -144,6 +160,7 @@ test("las horas que no esten disponible en un día, estas deben venir con el val
 test('Debe filtrar las horas de trabajo si el empleado tiene horas de descanso ', function () {
     // Arrange
     $employee = Employee::factory()
+        ->hasAttached(Location::factory())
         ->hasAttached($service = Service::factory()->create([
             'duration' => 30
         ]))
@@ -163,9 +180,11 @@ test('Debe filtrar las horas de trabajo si el empleado tiene horas de descanso '
     ]);
 
     // Act
-    $hours = $employee->workingHours(today()->addDay()->format('Y-m-d'), $service)->values();
+    $hours = $employee->workingHours(today()->addDay()->format('Y-m-d'), $service);
 
     // Assert
+    $hours = $hours->first()->values();
+
     $this->assertCount(4, $hours);
 
     expect('10:00')->toBe($hours[0]['hour']);

@@ -14,11 +14,12 @@ class CreateAppointmentsLivewire extends Component
     public $employees = [];
 
     public $form = [
-        'customer_id' => '',
         'service_id' => '',
         'employee_id' => '',
         'start_time' => '',
+        'location_id' => '',
         'date' => '',
+        'customer_id' => '',
         'note' => '',
     ];
 
@@ -98,6 +99,7 @@ class CreateAppointmentsLivewire extends Component
             'customer_id' => $this->form['customer_id'],
             'service_id' => $this->form['service_id'],
             'employee_id' => $this->form['employee_id'],
+            'location_id' => $this->form['location_id'],
             'start_time' => $this->form['start_time'],
             'end_time' => $this->createEndTime($this->form['start_time']),
             'date' => $this->form['date'],
