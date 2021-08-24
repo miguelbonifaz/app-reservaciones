@@ -40,6 +40,8 @@ use Illuminate\Support\Carbon;
  * @method static Builder|Appointment whereUpdatedAt($value)
  * @mixin \Eloquent
  * @method static Builder|Appointment whereServiceId($value)
+ * @property int $location_id
+ * @method static Builder|Appointment whereLocationId($value)
  */
 class Appointment extends Model
 {

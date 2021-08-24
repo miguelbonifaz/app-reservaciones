@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Employee;
+use App\Models\Location;
 use App\Models\Schedule;
 use App\Models\Service;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -33,16 +34,18 @@ test('can see create employee form', function () {
 test('can create a employee', function () {
     // Arrange
     /** @var Employee $data */
-    $data = Employee::factory()->make();
-
-    $service = Service::factory()->create();
+    $data = Employee::factory()
+        ->hasAttached($service = Service::factory()->create())
+        ->hasAttached($location = Location::factory()->create())
+        ->make();
 
     // Act
     $response = createEmployee([
         'name' => $data->name,
         'email' => $data->email,
         'phone' => $data->phone,
-        'servicesId' => [$service->id]
+        'servicesId' => [$service->id],
+        'locationsId' => [$location->id],
     ]);
 
     // Assert
@@ -59,6 +62,9 @@ test('can create a employee', function () {
 
     $this->assertCount(1, $employee->services);
     $this->assertEquals($service->id, $employee->services->first()->id);
+
+    $this->assertCount(1, $employee->locations);
+    $this->assertEquals($location->id, $employee->locations->first()->id);
 
     $this->assertCount(7, Schedule::all());
 
@@ -86,6 +92,34 @@ test('fields are required', function () {
         'name',
         'email',
         'phone',
+    ]);
+});
+
+test('field servicesId is required', function () {
+    // Arrange
+
+    //Act
+    $response = createEmployee([
+        'servicesId' => null,
+    ]);
+
+    //Assert
+    $response->assertSessionHasErrors([
+        'servicesId',
+    ]);
+});
+
+test('field locationsId is required', function () {
+    // Arrange
+
+    //Act
+    $response = createEmployee([
+        'locationsId' => null,
+    ]);
+
+    //Assert
+    $response->assertSessionHasErrors([
+        'locationsId',
     ]);
 });
 

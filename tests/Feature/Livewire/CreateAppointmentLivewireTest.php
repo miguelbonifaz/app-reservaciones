@@ -49,6 +49,7 @@ test('can create an appointment', function () {
 
     $component->set('form.customer_id', $data->customer_id);
     $component->set('form.service_id', $data->service_id);
+    $component->set('form.location_id', $data->location_id);
     $component->set('form.employee_id', $data->employee_id);
     $component->set('form.start_time', $data->start_time->format('H:i'));
     $component->set('form.date', $data->date->format('Y-m-d'));
@@ -65,6 +66,7 @@ test('can create an appointment', function () {
     expect($data->customer_id)->toEqual($appointment->customer_id);
     expect($data->service_id)->toEqual($appointment->service_id);
     expect($data->employee_id)->toEqual($appointment->employee_id);
+    expect($data->location_id)->toEqual($appointment->location_id);
     expect($data->start_time->format('H:i'))->toEqual($appointment->start_time->format('H:i'));
     expect($data->date)->toEqual($appointment->date);
     expect($data->note)->toEqual($appointment->note);

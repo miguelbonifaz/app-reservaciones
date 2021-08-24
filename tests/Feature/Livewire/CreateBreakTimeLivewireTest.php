@@ -4,6 +4,7 @@ namespace Tests\Feature\Livewire;
 
 use App\Http\Livewire\CreateBreakTimeLivewire;
 use App\Models\Employee;
+use App\Models\Location;
 use App\Models\RestSchedule;
 use App\Models\Schedule;
 use Carbon\Carbon;
@@ -24,7 +25,10 @@ function buildComponent(Schedule $schedule): TestableLivewire
 
 test('can create component', function () {
     // Arrange
-    Employee::factory()->create();
+    Employee::factory()
+        ->hasAttached(Location::factory())
+        ->create();
+
     $schedule = Schedule::first();
 
     // Act
@@ -37,7 +41,10 @@ test('can create component', function () {
 
 test('can create a break time', function () {
     // Arrange
-    Employee::factory()->create();
+    Employee::factory()
+        ->hasAttached($location = Location::factory())
+        ->create();
+
     $schedule = Schedule::first();
 
     $component = buildComponent($schedule);
@@ -62,7 +69,10 @@ test('can create a break time', function () {
 
 test('fields are required', function () {
     // Arrange
-    Employee::factory()->create();
+    Employee::factory()
+        ->hasAttached(Location::factory())
+        ->create();
+
     $schedule = Schedule::first();
 
     $component = buildComponent($schedule);
@@ -82,7 +92,10 @@ test('fields are required', function () {
 
 test('field endTime must be greater than startTime', function () {
     // Arrange
-    Employee::factory()->create();
+    Employee::factory()
+        ->hasAttached(Location::factory())
+        ->create();
+
     $schedule = Schedule::first();
 
     $component = buildComponent($schedule);

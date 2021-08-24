@@ -38,6 +38,8 @@ use Illuminate\Support\Collection;
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Service[] $services
  * * @method static \Illuminate\Database\Eloquent\Builder|Employee searchByName($name)
  * @property-read int|null $services_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Location[] $locations
+ * @property-read int|null $locations_count
  */
 class Employee extends Model
 {

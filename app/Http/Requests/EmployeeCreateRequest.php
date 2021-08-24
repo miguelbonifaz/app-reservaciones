@@ -12,6 +12,8 @@ class EmployeeCreateRequest extends FormRequest
             'name' => 'required',
             'email' => 'required|email|unique:employees,email',
             'phone' => 'required|numeric',
+            'servicesId' => 'required',
+            'locationsId' => 'required',
         ];
     }
 

@@ -36,6 +36,9 @@ use Illuminate\Support\Carbon;
  * @method static Builder|Schedule whereStartTime($value)
  * @method static Builder|Schedule whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property int $location_id
+ * @property-read \App\Models\Location $location
+ * @method static Builder|Schedule whereLocationId($value)
  */
 class Schedule extends Model
 {
