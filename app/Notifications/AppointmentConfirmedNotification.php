@@ -44,6 +44,7 @@ class AppointmentConfirmedNotification extends Notification implements ShouldQue
             ->line("Esta es la confirmación de su cita con los siguientes datos:")
             ->line("- Fecha: {$this->appointment->present()->date()}")
             ->line("- Hora: {$this->appointment->present()->startTime()}")
+            ->line("- Lugar: {$this->appointment->location->present()->name()}")
             ->line("- Servicio: {$this->appointment->service->present()->name()}")
             ->line("- Profesional: {$this->appointment->employee->present()->name()}")
             ->line('Gracias por confiar en nosotros.')
