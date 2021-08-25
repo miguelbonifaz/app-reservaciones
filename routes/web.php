@@ -4,6 +4,7 @@ use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\DeleteBreakTimeController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\LocationController;
 use App\Http\Controllers\MyProfileController;
 use App\Http\Controllers\UserPhotoController;
 use App\Http\Controllers\EmployeeController;
@@ -57,6 +58,10 @@ Route::prefix('/customers')->group(function () {
     Route::get('/{customer}/edit', [CustomerController::class, 'edit'])->name('customers.edit');
     Route::post('/{customer}', [CustomerController::class, 'update'])->name('customers.update');
     Route::delete('/{customer}', [CustomerController::class, 'destroy'])->name('customers.destroy');
+});
+
+Route::prefix('/locations')->group(function () {
+    Route::get('/', [LocationController::class, 'index'])->name('locations.index');
 });
 
 Route::prefix('/profile')->group(function () {
