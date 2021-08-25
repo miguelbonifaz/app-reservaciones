@@ -93,6 +93,9 @@
                                                     {{ $data['hour'] }}
                                                 </label>
                                             @endforeach
+                                            @if ($hours->isEmpty())
+                                                <p>No existe horario disponible el día de hoy.</p>
+                                            @endif
                                         </div>
                                     @endforeach
                                 </div>

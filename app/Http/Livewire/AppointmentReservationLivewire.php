@@ -56,14 +56,14 @@ class AppointmentReservationLivewire extends Component
             return;
         }
 
-        $this->form['service_id'] = 1;
-        $this->updatedFormServiceId(1);
-        $this->form['employee_id'] = 1;
-        array_push($this->steps, self::STEP_DATE_AND_HOUR);
-        $this->currentStep = self::STEP_DATE_AND_HOUR;
-        $this->form['date'] = '2021-08-24';
-        $this->form['start_time_and_location'] = '10:00, 1';
-        $this->updatedFormStartTimeAndLocation('10:00, 1');
+//        $this->form['service_id'] = 1;
+//        $this->updatedFormServiceId(1);
+//        $this->form['employee_id'] = 1;
+//        array_push($this->steps, self::STEP_DATE_AND_HOUR);
+//        $this->currentStep = self::STEP_DATE_AND_HOUR;
+//        $this->form['date'] = '2021-08-24';
+//        $this->form['start_time_and_location'] = '10:00, 1';
+//        $this->updatedFormStartTimeAndLocation('10:00, 1');
 //        array_push($this->steps, self::STEP_DETAILS);
 //        $this->currentStep = self::STEP_DETAILS;
 //        array_push($this->steps, self::STEP_FORM_CUSTOMER);
