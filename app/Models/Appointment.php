@@ -42,6 +42,7 @@ use Illuminate\Support\Carbon;
  * @method static Builder|Appointment whereServiceId($value)
  * @property int $location_id
  * @method static Builder|Appointment whereLocationId($value)
+ * @property-read \App\Models\Location $location
  */
 class Appointment extends Model
 {
