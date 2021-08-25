@@ -36,6 +36,11 @@ class Navbar extends Component
                 'isActive' => request()->routeIs('customers.*')
             ],
             [
+                'title' => 'Localidades',
+                'route' => route('locations.index'),
+                'isActive' => request()->routeIs('locations.*'),
+            ],
+            [
                 'title' => 'Usuarios',
                 'route' => route('users.index'),
                 'isActive' => request()->routeIs('users.*')
