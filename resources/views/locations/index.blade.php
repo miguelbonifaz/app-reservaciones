@@ -30,6 +30,7 @@
                                     {{ $location->present()->name() }}
                                 </td>
                                 <td class="px-6 py-4 text-sm whitespace-nowrap">
+                                    <a onclick="Livewire.emit('openModal', 'update-location-livewire', {{ json_encode(['locationId' => $location->id]) }})" class="cursor-pointer text-indigo-600 hover:text-indigo-900">Editar</a>
                                 </td>
                             </tr>
                         @endforeach
