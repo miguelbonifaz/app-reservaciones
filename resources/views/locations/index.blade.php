@@ -1,9 +1,12 @@
 <x-app-layout header-title="Localidades">
     <x-ui.flash/>
     <div class="flex justify-end space-x-2">
-        <x-input.link href="">
+        <button
+            type="button"
+            class="inline-flex justify-center py-2 px-4 text-sm font-medium text-white bg-gray-900 leading-4 rounded-md border border-transparent shadow-sm hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+            onclick="Livewire.emit('openModal', 'create-location-livewire')">
             Crear localidad
-        </x-input.link>
+        </button>
     </div>
     <div class="h-4"></div>
     <div class="flex flex-col">
