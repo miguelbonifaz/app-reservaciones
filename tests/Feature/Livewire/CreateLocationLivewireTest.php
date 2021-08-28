@@ -1,7 +1,5 @@
 <?php
 
-namespace Tests\Feature\Livewire;
-
 use App\Http\Livewire\CreateLocationLivewire;
 use App\Models\Location;
 use Illuminate\Foundation\Testing\RefreshDatabase;

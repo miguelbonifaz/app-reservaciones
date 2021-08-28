@@ -3,7 +3,6 @@
 namespace Tests\Feature\Livewire;
 
 use App\Http\Livewire\AssignNewLocationToAnEmployeeLivewire;
-use App\Http\Livewire\CreateBreakTimeLivewire;
 use App\Models\Employee;
 use App\Models\Location;
 use App\Models\Schedule;
@@ -13,7 +12,7 @@ use function Pest\Livewire\livewire;
 
 uses(RefreshDatabase::class);
 
-function buildComponent(Employee $employee): TestableLivewire
+function buildAssignNewLocationToAnEmployeeLivewireComponent(Employee $employee): TestableLivewire
 {
     test()->actingAsUser();
 
@@ -27,7 +26,7 @@ test('can create AssignNewLocationToAnEmployeeLivewire component', function () {
     $employee = Employee::factory()->create();
 
     // Act
-    $component = buildComponent($employee);
+    $component = buildAssignNewLocationToAnEmployeeLivewireComponent($employee);
 
     // Assert
     expect($employee->id)->toBe($component->viewData('employeeId'));
@@ -43,7 +42,7 @@ test('can assign a new location to an employee', function () {
     expect($employee->locations)->toHaveCount(0);
     expect(Schedule::all())->toHaveCount(0);
 
-    $component = buildComponent($employee);
+    $component = buildAssignNewLocationToAnEmployeeLivewireComponent($employee);
     $component->set('locationId', $newLocation->id);
 
     // Act
