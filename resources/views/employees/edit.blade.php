@@ -7,6 +7,8 @@
                 :employee="$employee"
                 :schedules="$schedules"
                 :services="$services"
+                :isEditView="true"
+                :locations="$locations"
                 :daysOfWeek="$daysOfWeek ?? []"
             />
         </div>

@@ -6,10 +6,13 @@ use App\Models\Employee;
 use App\Models\Location;
 use App\Models\Schedule;
 use App\Models\Service;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class CreateEmployeeTest extends TestCase
 {
+    use RefreshDatabase;
+
     private function createEmployee($data = [])
     {
         $url = route('employees.store');
@@ -18,7 +21,8 @@ class CreateEmployeeTest extends TestCase
     }
 
     /** @test */
-    public function can_see_create_employee_form() {
+    public function can_see_create_employee_form()
+    {
         // Arrange
 
         // Act
@@ -35,7 +39,8 @@ class CreateEmployeeTest extends TestCase
     }
 
     /** @test */
-    public function can_create_a_employee() {
+    public function can_create_a_employee()
+    {
         // Arrange
         /** @var Employee $data */
         $data = Employee::factory()
@@ -49,7 +54,6 @@ class CreateEmployeeTest extends TestCase
             'email' => $data->email,
             'phone' => $data->phone,
             'servicesId' => [$service->id],
-            'locationsId' => [$location->id],
         ]);
 
         // Assert
@@ -67,23 +71,12 @@ class CreateEmployeeTest extends TestCase
         $this->assertCount(1, $employee->services);
         $this->assertEquals($service->id, $employee->services->first()->id);
 
-        $this->assertCount(1, $employee->locations);
-        $this->assertEquals($location->id, $employee->locations->first()->id);
-
-        $this->assertCount(7, Schedule::all());
-
-        collect(range(0, 6))->each(function ($number) use ($employee) {
-            $schedule = Schedule::query()
-                ->where('day', $number)
-                ->where('employee_id', $employee->id)
-                ->first();
-
-            $this->assertNotNull($schedule);
-        });
+        $this->assertCount(0, Schedule::all());
     }
 
     /** @test */
-    public function fields_are_required() {
+    public function fields_are_required()
+    {
         // Arrange
         //Act
         $response = $this->createEmployee([
@@ -101,7 +94,8 @@ class CreateEmployeeTest extends TestCase
     }
 
     /** @test */
-    public function field_servicesId_is_required() {
+    public function field_servicesId_is_required()
+    {
         // Arrange
 
         //Act
@@ -116,22 +110,8 @@ class CreateEmployeeTest extends TestCase
     }
 
     /** @test */
-    public function field_locationsId_is_required() {
-        // Arrange
-
-        //Act
-        $response = $this->createEmployee([
-            'locationsId' => null,
-        ]);
-
-        //Assert
-        $response->assertSessionHasErrors([
-            'locationsId',
-        ]);
-    }
-
-    /** @test */
-    public function field_phone_must_be_a_number() {
+    public function field_phone_must_be_a_number()
+    {
         // Arrange
         /** @var Employee $employee */
         $employee = Employee::factory()->create();
@@ -148,7 +128,8 @@ class CreateEmployeeTest extends TestCase
     }
 
     /** @test */
-    public function field_email_must_be_valid() {
+    public function field_email_must_be_valid()
+    {
         // Arrange
         // Act
         $response = $this->createEmployee([
@@ -162,7 +143,8 @@ class CreateEmployeeTest extends TestCase
     }
 
     /** @test */
-    public function email_must_be_unique() {
+    public function email_must_be_unique()
+    {
         // Arrange
         /** @var Employee $employee */
         $employee = Employee::factory()->create();

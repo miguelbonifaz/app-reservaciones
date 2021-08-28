@@ -7,32 +7,32 @@ use App\Models\Employee;
 use App\Models\Location;
 use App\Models\RestSchedule;
 use App\Models\Schedule;
-use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Testing\TestableLivewire;
 use function Pest\Livewire\livewire;
 
 uses(RefreshDatabase::class);
 
-function buildComponent(Schedule $schedule): TestableLivewire
+function buildComponent(Schedule $schedule, Location $location): TestableLivewire
 {
     test()->actingAsUser();
 
     return livewire(CreateBreakTimeLivewire::class, [
-        'scheduleId' => $schedule->id
+        'scheduleId' => $schedule->id,
+        'locationId' => $location->id,
     ]);
 }
 
 test('can create component', function () {
     // Arrange
     Employee::factory()
-        ->hasAttached(Location::factory())
+        ->hasAttached($location = Location::factory()->create())
         ->create();
 
     $schedule = Schedule::first();
 
     // Act
-    $component = buildComponent($schedule);
+    $component = buildComponent($schedule, $location);
 
     // Assert
     $component->assertSet('scheduleId', $schedule->id);
@@ -42,12 +42,12 @@ test('can create component', function () {
 test('can create a break time', function () {
     // Arrange
     Employee::factory()
-        ->hasAttached($location = Location::factory())
+        ->hasAttached($location = Location::factory()->create())
         ->create();
 
     $schedule = Schedule::first();
 
-    $component = buildComponent($schedule);
+    $component = buildComponent($schedule, $location);
     $component->set('startTime', $startTime = '10:00');
     $component->set('endTime', $endTime = '11:00');
 
@@ -70,12 +70,12 @@ test('can create a break time', function () {
 test('fields are required', function () {
     // Arrange
     Employee::factory()
-        ->hasAttached(Location::factory())
+        ->hasAttached($location = Location::factory()->create())
         ->create();
 
     $schedule = Schedule::first();
 
-    $component = buildComponent($schedule);
+    $component = buildComponent($schedule, $location);
     $component->set('startTime', null);
     $component->set('endTime', null);
 
@@ -93,12 +93,12 @@ test('fields are required', function () {
 test('field endTime must be greater than startTime', function () {
     // Arrange
     Employee::factory()
-        ->hasAttached(Location::factory())
+        ->hasAttached($location = Location::factory()->create())
         ->create();
 
     $schedule = Schedule::first();
 
-    $component = buildComponent($schedule);
+    $component = buildComponent($schedule, $location);
     $component->set('startTime', '08:00');
     $component->set('endTime', '08:00');
 
@@ -110,3 +110,4 @@ test('field endTime must be greater than startTime', function () {
         'endTime',
     ]);
 });
+

@@ -4,6 +4,8 @@ use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\DeleteBreakTimeController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\DeleteLocationFromEmployeeController;
+use App\Http\Controllers\EmployeeLocationController;
 use App\Http\Controllers\LocationController;
 use App\Http\Controllers\MyProfileController;
 use App\Http\Controllers\UserPhotoController;
@@ -38,6 +40,13 @@ Route::prefix('/employees')->group(function () {
     Route::get('/{employee}/edit', [EmployeeController::class, 'edit'])->name('employees.edit');
     Route::post('/{employee}', [EmployeeController::class, 'update'])->name('employees.update');
     Route::delete('/{employee}', [EmployeeController::class, 'destroy'])->name('employees.destroy');
+
+    Route::prefix('/{employee}/locations/{location}')->group(function () {
+        Route::get('/', [EmployeeLocationController::class, 'index'])->name('employees.locations.index');
+        Route::post('/', [EmployeeLocationController::class, 'update'])->name('employees.locations.update');
+
+        Route::get('/delete-location', [DeleteLocationFromEmployeeController::class, '__invoke'])->name('employees.locations.destroy');
+    });
 
     Route::get('/{employee}/breakTime/{restSchedule}', [DeleteBreakTimeController::class, '__invoke'])->name('employess.break-time.destroy');
 });
