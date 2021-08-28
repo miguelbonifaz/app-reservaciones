@@ -73,7 +73,7 @@
                                 <div class="lg:w-full lg:flex">
                                     @foreach ($this->availableHours as $location => $hours)
                                         <div
-                                            class="grid grid-cols-2 gap-1 lg:flex lg:flex-col lg:h-72 lg:flex-wrap lg:gap-0 lg:flex-grow lg:content-start">
+                                            class="grid grid-cols-2 gap-1 lg:flex lg:flex-col lg:h-72 lg:flex-wrap lg:gap-0 lg:content-start">
                                             <label
                                                 class="col-span-2 px-3 py-2 mt-8 w-32 text-center text-white rounded-lg border border-gray-200 lg:mb-1 lg:mt-0 bg-mariajose_gray"
                                                 for="">{{ $location }}</label>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\EmployeeCreateRequest;
 use App\Models\Employee;
+use App\Models\Location;
 use App\Models\RestSchedule;
 use App\Models\Schedule;
 use App\Models\Service;
@@ -28,39 +29,27 @@ class EmployeeController extends Controller
 
         $services = Service::query()->latest()->get();
 
+        $locations = Location::query()->latest()->get();
+
         return view('employees.create', [
             'employee' => $employee,
             'services' => $services,
+            'locations' => $locations,
         ]);
     }
 
     public function store(EmployeeCreateRequest $request)
     {
-        $servicesId = request()->servicesId;
+        DB::transaction(function () use ($request) {
+            $servicesId = request()->servicesId;
 
-        $locationsId = request()->locationsId;
-
-        $days = collect([0, 1, 2, 3, 4, 5, 6]);
-
-        DB::transaction(function () use ($servicesId, $days, $locationsId) {
             $employee = Employee::create([
-                'name' => request()->name,
-                'email' => request()->email,
-                'phone' => request()->phone
+                'name' => $request->name,
+                'email' => $request->email,
+                'phone' => $request->phone
             ]);
 
             $employee->services()->attach($servicesId);
-            $employee->locations()->attach($locationsId);
-
-            foreach ($locationsId as $locationId) {
-                $days->each(function ($day) use ($locationId, $employee) {
-                    $employee->schedules()->create([
-                        'day' => $day,
-                        'employee_id' => $employee->id,
-                        'location_id' => $locationId
-                    ]);
-                });
-            }
         });
 
         return redirect()
@@ -77,18 +66,19 @@ class EmployeeController extends Controller
 
         $services = Service::query()->latest()->get();
 
+        $locations = Location::query()->latest()->get();
+
         return view('employees.edit', [
             'employee' => $employee,
             'services' => $services,
             'schedules' => $schedules,
+            'locations' => $locations,
         ]);
     }
 
     public function update()
     {
         $servicesId = request()->servicesId;
-
-        $locationsId = request()->locationsId;
 
         $employee = request()->employee;
 
@@ -101,100 +91,15 @@ class EmployeeController extends Controller
             ],
             'phone' => 'required|numeric',
             'servicesId' => 'required',
-            'locationsId' => 'required',
-            'start_time.*' => function ($attr, $value, $fail) {
-                $key = (int)explode('.', $attr)[1];
-
-                if (!request()->start_time[$key] && !request()->end_time[$key]) {
-                    return;
-                }
-
-                if (request()->end_time[$key] == null) {
-                    $fail('Por favor, ingrese una hora de salida');
-                }
-            },
-            'end_time.*' => function ($attr, $value, $fail) {
-                $key = (int)explode('.', $attr)[1];
-
-                if (!request()->start_time[$key] && !request()->end_time[$key]) {
-                    return;
-                }
-
-                if (request()->start_time[$key] == null) {
-                    $fail('Por favor, ingrese una hora de inicio');
-                }
-            }
         ]);
 
-        DB::transaction(function () use ($locationsId, $servicesId, $employee) {
-            $employee->update([
-                'name' => request()->name,
-                'email' => request()->email,
-                'phone' => request()->phone,
-            ]);
+        $employee->update([
+            'name' => request()->name,
+            'email' => request()->email,
+            'phone' => request()->phone,
+        ]);
 
-            $employee->services()->sync($servicesId);
-
-            foreach ($locationsId as $locationId) {
-                collect(request()->start_time)->each(function ($hour, $day) use ($locationId, $employee) {
-                    if ($hour == null) {
-                        return;
-                    }
-                    $schedule = Schedule::query()
-                        ->where('day', $day)
-                        ->where('location_id', $locationId)
-                        ->where('employee_id', $employee->id)
-                        ->first();
-
-                    $schedule->update([
-                        'start_time' => $hour,
-                    ]);
-                });
-            }
-
-            collect(request()->end_time)->each(function ($hour, $day) use ($employee) {
-                if ($hour == null) {
-                    return;
-                }
-                $schedule = Schedule::query()
-                    ->where('day', $day)
-                    ->where('employee_id', $employee->id)
-                    ->first();
-
-                $endTime = Carbon::createFromTimestamp(strtotime($hour))->format('H:i');
-
-                $schedule->update([
-                    'end_time' => $endTime,
-                ]);
-            });
-
-            collect(request()->restStartTime)->each(function ($data, $day) {
-                collect($data)->each(function ($hours, $scheduleId) {
-                    collect($hours)->each(function ($hour) use ($scheduleId) {
-                        RestSchedule::updateOrCreate(
-                            [
-                                'schedule_id' => $scheduleId,
-                                'start_time' => $hour,
-                            ],
-                        );
-                    });
-                });
-            });
-
-            collect(request()->restEndTime)->each(function ($data, $day) {
-                collect($data)->each(function ($hours, $scheduleId) {
-                    collect($hours)->each(function ($hour) use ($scheduleId) {
-                        RestSchedule::updateOrCreate(
-                            [
-                                'schedule_id' => $scheduleId,
-                                'end_time' => $hour,
-                            ],
-                        );
-                    });
-                });
-            });
-
-        });
+        $employee->services()->sync($servicesId);
 
         return redirect()
             ->route('employees.index')

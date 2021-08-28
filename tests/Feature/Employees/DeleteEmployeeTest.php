@@ -6,8 +6,6 @@ use Tests\TestCase;
 
 uses(RefreshDatabase::class);
 
-uses(TestCase::class)->in('Feature');
-
 function deleteEmployee(Employee $employee)
 {
     $url = route('employees.destroy', $employee);

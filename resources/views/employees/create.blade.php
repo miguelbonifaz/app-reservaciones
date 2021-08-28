@@ -7,6 +7,8 @@
                     :employee="$employee"
                     :daysOfWeek="collect()"
                     :services="$services"
+                    :isEditView="false"
+                    :locations="$locations"
                 />
             </div>
         </div>

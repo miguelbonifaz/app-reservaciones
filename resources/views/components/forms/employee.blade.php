@@ -39,85 +39,65 @@
                 </label>
             </div>
         @endforeach
+        <x-input.error type="servicesId"/>
     </div>
-    @if ($employee->schedules->isNotEmpty())
+
+    @if ($isEditView)
+        <hr class="sm:col-span-2">
         <div class="sm:col-span-2">
-            <p class="mb-2 text-lg font-bold text-gray-800">Horario de trabajo</p>
-            <div class="grid gap-2 md:grid-cols-2 md:items-start">
-                @foreach ($schedules as $schedule)
-                    <div class="py-2 px-4 mt-1 mr-2 mb-2 space-y-1 bg-gray-50 rounded-lg shadow-sm">
-                        <div>
-                            <label for="monday" class="block mb-1 ml-2 font-semibold text-gray-800">
-                                {{ $schedule->present()->dayOfWeek() }}
-                            </label>
-                        </div>
-                        <div class="sm:grid sm:grid-cols-2 sm:gap-2">
-                            <div>
-                                <x-select-with-hours
-                                    label="Hora de inicio"
-                                    name="start_time[{{ $schedule->day }}]"
-                                    :value="$schedule->start_time ? \Carbon\Carbon::createFromTimestamp($schedule->start_time)->format('H:i') : null"
-                                />
-                                <x-ui.error type="start_time.{{ $schedule->day }}"/>
-                            </div>
-                            <div>
-                                <x-select-with-hours
-                                    label="Hora de salida"
-                                    name="end_time[{{ $schedule->day }}]"
-                                    :value="$schedule->end_time ? \Carbon\Carbon::createFromTimestamp($schedule->end_time)->format('H:i') : null"
-                                />
-                                <x-ui.error type="end_time.{{ $schedule->day }}"/>
-                            </div>
-                        </div>
-                        @foreach ($schedule->rests as $rest)
-                            <div class="sm:grid sm:grid-cols-2 sm:gap-2 pt-3">
-                                @if ($loop->index == false)
-                                    <p class="sm:col-span-2 font-bold text-gray-800">Horario de descanso</p>
-                                @endif
-                                <div>
-                                    <x-select-with-hours
-                                        label="Hora inicio"
-                                        name="''"
-                                        :value="$rest->start_time->format('H:i')"
-                                    />
-                                </div>
-                                <div class="flex space-x-1 items-center">
-                                    <x-select-with-hours
-                                        label="Hora fin"
-                                        name="''"
-                                        :value="$rest->end_time->format('H:i')"
-                                    />
-                                    <a
-                                        href="{{ route('employess.break-time.destroy', [$employee, $rest]) }}"
-                                        onclick="return confirm('¿Seguro desea eliminar este horario de descanso?');">
-                                        <svg class="relative top-3 text-red-600" width="30" height="30" fill="none"
-                                             viewBox="0 0 24 24">
-                                            <path stroke="currentColor" stroke-linecap="round"
-                                                  stroke-linejoin="round"
-                                                  stroke-width="1.5"
-                                                  d="M6.75 7.75L7.59115 17.4233C7.68102 18.4568 8.54622 19.25 9.58363 19.25H14.4164C15.4538 19.25 16.319 18.4568 16.4088 17.4233L17.25 7.75"></path>
-                                            <path stroke="currentColor" stroke-linecap="round"
-                                                  stroke-linejoin="round"
-                                                  stroke-width="1.5"
-                                                  d="M9.75 7.5V6.75C9.75 5.64543 10.6454 4.75 11.75 4.75H12.25C13.3546 4.75 14.25 5.64543 14.25 6.75V7.5"></path>
-                                            <path stroke="currentColor" stroke-linecap="round"
-                                                  stroke-linejoin="round"
-                                                  stroke-width="1.5" d="M5 7.75H19"></path>
-                                        </svg>
-                                    </a>
-                                </div>
-                            </div>
-                        @endforeach
-                        <div class="flex justify-end py-2">
-                            <button
-                                type="button"
-                                class="inline-flex font-bold items-center px-3 py-0.5 rounded-full text-sm bg-indigo-100 text-indigo-800"
-                                onclick="Livewire.emit('openModal', 'create-break-time-livewire', {{ json_encode(["scheduleId" => $schedule->id]) }})">
-                                Agregar Descanso
-                            </button>
+            <p class="mb-2 text-lg font-bold text-gray-800">Escoje una localidad para actualizar un horario de
+                trabajo
+            </p>
+            <div class="flex justify-end">
+                <button
+                    type="button"
+                    onclick="Livewire.emit('openModal', 'assign-new-location-to-an-employee-livewire', {{ json_encode(["employeeId" => $employee->id]) }})"
+                    class="inline-flex mb-4 items-center py-2 px-4 border font-bold border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    Asignar nueva localidad
+                </button>
+            </div>
+            <div class="flex flex-col">
+                <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+                    <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
+                        <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                <tr>
+                                    <th scope="col"
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Nombre
+                                    </th>
+                                    <th scope="col" class="relative px-6 py-3">
+                                        <span class="sr-only">Edit</span>
+                                    </th>
+                                </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200">
+                                @foreach ($employee->locations as $location)
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                            {{ $location->present()->name() }}
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                            <div class="flex justify-end">
+                                                <a
+                                                    href="{{ route('employees.locations.index', [$employee, $location]) }}"
+                                                    class="mr-4 text-indigo-600 hover:text-indigo-900">Editar</a>
+                                                <a
+                                                    href="{{ route('employees.locations.destroy', [$employee, $location]) }}"
+                                                    class="text-indigo-600 hover:text-indigo-900">Eliminar</a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                                </tbody>
+                            </table>
+                            <x-ui.empty-list :count="$employee->locations->count()">
+                                No se encuentra asignado ninguna localidad
+                            </x-ui.empty-list>
                         </div>
                     </div>
-                @endforeach
+                </div>
             </div>
         </div>
     @endif

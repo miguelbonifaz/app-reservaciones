@@ -6,6 +6,13 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class EmployeeCreateRequest extends FormRequest
 {
+    public function messages()
+    {
+        return [
+          'servicesId.required' => 'Debe escojer al menos un servicio',
+        ];
+    }
+
     public function rules(): array
     {
         return [
@@ -13,7 +20,6 @@ class EmployeeCreateRequest extends FormRequest
             'email' => 'required|email|unique:employees,email',
             'phone' => 'required|numeric',
             'servicesId' => 'required',
-            'locationsId' => 'required',
         ];
     }
 

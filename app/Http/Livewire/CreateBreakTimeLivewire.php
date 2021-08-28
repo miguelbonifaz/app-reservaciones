@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire;
 
+use App\Models\Location;
 use App\Models\RestSchedule;
 use App\Models\Schedule;
 use Carbon\Carbon;
@@ -13,9 +14,11 @@ class CreateBreakTimeLivewire extends ModalComponent
     public $scheduleId;
     public $startTime;
     public $endTime;
+    public $locationId;
 
-    public function mount($scheduleId)
+    public function mount($scheduleId, $locationId)
     {
+        $this->locationId = $locationId;
         $this->scheduleId = $scheduleId;
     }
 
@@ -52,8 +55,10 @@ class CreateBreakTimeLivewire extends ModalComponent
 
         session()->flash('flash_success', 'Se agregó con éxito el tiempo de descanso.');
 
+        $location = Location::find($this->locationId);
+
         return redirect()
-            ->route('employees.edit', $employee);
+            ->route('employees.locations.index', [$employee, $location]);
     }
 
     public function render()
