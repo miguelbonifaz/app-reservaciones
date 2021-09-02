@@ -110,7 +110,7 @@
                 @endif
 
                 @if ($currentStep == AppointmentReservationLivewire::STEP_DETAILS)
-                    <div class="col-span-2">
+                    <div>
                         <div class="lg:hidden">
                             <div class="overflow-hidden bg-white shadow sm:rounded-lg">
                                 <div class="px-4 py-5 sm:px-6">
@@ -125,7 +125,7 @@
                                                 Servicio
                                             </dt>
                                             <dd class="mt-1 text-gray-900 sm:mt-0 sm:col-span-2">
-                                                Margot Foster
+                                                {{ $this->service->present()->name() }}
                                             </dd>
                                         </div>
                                         <div class="px-4 py-5 bg-white sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
@@ -133,31 +133,39 @@
                                                 Fecha
                                             </dt>
                                             <dd class="mt-1 text-gray-900 sm:mt-0 sm:col-span-2">
-                                                Backend Developer
+                                                {{ $this->appointmentDate }}
                                             </dd>
                                         </div>
                                         <div class="px-4 py-5 bg-gray-50 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                                             <dt class="font-medium text-gray-500">
-                                                Hora
+                                                Lugar
                                             </dt>
                                             <dd class="mt-1 text-gray-900 sm:mt-0 sm:col-span-2">
-                                                margotfoster@example.com
+                                                {{ $this->appointmentLocation }}
                                             </dd>
                                         </div>
                                         <div class="px-4 py-5 bg-white sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                                             <dt class="font-medium text-gray-500">
-                                                Valor
+                                                Hora
                                             </dt>
                                             <dd class="mt-1 text-gray-900 sm:mt-0 sm:col-span-2">
-                                                -
+                                                {{ $this->appointmentHour }}
                                             </dd>
                                         </div>
                                         <div class="px-4 py-5 bg-gray-50 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                                             <dt class="font-medium text-gray-500">
+                                                Valor
+                                            </dt>
+                                            <dd class="mt-1 text-gray-900 sm:mt-0 sm:col-span-2">
+                                                {{ $this->appointmentValue }}
+                                            </dd>
+                                        </div>
+                                        <div class="px-4 py-5 bg-white sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                                            <dt class="font-medium text-gray-500">
                                                 Profesional
                                             </dt>
                                             <dd class="mt-1 text-gray-900 sm:mt-0 sm:col-span-2">
-                                                $120,000
+                                                {{ $this->employee->present()->name() }}
                                             </dd>
                                         </div>
                                     </dl>
