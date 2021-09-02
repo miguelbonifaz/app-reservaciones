@@ -15,7 +15,7 @@ test('puedo obtener las horas del trabajo del empleado en un día especifico con
     $employee = Employee::factory()
         ->hasAttached(Location::factory())
         ->hasAttached($service = Service::factory()->create([
-            'duration' => 30
+            'duration' => 45
         ]))
         ->create();
 
@@ -26,7 +26,7 @@ test('puedo obtener las horas del trabajo del empleado en un día especifico con
 
     $schedule->update([
         'start_time' => '10:00',
-        'end_time' => '11:00',
+        'end_time' => '11:30',
     ]);
 
     // Act
@@ -42,7 +42,7 @@ test('puedo obtener las horas del trabajo del empleado en un día especifico con
     $this->assertCount(2, $hours);
     $this->assertEquals("10:00", $hours[0]['hour']);
     $this->assertTrue($hours[0]['isAvailable']);
-    $this->assertEquals("10:30", $hours[1]['hour']);
+    $this->assertEquals("10:45", $hours[1]['hour']);
     $this->assertTrue($hours[1]['isAvailable']);
 });
 
