@@ -74,7 +74,7 @@ test("las horas que no esten disponible en un día, estas deben venir con el val
     $employee = Employee::factory()
         ->hasAttached(Location::factory())
         ->hasAttached($service = Service::factory()->create([
-            'duration' => 30
+            'duration' => 45
         ]))
         ->create();
 
@@ -82,14 +82,14 @@ test("las horas que no esten disponible en un día, estas deben venir con el val
 
     $schedule->update([
         'start_time' => '10:00',
-        'end_time' => '12:00',
+        'end_time' => '12:15',
     ]);
 
     Appointment::factory()->create([
         'service_id' => $service->id,
         'employee_id' => $employee->id,
         'date' => today()->addDay(),
-        'start_time' => '10:30',
+        'start_time' => '10:45',
     ]);
 
     // Act
@@ -98,19 +98,16 @@ test("las horas que no esten disponible en un día, estas deben venir con el val
     // Assert
     $hours = $hours->first();
 
-    $this->assertCount(4, $hours);
+    $this->assertCount(3, $hours);
 
     expect('10:00')->toBe($hours[0]['hour']);
     $this->assertTrue($hours[0]['isAvailable']);
 
-    expect('10:30')->toBe($hours[1]['hour']);
+    expect('10:45')->toBe($hours[1]['hour']);
     $this->assertFalse($hours[1]['isAvailable']);
 
-    expect('11:00')->toBe($hours[2]['hour']);
+    expect('11:30')->toBe($hours[2]['hour']);
     $this->assertTrue($hours[2]['isAvailable']);
-
-    expect('11:30')->toBe($hours[3]['hour']);
-    $this->assertTrue($hours[3]['isAvailable']);
 });
 
 test("las horas que no esten disponible en un día, estas deben venir con el valor 'false' (servicio de 60 minutos)", function () {
@@ -133,7 +130,7 @@ test("las horas que no esten disponible en un día, estas deben venir con el val
         'service_id' => $service->id,
         'employee_id' => $employee->id,
         'date' => today()->addDay(),
-        'start_time' => '11:00',
+        'start_time' => '10:45',
     ]);
 
     // Act
@@ -142,19 +139,16 @@ test("las horas que no esten disponible en un día, estas deben venir con el val
     // Assert
     $hours = $hours->first()->values();
 
-    $this->assertCount(4, $hours);
+    $this->assertCount(3, $hours);
 
     expect('10:00')->toBe($hours[0]['hour']);
     $this->assertTrue($hours[0]['isAvailable']);
 
-    expect('11:00')->toBe($hours[1]['hour']);
+    expect('10:45')->toBe($hours[1]['hour']);
     $this->assertFalse($hours[1]['isAvailable']);
 
     expect('11:30')->toBe($hours[2]['hour']);
-    $this->assertFalse($hours[2]['isAvailable']);
-
-    expect('12:00')->toBe($hours[3]['hour']);
-    $this->assertTrue($hours[3]['isAvailable']);
+    $this->assertTrue($hours[2]['isAvailable']);
 });
 
 test('Debe filtrar las horas de trabajo si el empleado tiene horas de descanso ', function () {
@@ -174,8 +168,8 @@ test('Debe filtrar las horas de trabajo si el empleado tiene horas de descanso '
     ]);
 
     RestSchedule::factory()->create([
-        'start_time' => '11:00',
-        'end_time' => '12:00',
+        'start_time' => '10:45',
+        'end_time' => '11:30',
         'schedule_id' => $schedule->id,
     ]);
 
@@ -185,11 +179,10 @@ test('Debe filtrar las horas de trabajo si el empleado tiene horas de descanso '
     // Assert
     $hours = $hours->first()->values();
 
-    $this->assertCount(4, $hours);
+    $this->assertCount(3, $hours);
 
     expect('10:00')->toBe($hours[0]['hour']);
-    expect('10:30')->toBe($hours[1]['hour']);
-    expect('12:00')->toBe($hours[2]['hour']);
-    expect('12:30')->toBe($hours[3]['hour']);
+    expect('11:30')->toBe($hours[1]['hour']);
+    expect('12:15')->toBe($hours[2]['hour']);
 });
 
