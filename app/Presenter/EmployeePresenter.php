@@ -17,14 +17,14 @@ class EmployeePresenter
     {
         return $this->employee->name;
     }
-    
+
     public function email()
     {
-        return $this->employee->email;
+        return $this->employee->email ?? 'N/A';
     }
 
     public function phone()
     {
-        return $this->employee->phone;
+        return $this->employee->phone ?? 'N/A';
     }
 }

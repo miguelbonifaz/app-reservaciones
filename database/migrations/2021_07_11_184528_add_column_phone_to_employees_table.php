@@ -14,7 +14,7 @@ class AddColumnPhoneToEmployeesTable extends Migration
     public function up()
     {
         Schema::table('employees', function (Blueprint $table) {
-            $table->string('phone')->after('email');
+            $table->string('phone')->after('email')->nullable();
         });
     }
 

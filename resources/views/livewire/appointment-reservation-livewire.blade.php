@@ -70,7 +70,7 @@
                                     class="px-3 py-2 mb-1 w-32 text-center text-white rounded-lg border border-gray-200 bg-mariajose_gray">
                                     {{ $this->selectedDay ?? 'Cargando...' }}
                                 </div>
-                                <div class="lg:w-full lg:flex">
+                                <div class="lg:grid lg:grid-cols-2">
                                     @foreach ($this->availableHours as $location => $hours)
                                         <div
                                             class="grid grid-cols-2 gap-1 lg:flex lg:flex-col lg:h-72 lg:flex-wrap lg:gap-0 lg:content-start">

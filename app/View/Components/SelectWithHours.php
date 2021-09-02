@@ -15,7 +15,7 @@ class SelectWithHours extends Component
     public $name;
     public $value;
 
-    public function __construct($name, $placeholder = 'Escoja una opción...', $label = false, $startTime = [8, 0], $endTime = [21, 0], $minuteSteps = 30, $value = null)
+    public function __construct($name, $placeholder = 'Escoja una opción...', $label = false, $startTime = [8, 0], $endTime = [21, 0], $minuteSteps = 15, $value = null)
     {
         $this->startTime = today()->setTime($startTime[0], $startTime[1]);
         $this->endTime = today()->setTime($endTime[0], $endTime[1]);

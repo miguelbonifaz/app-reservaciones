@@ -51,7 +51,7 @@ class Employee extends Model
         'phone',
     ];
 
-    public const MINUTE_INTERVALS = '30';
+    public const MINUTE_INTERVALS = '45';
 
     public function present(): EmployeePresenter
     {
