@@ -201,7 +201,7 @@
                                             </thead>
                                             <tbody class="bg-white divide-y divide-gray-200">
                                             <tr>
-                                                <td class="py-4 pr-6 font-medium text-gray-900 whitespace-nowrap">
+                                                <td class="py-4 pr-6 font-medium text-gray-900">
                                                     {{ $this->service->present()->name() }}
                                                 </td>
                                                 <td class="px-6 py-4 font-medium text-gray-500 whitespace-nowrap">
