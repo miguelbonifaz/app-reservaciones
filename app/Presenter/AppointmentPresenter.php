@@ -23,12 +23,12 @@ class AppointmentPresenter
 
     public function startTime(): string
     {
-        return $this->appointment->start_time->format('H:m A');
+        return $this->appointment->start_time->format('H:i A');
     }
 
     public function endTime(): string
     {
-        return $this->appointment->end_time->format('H:m A');
+        return $this->appointment->end_time->format('H:i A');
     }
 
     public function note(): ?string
