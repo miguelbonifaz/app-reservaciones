@@ -39,7 +39,8 @@ test('can create a service', function () {
     $response = createService([
         'name' => $data->name,
         'duration' => $data->duration,
-        'value' => $data->value
+        'value' => $data->value,
+        'description' => $data->description,
     ]);
 
     // Assert
@@ -54,6 +55,7 @@ test('can create a service', function () {
     $this->assertEquals($data->name, $service->name);
     $this->assertEquals($data->duration, $service->duration);
     $this->assertEquals($data->value, $service->value);
+    $this->assertEquals($data->description, $service->description);
 });
 
 test('fields are required', function () {
@@ -63,13 +65,15 @@ test('fields are required', function () {
         'name' => null,
         'duration' => null,
         'value' => null,
+        'description' => null,
     ]);
 
     //Assert
     $response->assertSessionHasErrors([
         'name',
         'duration',
-        'value'
+        'value',
+        'description',
     ]);
 });
 

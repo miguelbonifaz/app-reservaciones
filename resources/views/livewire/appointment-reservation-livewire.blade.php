@@ -51,6 +51,26 @@
                             <option value="{{ $employee->id }}">{{ $employee->present()->name() }}</option>
                         @endforeach
                     </x-input.select>
+                    @if ($this->service)
+                        <div class="rounded-md bg-blue-50 p-4 sm:col-span-2">
+                            <div class="flex">
+                                <div class="flex-shrink-0">
+                                    <!-- Heroicon name: solid/information-circle -->
+                                    <svg class="h-5 w-5 text-blue-400" xmlns="http://www.w3.org/2000/svg"
+                                         viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                        <path fill-rule="evenodd"
+                                              d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                                              clip-rule="evenodd"/>
+                                    </svg>
+                                </div>
+                                <div class="ml-3 flex-1 md:flex">
+                                    <p class="text-sm text-blue-700">
+                                        {{ $this->service->present()->description() }}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
                     <x-website.reservation.footer
                         :nextStep="AppointmentReservationLivewire::STEP_DATE_AND_HOUR"
                     />
@@ -210,7 +230,22 @@
                                             <tbody class="bg-white divide-y divide-gray-200">
                                             <tr>
                                                 <td class="py-4 pr-6 font-medium text-gray-900">
-                                                    {{ $this->service->present()->name() }}
+                                                    <div class="flex items-center">
+                                                        {{ $this->service->present()->name() }}
+                                                        <div style="flex-basis: 10px">
+                                                            <svg
+                                                                wire:click="$emit('openModal', 'show-service-detail-livewire', {{ json_encode(['serviceId' => $this->service->id]) }})"
+                                                                class="cursor-pointer ml-2 text-gray-600" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                                                <path stroke="currentColor" stroke-linecap="round"
+                                                                      stroke-linejoin="round" stroke-width="2"
+                                                                      d="M12 13V15"></path>
+                                                                <circle cx="12" cy="9" r="1" fill="currentColor"></circle>
+                                                                <circle cx="12" cy="12" r="7.25" stroke="currentColor"
+                                                                        stroke-linecap="round" stroke-linejoin="round"
+                                                                        stroke-width="1.5"></circle>
+                                                            </svg>
+                                                        </div>
+                                                    </div>
                                                 </td>
                                                 <td class="px-6 py-4 font-medium text-gray-500 whitespace-nowrap">
                                                     {{ $this->appointmentDate }}

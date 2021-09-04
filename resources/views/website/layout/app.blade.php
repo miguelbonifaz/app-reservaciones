@@ -22,6 +22,7 @@
     class="h-screen antialiased">
 {{ $slot }}
 @livewireScripts
+@livewire('livewire-ui-modal')
 <script src="{{ mix('js/app.js')  }}"></script>
 </body>
 </html>

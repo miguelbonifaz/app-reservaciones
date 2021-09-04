@@ -8,10 +8,13 @@ use App\Models\Schedule;
 use App\Models\Service;
 use App\Models\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Artisan;
 
 class BaseSeeder extends Seeder
 {
+    use WithFaker;
+
     public function run()
     {
         Artisan::call('create:user');
@@ -96,10 +99,11 @@ class BaseSeeder extends Seeder
         ];
 
         foreach ($servicios as $service) {
-            Service::create([
+
+            Service::factory()->create([
                 'name' => $service['name'],
                 'value' => $service['value'],
-                'duration' => 45
+                'duration' => 45,
             ]);
         }
 

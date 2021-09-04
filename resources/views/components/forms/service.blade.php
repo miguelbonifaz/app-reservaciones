@@ -17,6 +17,16 @@
         label="Valor"
     />
 
+    <div class="hidden sm:block"></div>
+
+    <div class="sm:col-span-2">
+        <x-input.textarea
+            label="Descripción"
+            name="description"
+            value="{{old('description', $service->description)}}"
+        />
+    </div>
+
     <x-slot name="footer">
         <x-input.link theme="white" href="{{ route('services.index') }}">
             Cancelar
