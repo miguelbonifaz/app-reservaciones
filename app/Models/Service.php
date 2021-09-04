@@ -40,7 +40,8 @@ class Service extends Model
     protected $fillable = [
         'name',
         'duration',
-        'value'
+        'value',
+        'description'
     ];
 
     public function present(): ServicePresenter

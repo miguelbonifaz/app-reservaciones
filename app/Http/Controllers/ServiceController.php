@@ -31,12 +31,14 @@ class ServiceController extends Controller
             'name' => 'required',
             'duration' => 'required|numeric',
             'value' => 'required|numeric',
+            'description' => 'required'
         ]);
 
         Service::create([
             'name' => request()->name,
             'duration' => request()->duration,
             'value' => request()->value,
+            'description' => request()->description,
         ]);
 
         return redirect()
@@ -61,13 +63,14 @@ class ServiceController extends Controller
             'name' => 'required',
             'duration' => 'required|numeric',
             'value' => 'required|numeric',
+            'description' => 'required'
         ]);
 
         $service->update([
             'name' => request()->name,
             'duration' => request()->duration,
             'value' => request()->value,
-
+            'description' => request()->description,
         ]);
 
         return redirect()

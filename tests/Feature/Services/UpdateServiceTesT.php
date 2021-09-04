@@ -38,7 +38,9 @@ test('can update a service', function () {
     // Act
     $response = updateService($service,[
         'name' => $data->name,
-        'duration' => $data->duration
+        'duration' => $data->duration,
+        'value' => $data->value,
+        'description' => $data->description,
     ]);
 
     // Assert
@@ -52,6 +54,8 @@ test('can update a service', function () {
 
     $this->assertEquals($data->name, $service->name);
     $this->assertEquals($data->duration, $service->duration);
+    $this->assertEquals($data->value, $service->value);
+    $this->assertEquals($data->description, $service->description);
 });
 
 test('fields are required', function () {
@@ -62,12 +66,16 @@ test('fields are required', function () {
     $response = updateService($service,[
         'name' => null,
         'duration' => null,
+        'description' => null,
+        'value' => null
     ]);
 
     //Assert
     $response->assertSessionHasErrors([
         'name',
         'duration',
+        'value',
+        'description'
     ]);
 });
 

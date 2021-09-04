@@ -27,4 +27,9 @@ class ServicePresenter
     {
         return "$" . $this->service->value;
     }
+
+    public function description():? string
+    {
+        return $this->service->description ?? 'N/A';
+    }
 }
