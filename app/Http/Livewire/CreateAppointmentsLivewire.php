@@ -4,6 +4,7 @@ namespace App\Http\Livewire;
 
 use App\Models\Appointment;
 use App\Models\Employee;
+use App\Models\Location;
 use App\Models\Service;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
@@ -23,13 +24,30 @@ class CreateAppointmentsLivewire extends Component
         'note' => '',
     ];
 
-    protected $listeners = ['updatedDay'];
+    protected $listeners = ['updatedDay', 'customer_idUpdated'];
 
-    public function updatedDay($date, $dontSetHour = true)
+    public function customer_idUpdated($data)
     {
+        $this->form['customer_id'] = $data['value'];
+    }
+
+    public function updatedDay($date)
+    {
+        $this->form['location_id'] = '';
+        $this->form['start_time'] = '';
         $this->form['date'] = $date;
-        $date = Carbon::createFromDate($date);
-        $this->selectedDay = $date->format('l j');
+    }
+
+    public function updatedFormStartTime($hour)
+    {
+        $this->availableHours
+            ->filter(function (Collection $hours, $location) use ($hour) {
+                $hours = $hours->map(fn($data) => $data['hour']);
+
+                if ($hours->contains($hour)) {
+                    $this->form['location_id'] = Location::firstWhere('name', $location)->id;
+                }
+            });
     }
 
     public function updatedFormServiceId($serviceId)
@@ -46,14 +64,21 @@ class CreateAppointmentsLivewire extends Component
 
     public function getAvailableHoursProperty(): Collection
     {
-        if (!$this->form['employee_id']) {
+        if (!$this->form['employee_id'] || !$this->form['date']) {
             return collect();
         }
 
         return $this->employee
             ->workingHours($this->form['date'], $this->service)
-            ->filter(function ($hour) {
-                return $hour['isAvailable'];
+            ->mapWithKeys(function (Collection $hours, $location) {
+                $hours = $hours->filter(fn($hour) => $hour['isAvailable']);
+
+                return [
+                    $location => $hours
+                ];
+            })
+            ->sortBy(function (Collection $hours, $location) {
+                return $hours;
             });
     }
 
@@ -72,6 +97,15 @@ class CreateAppointmentsLivewire extends Component
         return Service::query()->latest()->get();
     }
 
+    public function getLocationsProperty()
+    {
+        if (!$this->form['employee_id']) {
+            return [];
+        }
+
+        return $this->employee->locations;
+    }
+
     public function onSubmit()
     {
         $this->validate([
@@ -86,6 +120,9 @@ class CreateAppointmentsLivewire extends Component
             'form.employee_id' => [
                 'required',
                 'exists:employees,id'
+            ],
+            'form.location_id' => [
+                'required',
             ],
             'form.start_time' => [
                 'required',
@@ -108,7 +145,7 @@ class CreateAppointmentsLivewire extends Component
 
         session()->flash('flash_success', 'Se creó con exito la reservación');
 
-        return redirect()->to('calendar.index');
+        $this->redirect(route('calendar.index'));
     }
 
     public function render()

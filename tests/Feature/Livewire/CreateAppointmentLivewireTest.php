@@ -59,6 +59,8 @@ test('can create an appointment', function () {
     $component->call('onSubmit');
 
     // Assert
+    $component->assertRedirect(route('calendar.index'));
+
     $this->assertCount(1, Appointment::all());
 
     $appointment = Appointment::first();
@@ -79,6 +81,7 @@ test('fields are required', function () {
     $component->set('form.customer_id', null);
     $component->set('form.service_id', null);
     $component->set('form.employee_id', null);
+    $component->set('form.location_id', null);
     $component->set('form.start_time', null);
     $component->set('form.date', null);
 
@@ -90,6 +93,7 @@ test('fields are required', function () {
         'form.customer_id' => 'required',
         'form.service_id' => 'required',
         'form.employee_id' => 'required',
+        'form.location_id' => 'required',
         'form.start_time' => 'required',
         'form.date' => 'required',
     ]);

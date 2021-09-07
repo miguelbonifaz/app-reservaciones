@@ -14,12 +14,6 @@ use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/email', function () {
-    $appointment = \App\Models\Appointment::first();
-
-    $appointment->customer->notify(new \App\Notifications\AppointmentConfirmedNotification($appointment));
-});
-
 Route::get('/calendar', [CalendarController::class, 'index'])->name('calendar.index');
 
 Route::prefix('/users')->group(function () {

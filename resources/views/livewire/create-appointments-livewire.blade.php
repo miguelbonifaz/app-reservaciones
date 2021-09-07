@@ -3,11 +3,11 @@
         <x-ui.flash/>
     </div>
     @csrf
-    <div class="shadow overflow-hidden sm:rounded-md">
+    <div class="overflow-hidden shadow sm:rounded-md">
         <div class="px-4 py-5 bg-white sm:p-6">
-            <div class="grid sm:grid-cols-2 gap-6">
+            <div class="grid gap-6 sm:grid-cols-2">
                 <div class="sm:col-span-2">
-                    <label for="customer_id" class="mb-1 block text-sm font-medium leading-5 text-gray-700">
+                    <label for="customer_id" class="block mb-1 text-sm font-medium leading-5 text-gray-700">
                         Cliente
                     </label>
                     <livewire:customer-select
@@ -18,27 +18,41 @@
                         :searchable="true"
                     />
                 </div>
-                <div>
-                    <x-input.select
-                        label="Escoje un servicio"
-                        name="form.service_id"
-                        wire:model.lazy="form.service_id"
-                        placeholder="Servicio">
-                        @foreach ($this->services as $service)
-                            <option value="{{ $service->id }}">{{ $service->present()->name() }}</option>
-                        @endforeach
-                    </x-input.select>
-                </div>
-                <div>
-                    <x-input.select
-                        label="Escoje un profesional"
-                        name="form.employee_id"
-                        wire:model.lazy="form.employee_id"
-                        placeholder="Profesional">
-                        @foreach ($employees as $employee)
-                            <option value="{{ $employee->id }}">{{ $employee->present()->name() }}</option>
-                        @endforeach
-                    </x-input.select>
+                <div class="grid gap-6 sm:col-span-2 lg:grid-cols-3">
+                    <div>
+                        <x-input.select
+                            label="Escoje un servicio"
+                            name="form.service_id"
+                            wire:model.lazy="form.service_id"
+                            placeholder="Escoja un servicio">
+                            @foreach ($this->services as $service)
+                                <option value="{{ $service->id }}">{{ $service->present()->name() }}</option>
+                            @endforeach
+                        </x-input.select>
+                    </div>
+                    <div>
+                        <x-input.select
+                            label="Escoje un profesional"
+                            name="form.employee_id"
+                            wire:model.lazy="form.employee_id"
+                            placeholder="Escoja un profesional">
+                            @foreach ($employees as $employee)
+                                <option value="{{ $employee->id }}">{{ $employee->present()->name() }}</option>
+                            @endforeach
+                        </x-input.select>
+                    </div>
+                    <div>
+                        <x-input.select
+                            disabled
+                            label="Localidad"
+                            name="form.location_id"
+                            wire:model.lazy="form.location_id"
+                            placeholder="Escoja una localidad">
+                            @foreach ($this->locations as $location)
+                                <option value="{{ $location->id }}">{{ $location->present()->name() }}</option>
+                            @endforeach
+                        </x-input.select>
+                    </div>
                 </div>
                 <div>
                     @if ($this->form['employee_id'])
@@ -55,21 +69,25 @@
                         label="Hora"
                         wire:model="form.start_time"
                         name="form.start_time">
-                        @foreach ($this->availableHours as $hour)
-                            <option value="{{ $hour['hour'] }}">{{ $hour['hour'] }}</option>
+                        @foreach ($this->availableHours as $location => $hours)
+                            <optgroup label="{{ $location }}">
+                                @foreach ($hours as $hour)
+                                    <option value="{{ $hour['hour'] }}">{{ $hour['hour'] }}</option>
+                                @endforeach
+                            </optgroup>
                         @endforeach
                     </x-input.select>
                 </div>
                 <div class="sm:col-span-2">
                     <x-input.textarea
                         name="note"
-                        wire:model="note"
+                        wire:model="form.note"
                         label="Nota"
                     />
                 </div>
             </div>
         </div>
-        <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
+        <div class="px-4 py-3 text-right bg-gray-50 sm:px-6">
             <x-input.link theme="white" href="{{ $cancelUrl ?? '#' }}">
                 Cancelar
             </x-input.link>
