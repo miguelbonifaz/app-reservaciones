@@ -12,7 +12,9 @@ test('can build component', function () {
     $service = Service::factory()->create();
 
     // Act
-    $component = livewire(ShowServiceDetailLivewire::class);
+    $component = livewire(ShowServiceDetailLivewire::class, [
+        'serviceId' => $service->id,
+    ]);
 
     // Assert
     expect($component)->not()->toBeNull();
