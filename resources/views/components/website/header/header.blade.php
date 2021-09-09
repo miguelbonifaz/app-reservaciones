@@ -37,7 +37,7 @@
                            href="{{ route('website.reservation') }}">Reservaciones</a>
                     </li>
                     <li>
-                        <a class="inline-block w-full text-sm font-bold uppercase testing" href="">Contacto</a>
+                        <a class="inline-block w-full text-sm font-bold uppercase testing" href="{{ route('website.contact') }}">Contacto</a>
                     </li>
                 </ul>
             </nav>
