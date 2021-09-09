@@ -27,7 +27,7 @@
                            href="{{ route('website.home') }}">Inicio</a>
                     </li>
                     <li>
-                        <a class="inline-block w-full text-sm font-bold uppercase testing" href="">Terapias</a>
+                        <a class="inline-block w-full text-sm font-bold uppercase testing" href="{{ route('website.therapy') }}">Terapias</a>
                     </li>
                     <li>
                         <a class="inline-block w-full text-sm font-bold uppercase testing" href="">Evaluaciones</a>
