@@ -9,6 +9,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css?family=PT+Sans:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ mix('css/app.css') }}">
     @livewireStyles
     <style>
         * {
@@ -16,7 +17,7 @@
             font-weight: 400;
         }
     </style>
-    <link rel="stylesheet" href="{{ mix('css/app.css') }}">
+    <title>Laravel</title>
 </head>
 <body
     class="h-screen antialiased">
