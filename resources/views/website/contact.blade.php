@@ -92,7 +92,8 @@
             </div>
 
             <div class="flex justify-center lg:pb-20">
-                <button
+                <a
+                    href="{{ route('website.reservation') }}"
                     class="inline-flex items-center px-4 py-2 text-sm text-white uppercase rounded-md border shadow-sm bg-mariajose_gray lg:text-lg focus:ring-offset-2 focus:ring-indigo-500">
                     <span class="font-bold">
                         Realiza tu cita online
@@ -105,7 +106,7 @@
                             d="M9.63867 9.50586C9.97266 9.17188 9.97266 8.61523 9.63867 8.28125L2.43945 1.04492C2.06836 0.710938 1.51172 0.710938 1.17773 1.04492L0.324219 1.89844C-0.00976562 2.23242 -0.00976562 2.78906 0.324219 3.16016L6.03906 8.875L0.324219 14.627C-0.00976562 14.998 -0.00976562 15.5547 0.324219 15.8887L1.17773 16.7422C1.51172 17.0762 2.06836 17.0762 2.43945 16.7422L9.63867 9.50586Z"
                             fill="#fff"/>
                     </svg>
-                </button>
+                </a>
             </div>
         </div>
     </x-website.container>
