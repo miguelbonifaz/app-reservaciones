@@ -39,6 +39,12 @@ jobs:
       - name: Install dependencies
         run: composer install --ignore-platform-reqs
 
+      - name: Npm dependencies
+        run: npm install
+
+      - name: Compile styles
+        run: npm run dev
+
       - name: Generate key
         run: php artisan key:generate
 

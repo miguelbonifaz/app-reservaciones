@@ -1,4 +1,6 @@
-<header class="py-7 px-6 w-full bg-mariajose_gray" x-data="{ open: false }">
+<header
+    class="py-7 px-6 w-full {{ $withBackground ? 'bg-mariajose_gray' : 'absolute top-0 w-full bg-mariajose_gray lg:bg-transparent' }}"
+    x-data="{ open: false }">
     <div class="lg:max-w-7xl lg:mx-auto">
         <div class="flex justify-between items-center">
             <figure>
@@ -21,7 +23,8 @@
             <nav class="hidden lg:block">
                 <ul class="flex space-x-8 text-white">
                     <li>
-                        <a class="inline-block w-full text-sm font-bold uppercase testing" href="{{ route('website.home') }}">Inicio</a>
+                        <a class="inline-block w-full text-sm font-bold uppercase testing"
+                           href="{{ route('website.home') }}">Inicio</a>
                     </li>
                     <li>
                         <a class="inline-block w-full text-sm font-bold uppercase testing" href="">Terapias</a>

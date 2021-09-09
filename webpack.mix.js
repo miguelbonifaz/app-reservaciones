@@ -28,3 +28,4 @@ mix.browserSync({
 });
 
 mix.copyDirectory('resources/assets', 'public/assets');
+mix.version();
