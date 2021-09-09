@@ -23,21 +23,29 @@
             <nav class="hidden lg:block">
                 <ul class="flex space-x-8 text-white">
                     <li>
-                        <a class="inline-block w-full text-sm font-bold uppercase testing"
-                           href="{{ route('website.home') }}">Inicio</a>
+                        <a
+                            class="inline-block w-full text-sm font-bold uppercase testing"
+                            href="{{ route('website.home') }}">Inicio</a>
                     </li>
                     <li>
-                        <a class="inline-block w-full text-sm font-bold uppercase testing" href="{{ route('website.therapy') }}">Terapias</a>
+                        <a
+                            class="inline-block w-full text-sm font-bold uppercase testing"
+                            href="{{ route('website.therapy') }}">Terapias</a>
                     </li>
                     <li>
-                        <a class="inline-block w-full text-sm font-bold uppercase testing" href="">Evaluaciones</a>
+                        <a
+                            class="inline-block w-full text-sm font-bold uppercase testing"
+                            href="{{ route('website.evaluation') }}">Evaluaciones</a>
                     </li>
                     <li>
-                        <a class="inline-block w-full text-sm font-bold uppercase testing"
-                           href="{{ route('website.reservation') }}">Reservaciones</a>
+                        <a
+                            class="inline-block w-full text-sm font-bold uppercase testing"
+                            href="{{ route('website.reservation') }}">Reservaciones</a>
                     </li>
                     <li>
-                        <a class="inline-block w-full text-sm font-bold uppercase testing" href="{{ route('website.contact') }}">Contacto</a>
+                        <a
+                            class="inline-block w-full text-sm font-bold uppercase testing"
+                            href="{{ route('website.contact') }}">Contacto</a>
                     </li>
                 </ul>
             </nav>
