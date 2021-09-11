@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Website;
 
 use App\Http\Controllers\Controller;
 
-class AppointmentReservationController extends Controller
+class TermsAndConditionsController extends Controller
 {
     public function __invoke()
     {
