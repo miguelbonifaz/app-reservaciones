@@ -16,4 +16,6 @@ Route::get('/terapias', [TherapyPageController::class, '__invoke'])->name('websi
 Route::get('/evaluaciones', [EvaluationPageController::class, '__invoke'])->name('website.evaluation');
 Route::get('/reservaciones', [AppointmentReservationController::class, '__invoke'])->name('website.reservation');
 
+Route::get('/terminos-y-condiciones', [AppointmentReservationController::class, '__invoke'])->name('website.terms-and-conditions');
+
 require __DIR__ . '/auth.php';
