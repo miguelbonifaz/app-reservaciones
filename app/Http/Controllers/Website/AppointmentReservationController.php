@@ -8,6 +8,6 @@ class AppointmentReservationController extends Controller
 {
     public function __invoke()
     {
-        return view('website.terms-and-conditions');
+        return view('website.reservation');
     }
 }

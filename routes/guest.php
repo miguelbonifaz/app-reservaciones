@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
    return view('website.coming-soon');
 });
+
 Route::get('/home', [HomePageController::class, '__invoke'])->name('website.home');
 Route::get('/contacto', [ContactPageController::class, '__invoke'])->name('website.contact');
 Route::get('/terapias', [TherapyPageController::class, '__invoke'])->name('website.therapy');
