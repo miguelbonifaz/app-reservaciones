@@ -29,9 +29,12 @@ class CustomerController extends Controller
     public function store(CustomerCreateRequest $request)
     {
         Customer::create([
-            'name' => request()->name,
+            'full_name' => request()->full_name,
+            'first_name' => request()->first_name,
+            'last_name' => request()->last_name,
             'email' => request()->email,
             'phone' => request()->phone,
+            'name_of_child' => request()->name_of_child,
         ]);
 
         return redirect()
@@ -53,19 +56,25 @@ class CustomerController extends Controller
         $customer = request()->customer;
 
         request()->validate([
-            'name' => 'required',
+            'full_name' => 'required',
+            'first_name' => 'required',
+            'last_name' => 'required',
             'email' => [
                 'required',
                 'email',
                 Rule::unique('customers', 'email')->ignoreModel($customer)
             ],
             'phone' => 'required|numeric',
+            'name_of_child' => 'required'
         ]);
 
         $customer->update([
-            'name' => request()->name,
+            'full_name' => request()->full_name,
+            'first_name' => request()->first_name,
+            'last_name' => request()->last_name,
             'email' => request()->email,
             'phone' => request()->phone,
+            'name_of_child' => request()->name_of_child,
         ]);
 
         return redirect()

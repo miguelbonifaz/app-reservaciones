@@ -33,9 +33,12 @@ test('can create a customer', function () {
 
     // Act
     $response = createCustomer([
-        'name' => $data->name,
+        'full_name' => $data->full_name,
+        'first_name' => $data->first_name,
+        'last_name' => $data->last_name,
         'email' => $data->email,
         'phone' => $data->phone,
+        'name_of_child' => $data->name_of_child,
     ]);
 
     // Assert
@@ -47,9 +50,12 @@ test('can create a customer', function () {
 
     $customer = Customer::first();
 
-    $this->assertEquals($data->name, $customer->name);
+    $this->assertEquals($data->full_name, $customer->full_name);
+    $this->assertEquals($data->first_name, $customer->first_name);
+    $this->assertEquals($data->last_name, $customer->last_name);
     $this->assertEquals($data->email, $customer->email);
     $this->assertEquals($data->phone, $customer->phone);
+    $this->assertEquals($data->name_of_child, $customer->name_of_child);
 });
 
 test('fields are required', function () {
@@ -57,16 +63,22 @@ test('fields are required', function () {
 
     //Act
     $response = createCustomer([
-        'name' => null,
+        'full_name' => null,
+        'first_name' => null,
+        'last_name' => null,
         'email' => null,
         'phone' => null,
+        'name_of_child' => null,
     ]);
 
     //Assert
     $response->assertSessionHasErrors([
-        'name',
+        'full_name',
+        'first_name',
+        'last_name',
         'email',
         'phone',
+        'name_of_child',
     ]);
 });
 
