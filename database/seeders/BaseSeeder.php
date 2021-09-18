@@ -26,12 +26,10 @@ class BaseSeeder extends Seeder
         ]);
 
         $employees = [
-            'Master Maria Jose Jauregui',
+            'Maria Jose Jauregui',
             'Belén Illescas',
             'Carolina Coloma',
             'Chris Ruiz',
-            'Cinthya Jiménez',
-            'Cristina Torres',
             'Doménica Herrera',
             'Edith Castillo',
             'Emily Ponce',
@@ -55,54 +53,65 @@ class BaseSeeder extends Seeder
             [
                 'name' => 'Proceso diagnostico 1 (Entrevista inicial con padres)',
                 'value' => 100,
+                'description' => 'Es la 1ra cita con papa y mama relacionada a la mecánica familiar, en esta cita se determina si el niño continua la evaluación, duración 1 hora'
             ],
             [
                 'name' => 'Proceso diagnostico 2 (Evaluación)',
                 'value' => 100,
+                'description' => 'Esta es la 2da cita y se realiza de manera presencial con el niño para evaluarlo mediante los diferentes metodos, duración 45 minutos'
             ],
             [
                 'name' => 'Proceso diagnostico 3 (Devolucion de cierre con padres)',
                 'value' => 100,
+                'description' => 'Esta es la 3ra cita para el diagnostico “en caso de haberlo”, se elabora el plan de intervención en casa, escuela y terapias individuales y grupales según la necesidad, duración 1 hora '
             ],
             [
                 'name' => 'Reunión en escuela valor',
                 'value' => 90,
+                'description' => 'Reunion de nuestro equipo y padres con los profesores con el finde elaborar el plan de trabajo y adaptaciones curriculares'
             ],
             [
                 'name' => 'Observación en escuela',
                 'value' => 90,
+                'description' => 'Se realizo visita a la escuela para revisar el trabajo y el sistema de comunicación y socialización junto a la tutora'
             ],
             [
                 'name' => 'Reunión con padres',
                 'value' => 90,
+                'description' => 'Se realizan en el consultorio cada cierto tiempo cuando es necesario REEVALORAR el trabajo con los familiares'
             ],
             [
                 'name' => 'Observación en casa',
                 'value' => 90,
+                'description' => 'Es una observación que se da puntualmente por algún tema'
             ],
             [
                 'name' => 'Reunión con profesionales externos',
                 'value' => 90,
+                'description' => 'Reuniones con psicopedagogaso terapistas de lenguaje o cualquier profesional que este trabajando con el niñop'
             ],
             [
                 'name' => 'Intervención individual',
                 'value' => 40,
+                'description' => 'Terapia inicial en caso de requerirse como preparación a la terapia individual'
             ],
             [
                 'name' => 'Intervención grupal',
                 'value' => 40,
+                'description' => 'Es la terapia con niños de edad y funcionamiento similar para trabajar la comunicación, desarrollo similar, tiempos de trabajo , tolerancia a la frustración'
             ],
             [
                 'name' => 'Lúdico terapia',
                 'value' => 50,
+                'description' => 'Terapia en contextos naturales en diferentes parques o lugares abiertos, se trabajan frentes como motricidad, socialización con el par. '
             ],
         ];
 
         foreach ($servicios as $service) {
-
             Service::factory()->create([
                 'name' => $service['name'],
                 'value' => $service['value'],
+                'description' => $service['description'],
                 'duration' => 45,
             ]);
         }
@@ -118,7 +127,7 @@ class BaseSeeder extends Seeder
 
             $this->createLocation($employee, $samborondon);
 
-            if ($employee->name == 'Master Maria Jose Jauregui') {
+            if ($employee->name == 'Maria Jose Jauregui') {
                 $this->createLocation($employee, $urdesa);
             }
         }
@@ -140,7 +149,7 @@ class BaseSeeder extends Seeder
             5 => '13:00',
         ];
 
-        $employee = Employee::firstWhere('name', 'Master Maria Jose Jauregui');
+        $employee = Employee::firstWhere('name', 'Maria Jose Jauregui');
 
         $this->createSchedule($start_time, $employee, $urdesa, $end_time);
 
@@ -157,7 +166,7 @@ class BaseSeeder extends Seeder
         $this->createSchedule($start_time, $employee, $samborondon, $end_time);
 
         $employees = Employee::all();
-        $employees = collect($employees)->reject(fn(Employee $employee) => $employee->name == 'Master Maria Jose Jauregui');
+        $employees = collect($employees)->reject(fn(Employee $employee) => $employee->name == 'Maria Jose Jauregui');
 
         // Creación de horario para el resto de empleados - Samborondon de Lunes a Viernes
         $start_time = [
