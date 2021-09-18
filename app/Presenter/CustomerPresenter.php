@@ -15,7 +15,7 @@ class CustomerPresenter
 
     public function name(): string
     {
-        return $this->customer->name;
+        return "{$this->customer->first_name} {$this->customer->last_name}";
     }
 
     public function email(): string

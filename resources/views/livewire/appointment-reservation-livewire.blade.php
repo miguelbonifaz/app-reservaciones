@@ -52,18 +52,18 @@
                         @endforeach
                     </x-input.select>
                     @if ($this->service)
-                        <div class="rounded-md bg-blue-50 p-4 sm:col-span-2">
+                        <div class="p-4 bg-blue-50 rounded-md sm:col-span-2">
                             <div class="flex">
                                 <div class="flex-shrink-0">
                                     <!-- Heroicon name: solid/information-circle -->
-                                    <svg class="h-5 w-5 text-blue-400" xmlns="http://www.w3.org/2000/svg"
+                                    <svg class="w-5 h-5 text-blue-400" xmlns="http://www.w3.org/2000/svg"
                                          viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                                         <path fill-rule="evenodd"
                                               d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
                                               clip-rule="evenodd"/>
                                     </svg>
                                 </div>
-                                <div class="ml-3 flex-1 md:flex">
+                                <div class="flex-1 ml-3 md:flex">
                                     <p class="text-sm text-blue-700">
                                         {{ $this->service->present()->description() }}
                                     </p>
@@ -235,7 +235,7 @@
                                                         <div style="flex-basis: 10px">
                                                             <svg
                                                                 wire:click="$emit('openModal', 'show-service-detail-livewire', {{ json_encode(['serviceId' => $this->service->id]) }})"
-                                                                class="cursor-pointer ml-2 text-gray-600" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                                                class="ml-2 text-gray-600 cursor-pointer" width="24" height="24" fill="none" viewBox="0 0 24 24">
                                                                 <path stroke="currentColor" stroke-linecap="round"
                                                                       stroke-linejoin="round" stroke-width="2"
                                                                       d="M12 13V15"></path>
@@ -281,12 +281,25 @@
 
                 @if ($currentStep == AppointmentReservationLivewire::STEP_FORM_CUSTOMER)
                     <div class="sm:col-span-2">
+                        <p class="mb-6 font-medium text-lg font-bold text-gray-600 border-b border-gray-200">Información del representante</p>
                         <div class="grid gap-4 sm:grid-cols-3">
                             <x-input.text
                                 :labelBold="true"
-                                wire:model.lazy="form.name"
-                                label="Nombres"
-                                name="form.name"
+                                wire:model.lazy="form.full_name"
+                                label="Nombres completos"
+                                name="form.full_name"
+                            />
+                            <x-input.text
+                                :labelBold="true"
+                                wire:model.lazy="form.first_name"
+                                label="Primer apellido"
+                                name="form.first_name"
+                            />
+                            <x-input.text
+                                :labelBold="true"
+                                wire:model.lazy="form.last_name"
+                                label="Segundo Apellido"
+                                name="form.last_name"
                             />
                             <x-input.text
                                 :labelBold="true"
@@ -300,6 +313,12 @@
                                 label="Email"
                                 type="email"
                                 name="form.email"
+                            />
+                            <x-input.text
+                                :labelBold="true"
+                                wire:model.lazy="form.name_of_child"
+                                label="Nombre del niño"
+                                name="form.name_of_child"
                             />
                             <div class="sm:col-span-3">
                                 <x-input.textarea

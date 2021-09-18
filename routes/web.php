@@ -16,6 +16,12 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/calendar', [CalendarController::class, 'index'])->name('calendar.index');
 
+Route::get('/email', function () {
+    $appointment = \App\Models\Appointment::first();
+
+    $appointment->customer->notify(new \App\Notifications\AppointmentConfirmedNotification($appointment));
+});
+
 Route::prefix('/users')->group(function () {
     Route::get('/', [UserController::class, 'index'])->name('users.index');
     Route::get('/create', [UserController::class, 'create'])->name('users.create');

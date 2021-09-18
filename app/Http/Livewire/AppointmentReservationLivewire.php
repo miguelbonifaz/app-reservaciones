@@ -28,9 +28,12 @@ class AppointmentReservationLivewire extends Component
         'start_time' => '',
         'start_time_and_location' => '',
         'location_id' => '',
-        'name' => '',
+        'full_name' => '',
+        'first_name' => '',
+        'last_name' => '',
         'phone' => '',
         'email' => '',
+        'name_of_child' => '',
         'note' => '',
         'terms_and_conditions' => false,
     ];
@@ -78,11 +81,14 @@ class AppointmentReservationLivewire extends Component
 
         'form.start_time.required' => 'Escoje una hora',
 
-        'form.name.required' => 'El campo nombre es requerido',
+        'form.full_name.required' => 'El campo nombres completos es requerido',
+        'form.first_name.required' => 'El campo primer apellido Completos es requerido',
+        'form.last_name.required' => 'El campo segundo apellido Completos es requerido',
         'form.email.required' => 'El campo email es requerido',
         'form.email.email' => 'El campo email debe ser valido',
         'form.phone.required' => 'El campo teléfono es requerido',
         'form.phone.numeric' => 'El campo teléfono debe solo contener números',
+        'form.name_of_child.required' => 'El campo nombre del niño es requerido',
     ];
 
     public function updatedDay($date, $dontSetHour = true)
@@ -126,7 +132,9 @@ class AppointmentReservationLivewire extends Component
 
         if ($step == self::STEP_FAREWELL) {
             $this->validate([
-                'form.name' => 'required',
+                'form.full_name' => 'required',
+                'form.first_name' => 'required',
+                'form.last_name' => 'required',
                 'form.phone' => [
                     'required',
                     'numeric',
@@ -141,6 +149,7 @@ class AppointmentReservationLivewire extends Component
                     }
                 ],
                 'form.email' => 'required|email',
+                'form.name_of_child' => 'required',
                 'form.terms_and_conditions' => [
                     function ($attr, $value, $fail) {
                         if (!$value) {
@@ -345,8 +354,11 @@ class AppointmentReservationLivewire extends Component
                     'email' => $this->form['email']
                 ],
                 [
+                    'full_name' => $this->form['full_name'],
+                    'first_name' => $this->form['first_name'],
+                    'last_name' => $this->form['last_name'],
                     'phone' => $this->form['phone'],
-                    'name' => $this->form['name'],
+                    'name_of_child' => $this->form['name_of_child'],
                     'note' => $this->form['note']
                 ]
             );

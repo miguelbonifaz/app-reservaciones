@@ -18,7 +18,6 @@ function buildAppointmentComponent(): TestableLivewire
 
 test('can see create appointment form', function () {
     // Arrange
-    $this->withoutExceptionHandling();
 
     // Act
     $url = route('appointments.create');

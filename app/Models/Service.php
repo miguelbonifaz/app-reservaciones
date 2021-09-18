@@ -32,6 +32,8 @@ use Illuminate\Support\Carbon;
  * @method static Builder|Service whereUpdatedAt($value)
  * @method static Builder|Service whereValue($value)
  * @mixin \Eloquent
+ * @property string|null $description
+ * @method static \Illuminate\Database\Eloquent\Builder|Service whereDescription($value)
  */
 class Service extends Model
 {

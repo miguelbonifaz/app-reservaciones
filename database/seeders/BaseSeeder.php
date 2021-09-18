@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Appointment;
 use App\Models\Employee;
 use App\Models\Location;
 use App\Models\Schedule;

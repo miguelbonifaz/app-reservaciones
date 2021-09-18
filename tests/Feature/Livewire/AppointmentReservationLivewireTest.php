@@ -80,8 +80,13 @@ function stepFourth(TestableLivewire $component, $dataCustomer, $dataAppointment
     assertCount(4, $component->viewData('steps'));
 
     $component->assertSet('currentStep', AppointmentReservationLivewire::STEP_FORM_CUSTOMER);
-    $component->set('form.name', $dataCustomer->name);
+
+    $component->set('form.full_name', $dataCustomer->full_name);
+    $component->set('form.first_name', $dataCustomer->first_name);
+    $component->set('form.last_name', $dataCustomer->last_name);
     $component->set('form.phone', $dataCustomer->phone);
+    $component->set('form.email', $dataCustomer->email);
+    $component->set('form.name_of_child', $dataCustomer->name_of_child);
     $component->set('form.email', $dataCustomer->email);
     $component->set('form.note', $dataAppointment->note);
     $component->set('form.terms_and_conditions', true);
@@ -209,9 +214,12 @@ test('fields are required in the fourth step', function () {
     assertCount(4, $component->viewData('steps'));
 
     $component->assertSet('currentStep', AppointmentReservationLivewire::STEP_FORM_CUSTOMER);
-    $component->set('form.name', '');
+    $component->set('form.full_name', '');
+    $component->set('form.first_name', '');
+    $component->set('form.last_name', '');
     $component->set('form.phone', '');
     $component->set('form.email', '');
+    $component->set('form.name_of_child', '');
     $component->set('form.terms_and_conditions');
     $component->set('form.note', $dataAppointment->note);
 
@@ -221,9 +229,12 @@ test('fields are required in the fourth step', function () {
 
     // Assert
     $component->assertHasErrors([
-        'form.name' => 'required',
+        'form.full_name' => 'required',
+        'form.first_name' => 'required',
+        'form.last_name' => 'required',
         'form.phone' => 'required',
         'form.email' => 'required',
+        'form.name_of_child' => 'required',
         'form.terms_and_conditions',
     ]);
 

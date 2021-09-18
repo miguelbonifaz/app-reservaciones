@@ -21,10 +21,16 @@ class CustomerFactory extends Factory
      */
     public function definition(): array
     {
+        $firstName = $this->faker->firstName();
+        $lastName = $this->faker->lastName();
+
         return [
-            'name' => $this->faker->name(),
+            'full_name' => "{$firstName} {$lastName}",
+            'first_name' => $firstName,
+            'last_name' => $lastName,
             'email' => $this->faker->unique()->safeEmail(),
             'phone' => (string)$this->faker->numberBetween(0000000000, 9999999999),
+            'name_of_child' => $this->faker->name
         ];
     }
 }
