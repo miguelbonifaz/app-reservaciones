@@ -51,6 +51,9 @@ jobs:
       - name: Run phpunit tests
         run: ./vendor/bin/pest -d memory_limit=2048M
 
+      - name: Upgrade Chrome Driver
+      - run: php artisan dusk:chrome-driver
+
       - name: Run dusk tests
         run: php artisan dusk
 
