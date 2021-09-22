@@ -48,8 +48,11 @@ jobs:
       - name: Generate key
         run: php artisan key:generate
 
-      - name: Run tests
+      - name: Run phpunit tests
         run: ./vendor/bin/pest -d memory_limit=2048M
+
+      - name: Run dusk tests
+        run: php artisan dusk
 
       - name: Discord notification
         uses: sarisia/actions-status-discord@v1
