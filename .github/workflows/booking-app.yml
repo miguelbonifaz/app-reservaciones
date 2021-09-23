@@ -48,6 +48,28 @@ jobs:
       - name: Generate key
         run: php artisan key:generate
 
+      - name: Install Chrome Driver
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install google-chrome-stable -y
+          php artisan dusk:chrome-driver
+
+      - name: Start Chrome Driver
+        run: ./vendor/laravel/dusk/bin/chromedriver-linux &
+
+      - name: Run migrations
+        run: php artisan migrate
+
+      - name: Run Laravel Server
+        env:
+          APP_URL: "http://127.0.0.1:8000"
+        run: php artisan serve &
+
+      - name: Run Dusk tests
+        env:
+          APP_URL: "http://127.0.0.1:8000"
+        run: php artisan dusk
+
       - name: Run phpunit tests
         run: ./vendor/bin/pest -d memory_limit=2048M
 
