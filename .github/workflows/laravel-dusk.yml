@@ -1,6 +1,4 @@
-# GithHub Actions Workflow generated with Ghygen
-# Original configuration: https://ghygen.hi-folks.dev?code=0dc667d53e92b44a5c103e6f827c48bb
-name: Laravel Dusk
+name: Laravel Dusk tests
 on:
   push:
     branches:
