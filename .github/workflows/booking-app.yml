@@ -51,12 +51,17 @@ jobs:
       - name: Run phpunit tests
         run: ./vendor/bin/pest -d memory_limit=2048M
 
+      - name: Upgrade chrome driver
+        run: php artisan dusk:chrome-driver
+
+      - name: Start Chrome Driver
+        run: ./vendor/laravel/dusk/bin/chromedriver-linux > /dev/null 2>&1 &
+
+      - name: Run Laravel Server
+        run: php artisan serve > /dev/null 2>&1 &
+
       - name: Run dusk tests
-        run: |
-          php artisan dusk:chrome-driver
-          ./vendor/laravel/dusk/bin/chromedriver-linux > /dev/null 2>&1 &
-          php artisan serve > /dev/null 2>&1 &
-          php artisan dusk
+        run: php artisan dusk
 
       - name: Discord notification
         uses: sarisia/actions-status-discord@v1
