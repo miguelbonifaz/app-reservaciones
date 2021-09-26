@@ -235,11 +235,13 @@
                                                         <div style="flex-basis: 10px">
                                                             <svg
                                                                 wire:click="$emit('openModal', 'show-service-detail-livewire', {{ json_encode(['serviceId' => $this->service->id]) }})"
-                                                                class="ml-2 text-gray-600 cursor-pointer" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                                                class="ml-2 text-gray-600 cursor-pointer" width="24"
+                                                                height="24" fill="none" viewBox="0 0 24 24">
                                                                 <path stroke="currentColor" stroke-linecap="round"
                                                                       stroke-linejoin="round" stroke-width="2"
                                                                       d="M12 13V15"></path>
-                                                                <circle cx="12" cy="9" r="1" fill="currentColor"></circle>
+                                                                <circle cx="12" cy="9" r="1"
+                                                                        fill="currentColor"></circle>
                                                                 <circle cx="12" cy="12" r="7.25" stroke="currentColor"
                                                                         stroke-linecap="round" stroke-linejoin="round"
                                                                         stroke-width="1.5"></circle>
@@ -281,8 +283,16 @@
 
                 @if ($currentStep == AppointmentReservationLivewire::STEP_FORM_CUSTOMER)
                     <div class="sm:col-span-2">
-                        <p class="mb-6 font-medium text-lg font-bold text-gray-600 border-b border-gray-200">Información del representante</p>
+                        <p class="mb-6 text-lg font-medium font-bold text-gray-600 border-b border-gray-200">Información
+                            del representante</p>
                         <div class="grid gap-4 sm:grid-cols-3">
+                            <x-input.text
+                                :labelBold="true"
+                                wire:model.debounce.1000ms="form.email"
+                                label="Email"
+                                type="email"
+                                name="form.email"
+                            />
                             <x-input.text
                                 :labelBold="true"
                                 wire:model.lazy="form.full_name"
@@ -306,13 +316,6 @@
                                 wire:model.lazy="form.phone"
                                 label="Teléfono"
                                 name="form.phone"
-                            />
-                            <x-input.text
-                                :labelBold="true"
-                                wire:model.lazy="form.email"
-                                label="Email"
-                                type="email"
-                                name="form.email"
                             />
                             <x-input.text
                                 :labelBold="true"
