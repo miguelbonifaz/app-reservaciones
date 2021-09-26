@@ -59,18 +59,18 @@ class AppointmentReservationLivewire extends Component
             return;
         }
 
-//        $this->form['service_id'] = 1;
-//        $this->updatedFormServiceId(1);
-//        $this->form['employee_id'] = 1;
-//        array_push($this->steps, self::STEP_DATE_AND_HOUR);
-//        $this->currentStep = self::STEP_DATE_AND_HOUR;
-//        $this->form['date'] = '2021-08-24';
-//        $this->form['start_time_and_location'] = '10:00, 1';
-//        $this->updatedFormStartTimeAndLocation('10:00, 1');
-//        array_push($this->steps, self::STEP_DETAILS);
-//        $this->currentStep = self::STEP_DETAILS;
-//        array_push($this->steps, self::STEP_FORM_CUSTOMER);
-//        $this->currentStep = self::STEP_FORM_CUSTOMER;
+        $this->form['service_id'] = 1;
+        $this->updatedFormServiceId(1);
+        $this->form['employee_id'] = 1;
+        array_push($this->steps, self::STEP_DATE_AND_HOUR);
+        $this->currentStep = self::STEP_DATE_AND_HOUR;
+        $this->form['date'] = '2021-08-24';
+        $this->form['start_time_and_location'] = '10:00, 1';
+        $this->updatedFormStartTimeAndLocation('10:00, 1');
+        array_push($this->steps, self::STEP_DETAILS);
+        $this->currentStep = self::STEP_DETAILS;
+        array_push($this->steps, self::STEP_FORM_CUSTOMER);
+        $this->currentStep = self::STEP_FORM_CUSTOMER;
 //        array_push($this->steps, self::STEP_FAREWELL);
 //        $this->currentStep = self::STEP_FAREWELL;
     }
@@ -336,6 +336,31 @@ class AppointmentReservationLivewire extends Component
         }
 
         $this->employees = Service::find($this->form['service_id'])->employees;
+    }
+
+    public function updatedFormEmail($email)
+    {
+        if (!Str::contains($email, '@')) {
+            return null;
+        }
+
+        $totalCustomer = Customer::query()
+            ->where('email', 'LIKE', "%$email%")
+            ->count();
+
+        if ($totalCustomer != 1) {
+            return null;
+        }
+
+        $customer = Customer::query()
+            ->firstWhere('email', 'LIKE', "%$email%");
+
+        $this->form['email'] = $customer->email;
+        $this->form['full_name'] = $customer->full_name;
+        $this->form['first_name'] = $customer->first_name;
+        $this->form['last_name'] = $customer->last_name;
+        $this->form['phone'] = $customer->phone;
+        $this->form['name_of_child'] = $customer->name_of_child;
     }
 
     public function updatedFormStartTimeAndLocation($value)

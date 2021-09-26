@@ -101,6 +101,7 @@ function stepFourth(TestableLivewire $component, $dataCustomer, $dataAppointment
 
 function stepFive(TestableLivewire $component): void
 {
+    // Derrepente el test falla a este paso, no existe 5 pasos, solamente 4.
     assertCount(5, $component->viewData('steps'));
 
     $component->assertSet('currentStep', AppointmentReservationLivewire::STEP_FAREWELL);
@@ -239,7 +240,7 @@ test('fields are required in the fourth step', function () {
     ]);
 
     $component->assertHasNoErrors([
-       'form.note'
+        'form.note'
     ]);
 });
 
@@ -268,7 +269,7 @@ test('field phone must be a number', function () {
 
     // Assert
     $component->assertHasErrors([
-       'form.phone'  => 'numeric'
+        'form.phone' => 'numeric'
     ]);
 });
 
@@ -297,7 +298,7 @@ test('field phone must contain at least 10 numbers', function () {
 
     // Assert
     $component->assertHasErrors([
-       'form.phone'
+        'form.phone'
     ]);
 });
 
@@ -326,7 +327,7 @@ test('field phone must not contain more than 10 numbers', function () {
 
     // Assert
     $component->assertHasErrors([
-       'form.phone'
+        'form.phone'
     ]);
 });
 
@@ -355,7 +356,7 @@ test('field email must be valid', function () {
 
     // Assert
     $component->assertHasErrors([
-       'form.email' => 'email'
+        'form.email' => 'email'
     ]);
 });
 
@@ -384,8 +385,61 @@ test('field terms_and_conditions is required', function () {
 
     // Assert
     $component->assertHasErrors([
-       'form.terms_and_conditions'
+        'form.terms_and_conditions'
     ]);
+});
+
+test('user can autocomplete his information', function () {
+    // Arrange
+    $customer = Customer::factory()->create();
+    $component = buildComponent();
+
+    // Act
+    $component->set('form.email', $customer->email);
+
+    // Assert
+    expect($customer->email)->toBe($component->get('form.email'));
+    expect($customer->full_name)->toBe($component->get('form.full_name'));
+    expect($customer->first_name)->toBe($component->get('form.first_name'));
+    expect($customer->last_name)->toBe($component->get('form.last_name'));
+    expect($customer->phone)->toBe($component->get('form.phone'));
+    expect($customer->name_of_child)->toBe($component->get('form.name_of_child'));
+});
+
+test("user can not autocomplete his information if the email does not have string '@'", function () {
+    // Arrange
+    $customer = Customer::factory()->create();
+    $component = buildComponent();
+
+    // Act
+    $component->set('form.email', Str::remove('@', $customer->email));
+
+    // Assert
+    expect($component->get('form.email'))->not()->toBeNull();
+    expect($component->get('form.full_name'))->toBe('');
+    expect($component->get('form.first_name'))->toBe('');
+    expect($component->get('form.last_name'))->toBe('');
+    expect($component->get('form.phone'))->toBe('');
+    expect($component->get('form.name_of_child'))->toBe('');
+});
+
+test('if there are too many users, the information cannot be autocompleted.', function () {
+    // Arrange
+    Customer::factory()->create(['email' => 'miguel@gmail.com']);
+    Customer::factory()->create(['email' => 'miguel@hotmail.com']);
+
+    $component = buildComponent();
+
+    // Act
+    $component->set('form.email', 'miguel@');
+
+    // Assert
+    expect($component->get('form.email'))->not()->toBeNull();
+    expect($component->get('form.full_name'))->toBe('');
+    expect($component->get('form.first_name'))->toBe('');
+    expect($component->get('form.last_name'))->toBe('');
+    expect($component->get('form.phone'))->toBe('');
+    expect($component->get('form.name_of_child'))->toBe('');
 });
 
 
