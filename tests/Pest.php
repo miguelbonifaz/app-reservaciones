@@ -11,7 +11,11 @@
 |
 */
 
+use Tests\DuskTestCase;
+
 uses(Tests\TestCase::class)->in('Feature', 'Unit');
+uses(DuskTestCase::class)->in('Browser');
+
 
 /*
 |--------------------------------------------------------------------------

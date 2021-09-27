@@ -99,6 +99,7 @@
                                                 for="">{{ $location }}</label>
                                             @foreach ($hours as $data)
                                                 <label
+                                                    dusk="hour-{{ $data['hour'] }}"
                                                     class="mr-2 w-full lg:w-32 text-center border border-gray-200 text-center py-2 rounded-lg mb-1 flex items-center justify-center {{ $this->hourNotAvailableClasses($data['isAvailable']) }}">
                                                     <input
                                                         @if (!$data['isAvailable'])
@@ -288,7 +289,7 @@
                         <div class="grid gap-4 sm:grid-cols-3">
                             <x-input.text
                                 :labelBold="true"
-                                wire:model.debounce.1000ms="form.email"
+                                wire:model.lazy="form.email"
                                 label="Email"
                                 type="email"
                                 name="form.email"
@@ -357,9 +358,7 @@
 
                 @if ($currentStep == AppointmentReservationLivewire::STEP_FAREWELL)
                     <div class="sm:col-span-2">
-                        <p class="py-16 mx-auto max-w-2xl text-3xl text-center text-gray-700">
-                            Gracias por su reserva en linea, se le ha enviado un correo con los detalles de su
-                            reservación
+                        <p class="py-16 mx-auto max-w-2xl text-3xl text-center text-gray-700">Gracias por su reserva en linea, se le ha enviado un correo con los detalles de su reservación
                         </p>
                         <div class="flex justify-center">
                             <x-input.link href="{{ route('website.home') }}">

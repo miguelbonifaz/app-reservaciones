@@ -29,7 +29,7 @@ class CustomerFactory extends Factory
             'first_name' => $firstName,
             'last_name' => $lastName,
             'email' => $this->faker->unique()->safeEmail(),
-            'phone' => (string)$this->faker->numberBetween(0000000000, 9999999999),
+            'phone' => (string)random_int(8888888888, 9999999999),
             'name_of_child' => $this->faker->name
         ];
     }
