@@ -5,14 +5,11 @@ use App\Models\Customer;
 use App\Models\Employee;
 use App\Models\Location;
 use App\Models\Service;
-use App\Notifications\AppointmentConfirmedNotification;
 use Database\Seeders\BaseSeederForTesting;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Laravel\Dusk\Browser;
 
 beforeEach(function () {
-    \Illuminate\Support\Facades\Notification::fake();
-
     $this->seed(BaseSeederForTesting::class);
 });
 
@@ -29,7 +26,6 @@ test('can create an appointment', function () {
         $hour = '16:00';
 
         $browser->visit('/reservaciones')
-            ->resize(400, 600)
             ->select('form.service_id', $service->id)
             ->pause('500')
             ->select('form.employee_id', $employee->id)
@@ -51,9 +47,8 @@ test('can create an appointment', function () {
             ->type('form.note', $note = 'This is my note')
             ->check('termsAndConditions')
             ->press('Siguiente')
-            ->pause('5000')
-            ->screenshot('testing');
-
+            ->pause('2000')
+            ->assertSee('Gracias por su reserva en linea, se le ha enviado un correo con los detalles de su reservación');
 
         // Assert
         expect(Customer::all())->toHaveCount(1);
