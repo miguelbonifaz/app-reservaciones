@@ -4,7 +4,11 @@
     <div class="lg:max-w-7xl lg:mx-auto">
         <div class="flex justify-between items-center">
             <figure>
-                <h1 class="text-xl font-bold text-white">Psicóloga María José Jáuregui</h1>
+                <h1>
+                    <a class="text-xl font-bold text-white" href="/">
+                        Psicóloga María José Jáuregui
+                    </a>
+                </h1>
             </figure>
             <svg
                 x-on:click="open = !open"
@@ -35,11 +39,6 @@
                     <li>
                         <a
                             class="inline-block w-full text-sm font-bold uppercase testing"
-                            href="{{ route('website.evaluation') }}">Evaluaciones</a>
-                    </li>
-                    <li>
-                        <a
-                            class="inline-block w-full text-sm font-bold uppercase testing"
                             href="{{ route('website.reservation') }}">Reservaciones</a>
                     </li>
                     <li>
@@ -56,17 +55,14 @@
                     <a class="inline-block w-full uppercase" href="{{ route('website.home') }}">Inicio</a>
                 </li>
                 <li>
-                    <a class="inline-block w-full uppercase" href="">Terapias</a>
-                </li>
-                <li>
-                    <a class="inline-block w-full uppercase" href="">Evaluaciones</a>
+                    <a class="inline-block w-full uppercase" href="{{ route('website.therapy') }}">Terapias</a>
                 </li>
                 <li>
                     <a class="inline-block w-full uppercase"
                        href="{{ route('website.reservation') }}">Reservaciones</a>
                 </li>
                 <li>
-                    <a class="inline-block w-full uppercase" href="">Contacto</a>
+                    <a class="inline-block w-full uppercase" href="{{ route('website.contact') }}">Contacto</a>
                 </li>
             </ul>
         </nav>

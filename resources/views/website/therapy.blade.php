@@ -12,8 +12,8 @@
 
     <section class="grid gap-4 px-4 sm:grid-cols-2 xl:grid-cols-4 lg:px-0 lg:gap-0">
         @foreach ([1,2,3,4] as $number)
-            <figure>
-                <img class="w-full" src="{{ asset("assets/home/foto{$number}.jpg") }}" alt="">
+            <figure class="flex">
+                <img class="w-full object-cover terapia__galeria-image" src="{{ asset("assets/terapias/terapia-{$number}.jpg") }}" alt="">
             </figure>
         @endforeach
     </section>
