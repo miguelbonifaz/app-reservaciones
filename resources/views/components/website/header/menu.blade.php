@@ -7,9 +7,6 @@
             <a class="inline-block w-full uppercase" href="">Terapias</a>
         </li>
         <li>
-            <a class="inline-block w-full uppercase" href="">Evaluaciones</a>
-        </li>
-        <li>
             <a class="inline-block w-full uppercase"
                href="{{ route('website.reservation') }}">Reservaciones</a>
         </li>

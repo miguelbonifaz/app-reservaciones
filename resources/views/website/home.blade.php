@@ -7,7 +7,8 @@
         class="flex flex-col justify-center h-screen bg-center"
         style="background: url({{ asset('assets/home/hero_image.jpg') }})">
         <div class="px-6 mx-auto max-w-7xl text-center">
-            <h1 class="mb-6 text-3xl font-bold text-white lg:text-6xl lg:mb-14">Máster en Autismo e <br> Intervención Psicoeducativa</h1>
+            <h1 class="mb-6 text-3xl font-bold text-white lg:text-6xl lg:mb-14">Máster en Autismo e <br> Intervención
+                Psicoeducativa</h1>
             <a
                 href="{{ route('website.reservation') }}"
                 class="inline-flex items-center px-4 py-2 text-sm font-bold text-gray-700 bg-white rounded-md border border-gray-300 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 lg:text-lg focus:ring-offset-2 focus:ring-indigo-500">
@@ -31,17 +32,22 @@
             <div class="md:flex">
                 <div class="mb-10 md:w-1/2">
                     <figure class="flex justify-center">
-                        <img class="w-72 lg:w-10/12" src="{{ asset('assets/home/maria-jose-jauregui.png') }}" alt="Psicóloga María José Jáuregui">
+                        <img class="w-72 lg:w-10/12" src="{{ asset('assets/home/maria-jose-jauregui.png') }}"
+                             alt="Psicóloga María José Jáuregui">
                     </figure>
                 </div>
                 <div class="md:w-1/2">
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore
-                        et dolore magna aliqua.
-
-                        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-                        consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat
-                        nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt
-                        mollit anim id est laborum.</p>
+                    <p>Psicóloga Clínica
+                        Máster en Autismo e Intervención Psicoeducativa
+                        Especializada en España y Argentina
+                        Especialista en Comunicación y Socialización
+                        Asesora de Universidades, Fasinarm y diferentes instituciones en temas de Autismo
+                        Calificadora del carnet del Conadis
+                        Psicóloga Clínica encargada del proyecto gubernamental Gallegos Lara
+                        Certificación en método Pierce al entorno escolar para mejorar habilidades sociales de niños y
+                        adolescentes con trastornos del espectro autista y otros desafíos sociales (Universidad de
+                        California UCLA)
+                    </p>
                     <h5 class="mt-10 mb-4 text-2xl uppercase">Redes sociales</h5>
                     <div class="flex space-x-6">
                         <a href="">
@@ -85,7 +91,8 @@
             <div class="lg:flex">
                 <div class="mb-8 divide-y-2 divide-gray-200 lg:w-5/12 lg:pr-10">
                     <div class="py-4">
-                        <h4 class="mb-3 text-xl font-bold uppercase text-mariajose_gray lg:text-2xl">Lunes a Viernes</h4>
+                        <h4 class="mb-3 text-xl font-bold uppercase text-mariajose_gray lg:text-2xl">Lunes a
+                            Viernes</h4>
                         <div class="flex items-baseline">
                             <svg
                                 class="self-center mr-2"
@@ -144,6 +151,142 @@
     </section>
     <section class="py-16">
         <x-website.container>
+            <h3 class="title_large">Servicios</h3>
+            <div class="flex flex-col">
+                <div class="overflow-x-auto -my-2 sm:-mx-6 lg:-mx-8">
+                    <div class="inline-block py-2 min-w-full align-middle sm:px-6 lg:px-8">
+                        <div class="overflow-hidden border-b border-gray-200 shadow sm:rounded-lg">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                <tr>
+                                    <th scope="col"
+                                        class="px-6 py-3 font-bold tracking-wider text-left text-gray-800 uppercase">
+                                        Servicio
+                                    </th>
+                                    <th scope="col"
+                                        class="px-6 py-3 font-bold tracking-wider text-left text-gray-800 uppercase">
+                                        Lugar
+                                    </th>
+                                    <th scope="col"
+                                        class="px-6 py-3 font-bold tracking-wider text-left text-gray-800 uppercase">
+                                        Valor
+                                    </th>
+                                    <th scope="col"
+                                        class="px-6 py-3 font-bold tracking-wider text-left text-gray-800 uppercase">
+                                        Tiempo duración
+                                    </th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr class="bg-white">
+                                    <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                                        Reunión en escuela
+                                    </td>
+                                    <td class="px-6 py-4 text-gray-500 whitespace-nowrap">
+                                        Escuela
+                                    </td>
+                                    <td class="px-6 py-4 text-gray-500 whitespace-nowrap">
+                                        $100
+                                    </td>
+                                    <td class="px-6 py-4 text-gray-500 whitespace-nowrap">
+                                        1 hora
+                                    </td>
+                                </tr>
+                                <tr class="bg-white">
+                                    <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                                        Observación en escuela
+                                    </td>
+                                    <td class="px-6 py-4 text-gray-500 whitespace-nowrap">
+                                        Escuela
+                                    </td>
+                                    <td class="px-6 py-4 text-gray-500 whitespace-nowrap">
+                                        $100
+                                    </td>
+                                    <td class="px-6 py-4 text-gray-500 whitespace-nowrap">
+                                        1 hora
+                                    </td>
+                                </tr>
+                                <tr class="bg-white">
+                                    <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                                        Observación en casa
+                                    </td>
+                                    <td class="px-6 py-4 text-gray-500 whitespace-nowrap">
+                                        Casa
+                                    </td>
+                                    <td class="px-6 py-4 text-gray-500 whitespace-nowrap">
+                                        $120
+                                    </td>
+                                    <td class="px-6 py-4 text-gray-500 whitespace-nowrap">
+                                        1 hora y media
+                                    </td>
+                                </tr>
+                                <tr class="bg-white">
+                                    <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                                        Reunión con profesionales externos
+                                    </td>
+                                    <td class="px-6 py-4 text-gray-500 whitespace-nowrap">
+                                        Oficina Samborondón
+                                    </td>
+                                    <td class="px-6 py-4 text-gray-500 whitespace-nowrap">
+                                        $90
+                                    </td>
+                                    <td class="px-6 py-4 text-gray-500 whitespace-nowrap">
+                                        45 minutos
+                                    </td>
+                                </tr>
+                                <tr class="bg-white">
+                                    <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                                        Intervención individual
+                                    </td>
+                                    <td class="px-6 py-4 text-gray-500 whitespace-nowrap">
+                                        Oficina Samborondón
+                                    </td>
+                                    <td class="px-6 py-4 text-gray-500 whitespace-nowrap">
+                                        $40
+                                    </td>
+                                    <td class="px-6 py-4 text-gray-500 whitespace-nowrap">
+                                        45 minutos
+                                    </td>
+                                </tr>
+                                <tr class="bg-white">
+                                    <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                                        Terapia Lúdico
+                                    </td>
+                                    <td class="px-6 py-4 text-gray-500 whitespace-nowrap">
+                                        Consultar lugar
+                                    </td>
+                                    <td class="px-6 py-4 text-gray-500 whitespace-nowrap">
+                                        $55
+                                    </td>
+                                    <td class="px-6 py-4 text-gray-500 whitespace-nowrap">
+                                        1 hora y media
+                                    </td>
+                                </tr>
+                                <tr class="bg-white">
+                                    <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                                        Reunión con padres
+                                    </td>
+                                    <td class="px-6 py-4 text-gray-500 whitespace-nowrap">
+                                        Oficina Samborondón
+                                    </td>
+                                    <td class="px-6 py-4 text-gray-500 whitespace-nowrap">
+                                        $90
+                                    </td>
+                                    <td class="px-6 py-4 text-gray-500 whitespace-nowrap">
+                                        1 hora
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </x-website.container>
+    </section>
+    <section class="py-16">
+        <x-website.container>
             <h3 class="title_large">Conoce Nuestras Oficinas</h3>
             <p class="mb-12 text-center">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
                 incididunt ut labore et
@@ -152,7 +295,7 @@
             <div class="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
                 @foreach ([1,2,3,1,2,3,1,2] as $item)
                     <figure>
-                        <img class="w-full" src="{{ asset("assets/home/ofi{$item}.jpg") }}" alt="">
+                        <img class="w-full rounded" src="{{ asset("assets/home/ofi{$item}.jpg") }}" alt="">
                     </figure>
                 @endforeach
             </div>
@@ -160,18 +303,13 @@
     </section>
     <section class="py-10">
         <x-website.container>
-            <h3 class="title_large">Profesionales</h3>
+            <h3 class="title_large">Nuestro Trabajo</h3>
             <div class="grid grid-cols-2 gap-x-3 gap-y-10 md:grid-cols-3 lg:grid-cols-4">
-                @foreach (\App\Models\Employee::limit(8)->get() as $employee)
-                    <div class="flex flex-col items-center">
-                        <figure class="mb-6 w-44 h-44 bg-gray-100 rounded-full">
-
-                        </figure>
-                        <h4 class="font-bold text-center uppercase text-mariajose_gray">{{ $employee->present()->name() }}</h4>
-                        <div>
-
-                        </div>
-                    </div>
+                @foreach (range(1,9) as $number)
+                    <figure>
+                        <img class="object-cover w-full h-52 rounded shadow"
+                             src="{{ asset("assets/home/ambiente-laboral-{$number}.jpg") }}" alt="">
+                    </figure>
                 @endforeach
             </div>
         </x-website.container>
