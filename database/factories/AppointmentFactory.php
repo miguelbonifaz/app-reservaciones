@@ -27,11 +27,16 @@ class AppointmentFactory extends Factory
     {
         $startTime = today()->setTime(config('booking.factory.startTime')->random(), 0);
 
+        $service = Service::factory()->withALocation()->create();
+
         return [
-            'employee_id' => Employee::factory(),
-            'customer_id' => Customer::factory(),
-            'service_id' => Service::factory(),
-            'location_id' => Location::factory(),
+            'employee_id' => Employee::factory()->create(),
+            'customer_id' => Customer::factory()->create(),
+            'service_id' => $service->id,
+            'location_id' => function ($data) {
+                $service = Service::find($data['service_id']);
+                return $service->locations()->first()->id;
+            },
             'date' => today()->startOfWeek()->addDays(rand(0, 7)),
             'start_time' => $startTime,
             'note' => $this->faker->sentence,

@@ -3,6 +3,7 @@
 use App\Http\Livewire\AppointmentReservationLivewire;
 use App\Models\Appointment;
 use App\Models\Customer;
+use App\Models\Service;
 use App\Notifications\AppointmentConfirmedNotification;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Testing\TestableLivewire;
@@ -28,7 +29,7 @@ test('can create component', function () {
     expect($component)->not()->toBeNull();
 });
 
-function stepOne(TestableLivewire $component, $dataAppointment): void
+function stepOne(TestableLivewire $component, $dataAppointment, $isInAnOffice = true): void
 {
     assertCount(1, $component->viewData('steps'));
 
@@ -41,6 +42,12 @@ function stepOne(TestableLivewire $component, $dataAppointment): void
     assertEquals('opacity-30', $component->get('fourthStepProgressBarClass'));
     assertEquals('opacity-30', $component->get('fifthStepProgressBarClass'));
 
+    if ($isInAnOffice) {
+        $component->set('form.location_id', $dataAppointment->location_id);
+    } else {
+        assertEquals(Service::first()->place, $component->get('form.place'));
+    }
+
     $component->call('nextStep', AppointmentReservationLivewire::STEP_DATE_AND_HOUR);
 }
 
@@ -51,7 +58,6 @@ function stepTwo(TestableLivewire $component, $dataAppointment): void
     $component->assertSet('currentStep', AppointmentReservationLivewire::STEP_DATE_AND_HOUR);
     $component->set('form.date', $dataAppointment->date->format('Y-m-d'));
     $component->set('form.start_time', $dataAppointment->start_time->format('H:i'));
-    $component->set('form.location_id', $dataAppointment->location_id);
     assertNull($component->get('firstStepProgressBarClass'));
     assertNull($component->get('secondStepProgressBarClass'));
     assertEquals('opacity-30', $component->get('thirdStepProgressBarClass'));
@@ -112,7 +118,61 @@ function stepFive(TestableLivewire $component): void
     assertNull($component->get('fifthStepProgressBarClass'));
 }
 
-test('can create an appointment', function () {
+test('can create an appointment with an out-of-office service. ', function () {
+    Notification::fake();
+
+    // Arrange
+    $dataAppointment = Appointment::factory()->make([
+        'service_id' => Service::factory()->create(),
+        'location_id' => null,
+    ]);
+
+    $dataCustomer = Customer::factory()->make();
+    $component = buildComponent();
+
+    // STEP ONE
+    stepOne($component, $dataAppointment);
+
+    // STEP TWO
+    stepTwo($component, $dataAppointment);
+
+    // STEP THREE
+    stepThree($component);
+
+    // STEP FOURTH
+    stepFourth($component, $dataCustomer, $dataAppointment);
+
+    // STEP FIVE
+    stepFive($component);
+
+    // Assert
+    $this->assertCount(1, Appointment::all());
+    $this->assertCount(2, Customer::all());
+
+    $customer = Customer::firstWhere('email', $dataCustomer->email);
+    expect($dataCustomer->full_name)->toBe($customer->full_name);
+    expect($dataCustomer->first_name)->toBe($customer->first_name);
+    expect($dataCustomer->last_name)->toBe($customer->last_name);
+    expect($dataCustomer->phone)->toBe($customer->phone);
+    expect($dataCustomer->email)->toBe($customer->email);
+    expect($dataCustomer->name_of_child)->toBe($customer->name_of_child);
+
+    $appointment = Appointment::first();
+
+    $endTime = $appointment->start_time->addMinutes($dataAppointment->service->duration);
+
+    expect($dataAppointment->service_id)->toBe($appointment->service_id);
+    expect($appointment->location_id)->toBeNull();
+    expect($dataAppointment->employee_id)->toBe($appointment->employee_id);
+    expect($customer->id)->toBe($appointment->customer_id);
+    expect($dataAppointment->date->format('Y-m-d'))->toBe($appointment->date->format('Y-m-d'));
+    expect($dataAppointment->start_time->format('H:i'))->toBe($appointment->start_time->format('H:i'));
+    expect($endTime->format('H:i'))->toBe($appointment->end_time->format('H:i'));
+
+    Notification::assertSentTo($customer, AppointmentConfirmedNotification::class);
+});
+
+test('can create an appointment with with an service into a office', function () {
     Notification::fake();
 
     // Arrange
@@ -137,25 +197,9 @@ test('can create an appointment', function () {
 
     // Assert
     $this->assertCount(1, Appointment::all());
-    $this->assertCount(2, Customer::all());
-
-    $customer = Customer::firstWhere('email', $dataCustomer->email);
-    expect($dataCustomer->name)->toBe($customer->name);
-    expect($dataCustomer->phone)->toBe($customer->phone);
-    expect($dataCustomer->email)->toBe($customer->email);
-
     $appointment = Appointment::first();
 
-    $endTime = $appointment->start_time->addMinutes($dataAppointment->service->duration);
-
-    expect($dataAppointment->service_id)->toBe($appointment->service_id);
-    expect($dataAppointment->employee_id)->toBe($appointment->employee_id);
-    expect($customer->id)->toBe($appointment->customer_id);
-    expect($dataAppointment->date->format('Y-m-d'))->toBe($appointment->date->format('Y-m-d'));
-    expect($dataAppointment->start_time->format('H:i'))->toBe($appointment->start_time->format('H:i'));
-    expect($endTime->format('H:i'))->toBe($appointment->end_time->format('H:i'));
-
-    Notification::assertSentTo($customer, AppointmentConfirmedNotification::class);
+    expect($dataAppointment->location_id)->toBe($appointment->location_id);
 });
 
 test('fields are required in the first step', function () {
@@ -176,6 +220,26 @@ test('fields are required in the first step', function () {
     $component->assertHasErrors([
         'form.service_id' => 'required',
         'form.employee_id' => 'required'
+    ]);
+});
+
+test('field location_id is required if the  service has locations', function () {
+    // Arrange
+    $component = buildComponent();
+    $service = Service::factory()->withALocation()->create();
+
+    // STEP ONE
+    $component->set('form.service_id', $service->id);
+
+    // Act
+    $component->call('nextStep', AppointmentReservationLivewire::STEP_DATE_AND_HOUR);
+
+    // Assert
+    $this->assertFalse(
+        collect($component->get('steps'))->contains(AppointmentReservationLivewire::STEP_DATE_AND_HOUR)
+    );
+    $component->assertHasErrors([
+        'form.location_id' => 'required',
     ]);
 });
 
