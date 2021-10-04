@@ -41,6 +41,7 @@ class AppointmentReservationLivewire extends Component
     ];
 
     public $employees;
+    public $locations;
 
     public $selectedDay;
 
@@ -53,6 +54,7 @@ class AppointmentReservationLivewire extends Component
     public function mount()
     {
         $this->employees = collect();
+        $this->locations = collect();
 
         array_push($this->steps, self::STEP_SERVICE_AND_EMPLOYEE);
     }
@@ -60,6 +62,7 @@ class AppointmentReservationLivewire extends Component
     protected $messages = [
         'form.service_id.required' => 'Seleccione un servicio',
         'form.employee_id.required' => 'Seleccione un profesional',
+        'form.location_id.required' => 'Seleccione un lugar',
 
         'form.start_time.required' => 'Escoje una hora',
 
@@ -195,15 +198,6 @@ class AppointmentReservationLivewire extends Component
         }
 
         return false;
-    }
-
-    public function getLocationsProperty(): Collection
-    {
-        if ($this->form['employee_id']) {
-            return $this->employee->locations;
-        }
-
-        return collect();
     }
 
     public function getAppointmentDateProperty(): string
@@ -354,6 +348,13 @@ class AppointmentReservationLivewire extends Component
                 $query->where('location_id', $locationId);
             })
             ->get();
+    }
+
+    public function updatedFormEmployeeId()
+    {
+        $this->form['location_id'] = '';
+
+        return $this->locations = $this->employee->locations;
     }
 
     public function updatedFormEmail($email)

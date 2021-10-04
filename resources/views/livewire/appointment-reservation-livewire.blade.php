@@ -110,6 +110,9 @@
                                 </div>
                                 <div
                                     class="grid grid-cols-2 gap-1 lg:flex lg:flex-col lg:h-72 lg:flex-wrap lg:gap-0 lg:content-start">
+                                    @if (count($this->availableHours) == 0)
+                                        <p>No existe horario disponible el día de hoy.</p>
+                                    @endif
                                     @foreach ($this->availableHours as $data)
                                         <label
                                             dusk="hour-{{ $data['hour'] }}"
@@ -130,9 +133,7 @@
                                         </label>
                                     @endforeach
                                 </div>
-                                @if (count($this->availableHours) == 0)
-                                    <p>No existe horario disponible el día de hoy.</p>
-                                @endif
+
                                 <x-ui.error type="form.start_time_and_location"/>
                             </div>
                         </div>
