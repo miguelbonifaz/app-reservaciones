@@ -3,6 +3,7 @@
 namespace App\Http\Livewire;
 
 use App\Models\Employee;
+use App\Models\Location;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
@@ -13,11 +14,13 @@ class DatePickerLivewire extends Component
     public $currentDay;
     public $selectedDay;
     public $employeeId;
+    public $locationId;
 
     protected $listeners = ['selectDefaultDay'];
 
-    public function mount($employeeId)
+    public function mount($employeeId, $locationId)
     {
+        $this->locationId = $locationId;
         $this->employeeId = $employeeId;
 
         $this->selectedDay = '';
@@ -50,7 +53,9 @@ class DatePickerLivewire extends Component
             return false;
         }
 
-        if (!collect($employee->businessDays())->contains($selectedDay->dayOfWeek)) {
+        $location = Location::find($this->locationId);
+
+        if (!collect($employee->businessDays($location))->contains($selectedDay->dayOfWeek)) {
             return true;
         }
 
@@ -91,7 +96,8 @@ class DatePickerLivewire extends Component
             ? today()
             : Carbon::createFromDate($date);
 
-        while (!$employee->businessDays()->contains($date->dayOfWeek)) {
+        $location = Location::find($this->locationId);
+        while (!$employee->businessDays($location)->contains($date->dayOfWeek)) {
             $date->addDay();
         }
 

@@ -9,8 +9,10 @@ use App\Models\Location;
 use App\Models\Service;
 use App\Notifications\AppointmentConfirmedNotification;
 use Carbon\Carbon;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 use Livewire\Component;
 
 class AppointmentReservationLivewire extends Component
@@ -26,8 +28,8 @@ class AppointmentReservationLivewire extends Component
         'employee_id' => '',
         'date' => '',
         'start_time' => '',
-        'start_time_and_location' => '',
         'location_id' => '',
+        'place' => '',
         'full_name' => '',
         'first_name' => '',
         'last_name' => '',
@@ -39,6 +41,7 @@ class AppointmentReservationLivewire extends Component
     ];
 
     public $employees;
+    public $locations;
 
     public $selectedDay;
 
@@ -51,6 +54,7 @@ class AppointmentReservationLivewire extends Component
     public function mount()
     {
         $this->employees = collect();
+        $this->locations = collect();
 
         array_push($this->steps, self::STEP_SERVICE_AND_EMPLOYEE);
     }
@@ -58,6 +62,7 @@ class AppointmentReservationLivewire extends Component
     protected $messages = [
         'form.service_id.required' => 'Seleccione un servicio',
         'form.employee_id.required' => 'Seleccione un profesional',
+        'form.location_id.required' => 'Seleccione un lugar',
 
         'form.start_time.required' => 'Escoje una hora',
 
@@ -97,6 +102,7 @@ class AppointmentReservationLivewire extends Component
         $this->validate([
             'form.service_id' => 'required',
             'form.employee_id' => 'required',
+            'form.location_id' => 'required'
         ]);
 
         if ($step == self::STEP_DATE_AND_HOUR) {
@@ -211,7 +217,11 @@ class AppointmentReservationLivewire extends Component
 
     public function getAppointmentLocationProperty()
     {
-        return Location::find($this->form['location_id'])->present()->name();
+        if ($this->form['location_id']) {
+            return Location::find($this->form['location_id'])->present()->name();
+        }
+
+        return $this->service->present()->place();
     }
 
     public function getAppointmentValueProperty(): string
@@ -235,7 +245,7 @@ class AppointmentReservationLivewire extends Component
             return [];
         }
 
-        return $this->employee->workingHours($this->form['date'], $this->service);
+        return $this->employee->workingHours($this->form['date'], $this->service, $this->form['location_id']);
     }
 
     public function getFirstStepProgressBarClassProperty(): ?string
@@ -309,13 +319,42 @@ class AppointmentReservationLivewire extends Component
     public function updatedFormServiceId($serviceId)
     {
         $this->form['employee_id'] = '';
+        $this->form['location_id'] = '';
 
         if (!$serviceId) {
             $this->employees = collect();
             return;
         }
 
+        if ($this->service->place) {
+            $this->form['place'] = $this->service->place;
+        }
+
         $this->employees = Service::find($this->form['service_id'])->employees;
+    }
+
+    public function updatedFormLocationId($locationId)
+    {
+        if (!$this->form['service_id']) {
+            return null;
+        }
+
+        if (!$locationId) {
+            return null;
+        }
+
+        $this->employees = $this->service->employees()
+            ->whereHas('schedules', function ($query) use ($locationId) {
+                $query->where('location_id', $locationId);
+            })
+            ->get();
+    }
+
+    public function updatedFormEmployeeId()
+    {
+        $this->form['location_id'] = '';
+
+        return $this->locations = $this->employee->locations;
     }
 
     public function updatedFormEmail($email)
@@ -343,14 +382,6 @@ class AppointmentReservationLivewire extends Component
         $this->form['name_of_child'] = $customer->name_of_child;
     }
 
-    public function updatedFormStartTimeAndLocation($value)
-    {
-        $data = explode(',', $value);
-
-        $this->form['location_id'] = $data[1];
-        $this->form['start_time'] = $data[0];
-    }
-
     public function createAppointment()
     {
         DB::transaction(function () {
@@ -371,7 +402,9 @@ class AppointmentReservationLivewire extends Component
             $appointment = Appointment::create([
                 'employee_id' => $this->form['employee_id'],
                 'service_id' => $this->form['service_id'],
-                'location_id' => $this->form['location_id'],
+                'location_id' => $this->form['location_id'] === ''
+                    ? null
+                    : $this->form['location_id'],
                 'customer_id' => $customer->id,
                 'date' => $this->form['date'],
                 'start_time' => $this->form['start_time'],

@@ -43,7 +43,6 @@
                     </div>
                     <div>
                         <x-input.select
-                            disabled
                             label="Localidad"
                             name="form.location_id"
                             wire:model.lazy="form.location_id"
@@ -55,8 +54,9 @@
                     </div>
                 </div>
                 <div>
-                    @if ($this->form['employee_id'])
+                    @if ($this->form['employee_id'] && $this->form['location_id'])
                         <livewire:date-picker-livewire
+                            :locationId="$this->form['location_id']"
                             :employeeId="$this->form['employee_id']"
                         />
                         <x-ui.error :type="$this->form['date']"/>
@@ -69,12 +69,8 @@
                         label="Hora"
                         wire:model="form.start_time"
                         name="form.start_time">
-                        @foreach ($this->availableHours as $location => $hours)
-                            <optgroup label="{{ $location }}">
-                                @foreach ($hours as $hour)
-                                    <option value="{{ $hour['hour'] }}">{{ $hour['hour'] }}</option>
-                                @endforeach
-                            </optgroup>
+                        @foreach ($this->availableHours as $hour)
+                                <option value="{{ $hour }}">{{ $hour }}</option>
                         @endforeach
                     </x-input.select>
                 </div>

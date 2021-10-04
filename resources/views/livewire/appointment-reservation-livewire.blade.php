@@ -33,24 +33,41 @@
         <div class="bg-white">
             <div class="grid gap-4 gap-6 sm:grid-cols-2">
                 @if ($currentStep == AppointmentReservationLivewire::STEP_SERVICE_AND_EMPLOYEE)
-                    <x-input.select
-                        label="Escoje un servicio"
-                        name="form.service_id"
-                        wire:model.lazy="form.service_id"
-                        placeholder="Servicio">
-                        @foreach ($this->services as $service)
-                            <option value="{{ $service->id }}">{{ $service->present()->name() }}</option>
-                        @endforeach
-                    </x-input.select>
-                    <x-input.select
-                        label="Escoje un profesional"
-                        name="form.employee_id"
-                        wire:model.lazy="form.employee_id"
-                        placeholder="Profesional">
-                        @foreach ($employees as $employee)
-                            <option value="{{ $employee->id }}">{{ $employee->present()->name() }}</option>
-                        @endforeach
-                    </x-input.select>
+                    <div class="sm:col-span-2 md:flex md:flex-col lg:flex-row">
+                        <div wire:key="{{ \Illuminate\Support\Str::uuid() }}" class="pr-4 mb-3 w-full lg:flex-grow">
+                            <x-input.select
+                                label="Escoje un servicio"
+                                name="form.service_id"
+                                wire:model.lazy="form.service_id"
+                                placeholder="Servicio">
+                                @foreach ($this->services as $service)
+                                    <option value="{{ $service->id }}">{{ $service->present()->name() }}</option>
+                                @endforeach
+                            </x-input.select>
+                        </div>
+                        <div wire:key="{{ \Illuminate\Support\Str::uuid() }}" class="pr-4 mb-3 w-full lg:flex-grow">
+                            <x-input.select
+                                label="Escoje un profesional"
+                                name="form.employee_id"
+                                wire:model.lazy="form.employee_id"
+                                placeholder="Profesional">
+                                @foreach ($employees as $employee)
+                                    <option value="{{ $employee->id }}">{{ $employee->present()->name() }}</option>
+                                @endforeach
+                            </x-input.select>
+                        </div>
+                        <div wire:key="{{ \Illuminate\Support\Str::uuid() }}" class="w-full lg:flex-grow">
+                            <x-input.select
+                                label="Escoje un lugar"
+                                name="form.location_id"
+                                wire:model.lazy="form.location_id"
+                                placeholder="Lugar">
+                                @foreach ($this->locations as $location)
+                                    <option value="{{ $location->id }}">{{ $location->present()->name() }}</option>
+                                @endforeach
+                            </x-input.select>
+                        </div>
+                    </div>
                     @if ($this->service)
                         <div class="p-4 bg-blue-50 rounded-md sm:col-span-2">
                             <div class="flex">
@@ -81,6 +98,7 @@
                         <div class="flex flex-col space-x-2 lg:flex-row">
                             <div class="mb-6 lg:w-96">
                                 <livewire:date-picker-livewire
+                                    :locationId="$this->form['location_id']"
                                     :employeeId="$this->form['employee_id']"
                                 />
                                 <x-ui.error :type="$this->form['date']"/>
@@ -90,36 +108,32 @@
                                     class="px-3 py-2 mb-1 w-32 text-center text-white rounded-lg border border-gray-200 bg-mariajose_gray">
                                     {{ $this->selectedDay ?? 'Cargando...' }}
                                 </div>
-                                <div class="lg:grid lg:grid-cols-2">
-                                    @foreach ($this->availableHours as $location => $hours)
-                                        <div
-                                            class="grid grid-cols-2 gap-1 lg:flex lg:flex-col lg:h-72 lg:flex-wrap lg:gap-0 lg:content-start">
-                                            <label
-                                                class="col-span-2 px-3 py-2 mt-8 w-32 text-center text-white rounded-lg border border-gray-200 lg:mb-1 lg:mt-0 bg-mariajose_gray"
-                                                for="">{{ $location }}</label>
-                                            @foreach ($hours as $data)
-                                                <label
-                                                    dusk="hour-{{ $data['hour'] }}"
-                                                    class="mr-2 w-full lg:w-32 text-center border border-gray-200 text-center py-2 rounded-lg mb-1 flex items-center justify-center {{ $this->hourNotAvailableClasses($data['isAvailable']) }}">
-                                                    <input
-                                                        @if (!$data['isAvailable'])
-                                                        disabled
-                                                        @else
-                                                        wire:model="form.start_time_and_location"
-                                                        @endif
-                                                        class="mr-1 w-4 h-4 border-gray-300 focus:ring-mariajose_gray text-mariajose_gray"
-                                                        name="form.start_time_and_location"
-                                                        type="radio"
-                                                        value="{{ $data['hour'] }}, {{ $data['location_id'] }}">
-                                                    {{ $data['hour'] }}
-                                                </label>
-                                            @endforeach
-                                            @if ($hours->isEmpty())
-                                                <p>No existe horario disponible el día de hoy.</p>
-                                            @endif
-                                        </div>
+                                <div
+                                    class="grid grid-cols-2 gap-1 lg:flex lg:flex-col lg:h-72 lg:flex-wrap lg:gap-0 lg:content-start">
+                                    @if (count($this->availableHours) == 0)
+                                        <p>No existe horario disponible el día de hoy.</p>
+                                    @endif
+                                    @foreach ($this->availableHours as $data)
+                                        <label
+                                            dusk="hour-{{ $data['hour'] }}"
+                                            for="hour-{{ $data['hour'] }}"
+                                            class="mr-2 w-full lg:w-32 text-center border border-gray-200 text-center py-2 rounded-lg mb-1 flex items-center justify-center {{ $this->hourNotAvailableClasses($data['isAvailable']) }}">
+                                            <input
+                                                @if (!$data['isAvailable'])
+                                                disabled
+                                                @else
+                                                wire:model="form.start_time"
+                                                @endif
+                                                class="mr-1 w-4 h-4 border-gray-300 focus:ring-mariajose_gray text-mariajose_gray"
+                                                id="hour-{{ $data['hour'] }}"
+                                                name="form.start_time"
+                                                value="{{ $data['hour'] }}"
+                                                type="radio">
+                                            {{ $data['hour'] }}
+                                        </label>
                                     @endforeach
                                 </div>
+
                                 <x-ui.error type="form.start_time_and_location"/>
                             </div>
                         </div>

@@ -69,17 +69,8 @@ class CreateAppointmentsLivewire extends Component
         }
 
         return $this->employee
-            ->workingHours($this->form['date'], $this->service)
-            ->mapWithKeys(function (Collection $hours, $location) {
-                $hours = $hours->filter(fn($hour) => $hour['isAvailable']);
-
-                return [
-                    $location => $hours
-                ];
-            })
-            ->sortBy(function (Collection $hours, $location) {
-                return $hours;
-            });
+            ->workingHours($this->form['date'], $this->service, $this->form['location_id'])
+            ->map(fn($data) => $data['hour']);
     }
 
     public function getEmployeeProperty()

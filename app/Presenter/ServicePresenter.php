@@ -32,4 +32,9 @@ class ServicePresenter
     {
         return $this->service->description ?? 'N/A';
     }
+
+    public function place()
+    {
+        return $this->service->place ?? 'N/A';
+    }
 }
