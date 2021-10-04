@@ -35,6 +35,7 @@ function stepOne(TestableLivewire $component, $dataAppointment, $isInAnOffice = 
 
     $component->assertSet('currentStep', AppointmentReservationLivewire::STEP_SERVICE_AND_EMPLOYEE);
     $component->set('form.service_id', $dataAppointment->service_id);
+    $component->set('form.location_id', $dataAppointment->location_id);
     $component->set('form.employee_id', $dataAppointment->employee_id);
     assertNull($component->get('firstStepProgressBarClass'));
     assertEquals('opacity-30', $component->get('secondStepProgressBarClass'));
@@ -118,14 +119,12 @@ function stepFive(TestableLivewire $component): void
     assertNull($component->get('fifthStepProgressBarClass'));
 }
 
-test('can create an appointment with an out-of-office service. ', function () {
+test('can create an appointment', function () {
     Notification::fake();
 
     // Arrange
-    $dataAppointment = Appointment::factory()->make([
-        'service_id' => Service::factory()->create(),
-        'location_id' => null,
-    ]);
+    $dataAppointment = Appointment::factory()->make();
+    $dataAppointment->employee->schedules()->update(['start_time' => '10:00', 'end_time' => '20:00']);
 
     $dataCustomer = Customer::factory()->make();
     $component = buildComponent();
@@ -162,7 +161,7 @@ test('can create an appointment with an out-of-office service. ', function () {
     $endTime = $appointment->start_time->addMinutes($dataAppointment->service->duration);
 
     expect($dataAppointment->service_id)->toBe($appointment->service_id);
-    expect($appointment->location_id)->toBeNull();
+    expect($dataAppointment->location_id)->toBe($appointment->location_id);
     expect($dataAppointment->employee_id)->toBe($appointment->employee_id);
     expect($customer->id)->toBe($appointment->customer_id);
     expect($dataAppointment->date->format('Y-m-d'))->toBe($appointment->date->format('Y-m-d'));
@@ -172,36 +171,6 @@ test('can create an appointment with an out-of-office service. ', function () {
     Notification::assertSentTo($customer, AppointmentConfirmedNotification::class);
 });
 
-test('can create an appointment with with an service into a office', function () {
-    Notification::fake();
-
-    // Arrange
-    $dataAppointment = Appointment::factory()->make();
-    $dataCustomer = Customer::factory()->make();
-    $component = buildComponent();
-
-    // STEP ONE
-    stepOne($component, $dataAppointment);
-
-    // STEP TWO
-    stepTwo($component, $dataAppointment);
-
-    // STEP THREE
-    stepThree($component);
-
-    // STEP FOURTH
-    stepFourth($component, $dataCustomer, $dataAppointment);
-
-    // STEP FIVE
-    stepFive($component);
-
-    // Assert
-    $this->assertCount(1, Appointment::all());
-    $appointment = Appointment::first();
-
-    expect($dataAppointment->location_id)->toBe($appointment->location_id);
-});
-
 test('fields are required in the first step', function () {
     // Arrange
     $component = buildComponent();
@@ -209,6 +178,7 @@ test('fields are required in the first step', function () {
     // STEP ONE
     $component->set('form.service_id', '');
     $component->set('form.employee_id', '');
+    $component->set('form.location_id', '');
 
     // Act
     $component->call('nextStep', AppointmentReservationLivewire::STEP_DATE_AND_HOUR);
@@ -219,7 +189,8 @@ test('fields are required in the first step', function () {
     );
     $component->assertHasErrors([
         'form.service_id' => 'required',
-        'form.employee_id' => 'required'
+        'form.employee_id' => 'required',
+        'form.location_id' => 'required',
     ]);
 });
 
@@ -246,6 +217,7 @@ test('field location_id is required if the  service has locations', function () 
 test('fields are required in the second step', function () {
     // Arrange
     $dataAppointment = Appointment::factory()->create();
+    $dataAppointment->employee->schedules()->update(['start_time' => '10:00', 'end_time' => '20:00']);
     $component = buildComponent();
 
     // STEP ONE
@@ -264,6 +236,7 @@ test('fields are required in the second step', function () {
 test('fields are required in the fourth step', function () {
     // Arrange
     $dataAppointment = Appointment::factory()->make();
+    $dataAppointment->employee->schedules()->update(['start_time' => '10:00', 'end_time' => '20:00']);
     $component = buildComponent();
 
     // STEP ONE
@@ -311,6 +284,7 @@ test('fields are required in the fourth step', function () {
 test('field phone must be a number', function () {
     // Arrange
     $dataAppointment = Appointment::factory()->make();
+    $dataAppointment->employee->schedules()->update(['start_time' => '10:00', 'end_time' => '20:00']);
     $component = buildComponent();
 
     // STEP ONE
@@ -340,6 +314,7 @@ test('field phone must be a number', function () {
 test('field phone must contain at least 10 numbers', function () {
     // Arrange
     $dataAppointment = Appointment::factory()->make();
+    $dataAppointment->employee->schedules()->update(['start_time' => '10:00', 'end_time' => '20:00']);
     $component = buildComponent();
 
     // STEP ONE
@@ -369,6 +344,7 @@ test('field phone must contain at least 10 numbers', function () {
 test('field phone must not contain more than 10 numbers', function () {
     // Arrange
     $dataAppointment = Appointment::factory()->make();
+    $dataAppointment->employee->schedules()->update(['start_time' => '10:00', 'end_time' => '20:00']);
     $component = buildComponent();
 
     // STEP ONE
@@ -398,6 +374,7 @@ test('field phone must not contain more than 10 numbers', function () {
 test('field email must be valid', function () {
     // Arrange
     $dataAppointment = Appointment::factory()->make();
+    $dataAppointment->employee->schedules()->update(['start_time' => '10:00', 'end_time' => '20:00']);
     $component = buildComponent();
 
     // STEP ONE
@@ -427,6 +404,7 @@ test('field email must be valid', function () {
 test('field terms_and_conditions is required', function () {
     // Arrange
     $dataAppointment = Appointment::factory()->make();
+    $dataAppointment->employee->schedules()->update(['start_time' => '10:00', 'end_time' => '20:00']);
     $component = buildComponent();
 
     // STEP ONE

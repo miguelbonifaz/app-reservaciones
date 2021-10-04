@@ -2,6 +2,8 @@
 
 use App\Http\Livewire\CreateAppointmentsLivewire;
 use App\Models\Appointment;
+use App\Models\Employee;
+use App\Models\Location;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Testing\TestableLivewire;
@@ -42,14 +44,25 @@ test('can create component', function () {
 
 test('can create an appointment', function () {
     // Arrange
-    $data = Appointment::factory()->make();
+    $employee = Employee::factory()
+        ->hasAttached($location = Location::factory()->create())
+        ->create();
+
+    $employee->schedules()->update([
+       'start_time' => '10:00',
+       'end_time' => '20:00',
+    ]);
+
+    $data = Appointment::factory()->make([
+        'employee_id' => $employee->id
+    ]);
 
     $component = buildAppointmentComponent();
 
     $component->set('form.customer_id', $data->customer_id);
     $component->set('form.service_id', $data->service_id);
-    $component->set('form.location_id', $data->location_id);
     $component->set('form.employee_id', $data->employee_id);
+    $component->set('form.location_id', $location->id);
     $component->set('form.start_time', $data->start_time->format('H:i'));
     $component->set('form.date', $data->date->format('Y-m-d'));
     $component->set('form.note', $data->note);
@@ -67,7 +80,7 @@ test('can create an appointment', function () {
     expect($data->customer_id)->toEqual($appointment->customer_id);
     expect($data->service_id)->toEqual($appointment->service_id);
     expect($data->employee_id)->toEqual($appointment->employee_id);
-    expect($data->location_id)->toEqual($appointment->location_id);
+    expect($location->id)->toEqual($appointment->location_id);
     expect($data->start_time->format('H:i'))->toEqual($appointment->start_time->format('H:i'));
     expect($data->date)->toEqual($appointment->date);
     expect($data->note)->toEqual($appointment->note);

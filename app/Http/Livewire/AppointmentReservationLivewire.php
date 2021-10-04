@@ -99,9 +99,7 @@ class AppointmentReservationLivewire extends Component
         $this->validate([
             'form.service_id' => 'required',
             'form.employee_id' => 'required',
-            'form.location_id' => Rule::requiredIf(function () {
-                return $this->service && $this->service->locations->isNotEmpty();
-            })
+            'form.location_id' => 'required'
         ]);
 
         if ($step == self::STEP_DATE_AND_HOUR) {
@@ -201,10 +199,8 @@ class AppointmentReservationLivewire extends Component
 
     public function getLocationsProperty(): Collection
     {
-        $service = $this->service;
-
-        if ($service) {
-            return $service->locations;
+        if ($this->form['employee_id']) {
+            return $this->employee->locations;
         }
 
         return collect();
@@ -255,7 +251,7 @@ class AppointmentReservationLivewire extends Component
             return [];
         }
 
-        return $this->employee->workingHours($this->form['date'], $this->service);
+        return $this->employee->workingHours($this->form['date'], $this->service, $this->form['location_id']);
     }
 
     public function getFirstStepProgressBarClassProperty(): ?string

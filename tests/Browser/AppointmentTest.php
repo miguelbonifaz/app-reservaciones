@@ -5,12 +5,13 @@ use App\Models\Customer;
 use App\Models\Employee;
 use App\Models\Location;
 use App\Models\Service;
+use Database\Seeders\BaseSeeder;
 use Database\Seeders\BaseSeederForTesting;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Laravel\Dusk\Browser;
 
 beforeEach(function () {
-    $this->seed(BaseSeederForTesting::class);
+    $this->seed(BaseSeeder::class);
 });
 
 uses(DatabaseMigrations::class);
@@ -23,12 +24,14 @@ test('can create an appointment', function () {
         $service = Service::first();
         $employee = Employee::first();
         $date = today()->addDays(2)->format('Y-m-d');
-        $hour = '16:00';
+        $hour = '11:30';
 
         $browser->visit('/reservaciones')
             ->select('form.service_id', $service->id)
             ->pause('500')
             ->select('form.employee_id', $employee->id)
+            ->pause('500')
+            ->select('form.location_id', $employee->locations->first()->id)
             ->press('Siguiente')
             ->pause('1000')
             ->click("@date-$date")
@@ -64,7 +67,7 @@ test('can create an appointment', function () {
 
         $appointment = Appointment::first();
         $location = Location::first();
-        $hour = today()->setTime(16, 0);
+        $hour = today()->setTime(explode(':', $hour)[0],explode(':', $hour)[1]);
 
         expect($employee->id)->toBe($appointment->employee_id);
         expect($customer->id)->toBe($appointment->customer_id);

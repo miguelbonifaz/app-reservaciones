@@ -74,6 +74,7 @@ class Employee extends Model
 
         /** @var Schedule $schedule */
         $schedule = $this->schedules()
+            ->where('location_id', $locationId)
             ->firstWhere('day', $date->dayOfWeek);
 
         $startTime = $schedule->start_time
@@ -130,9 +131,10 @@ class Employee extends Model
             });
     }
 
-    public function businessDays(): Collection
+    public function businessDays(Location $location): Collection
     {
         return $this->schedules()
+            ->where('location_id', $location->id)
             ->whereNotNull('start_time')
             ->whereNotNull('end_time')
             ->pluck('day');

@@ -56,7 +56,6 @@ class BaseSeeder extends Seeder
                 'duration' => 45,
                 'value' => 100,
                 'description' => 'Es la 1ra cita con papa y mama relacionada a la mecánica familiar, en esta cita se determina si el niño continua la evaluación, duración 1 hora',
-                'locationIds' => [$urdesa->id, $samborondon->id],
                 'place' => null
             ],
             [
@@ -64,7 +63,6 @@ class BaseSeeder extends Seeder
                 'duration' => 45,
                 'value' => 100,
                 'description' => 'Esta es la 2da cita y se realiza de manera presencial con el niño para evaluarlo mediante los diferentes metodos, duración 45 minutos',
-                'locationIds' => [$urdesa->id, $samborondon->id],
                 'place' => null
             ],
             [
@@ -72,7 +70,6 @@ class BaseSeeder extends Seeder
                 'duration' => 45,
                 'value' => 100,
                 'description' => 'Esta es la 3ra cita para el diagnostico “en caso de haberlo”, se elabora el plan de intervención en casa, escuela y terapias individuales y grupales según la necesidad, duración 1 hora ',
-                'locationIds' => [$urdesa->id, $samborondon->id],
                 'place' => null
             ],
             [
@@ -80,7 +77,6 @@ class BaseSeeder extends Seeder
                 'duration' => 60,
                 'value' => 90,
                 'description' => 'Reunion de nuestro equipo y padres con los profesores con el finde elaborar el plan de trabajo y adaptaciones curriculares',
-                'locationIds' => [],
                 'place' => 'Escuela'
             ],
             [
@@ -88,7 +84,6 @@ class BaseSeeder extends Seeder
                 'duration' => 60,
                 'value' => 90,
                 'description' => 'Se realizo visita a la escuela para revisar el trabajo y el sistema de comunicación y socialización junto a la tutora',
-                'locationIds' => [],
                 'place' => 'Escuela'
             ],
             [
@@ -96,7 +91,6 @@ class BaseSeeder extends Seeder
                 'duration' => 60,
                 'value' => 90,
                 'description' => 'Se realizan en el consultorio cada cierto tiempo cuando es necesario REEVALORAR el trabajo con los familiares',
-                'locationIds' => [$samborondon->id],
                 'place' => null
             ],
             [
@@ -104,7 +98,6 @@ class BaseSeeder extends Seeder
                 'duration' => 90,
                 'value' => 90,
                 'description' => 'Es una observación que se da puntualmente por algún tema',
-                'locationIds' => [],
                 'place' => 'Casa'
             ],
             [
@@ -112,7 +105,6 @@ class BaseSeeder extends Seeder
                 'duration' => 45,
                 'value' => 90,
                 'description' => 'Reuniones con psicopedagogaso terapistas de lenguaje o cualquier profesional que este trabajando con el niño',
-                'locationIds' => [$samborondon->id],
                 'place' => null
             ],
             [
@@ -120,7 +112,6 @@ class BaseSeeder extends Seeder
                 'duration' => 45,
                 'value' => 40,
                 'description' => 'Terapia inicial en caso de requerirse como preparación a la terapia individual',
-                'locationIds' => [$samborondon->id],
                 'place' => null
             ],
             [
@@ -128,7 +119,6 @@ class BaseSeeder extends Seeder
                 'duration' => 45,
                 'value' => 40,
                 'description' => 'Es la terapia con niños de edad y funcionamiento similar para trabajar la comunicación, desarrollo similar, tiempos de trabajo , tolerancia a la frustración',
-                'locationIds' => [$samborondon->id],
                 'place' => null
             ],
             [
@@ -136,7 +126,6 @@ class BaseSeeder extends Seeder
                 'duration' => 90,
                 'value' => 50,
                 'description' => 'Terapia en contextos naturales en diferentes parques o lugares abiertos, se trabajan frentes como motricidad, socialización con el par. ',
-                'locationIds' => [],
                 'place' => 'Consultar Lugar'
             ],
         ];
@@ -149,8 +138,6 @@ class BaseSeeder extends Seeder
                 'duration' => $service['duration'],
                 'place' => $service['place'],
             ]);
-
-            $servicio->locations()->attach($service['locationIds']);
         }
 
         foreach ($employees as $name) {
