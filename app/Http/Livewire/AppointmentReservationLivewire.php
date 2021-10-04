@@ -350,9 +350,13 @@ class AppointmentReservationLivewire extends Component
             ->get();
     }
 
-    public function updatedFormEmployeeId()
+    public function updatedFormEmployeeId($employeeId)
     {
         $this->form['location_id'] = '';
+
+        if (!$employeeId) {
+            return null;
+        }
 
         return $this->locations = $this->employee->locations;
     }
