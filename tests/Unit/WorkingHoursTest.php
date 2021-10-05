@@ -75,7 +75,7 @@ test("las horas que no esten disponible en un día, estas deben venir con el val
     // Arrange
     $employee = Employee::factory()
         ->hasAttached($location = Location::factory()->create())
-        ->hasAttached($service = Service::factory()->create())
+        ->hasAttached($service = Service::factory()->create(['duration' => 30]))
         ->create();
 
     $schedule = $employee->schedules()->firstWhere('day', today()->addDay()->dayOfWeek);
