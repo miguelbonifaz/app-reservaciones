@@ -333,23 +333,6 @@ class AppointmentReservationLivewire extends Component
         $this->employees = Service::find($this->form['service_id'])->employees;
     }
 
-    public function updatedFormLocationId($locationId)
-    {
-        if (!$this->form['service_id']) {
-            return null;
-        }
-
-        if (!$locationId) {
-            return null;
-        }
-
-        $this->employees = $this->service->employees()
-            ->whereHas('schedules', function ($query) use ($locationId) {
-                $query->where('location_id', $locationId);
-            })
-            ->get();
-    }
-
     public function updatedFormEmployeeId($employeeId)
     {
         $this->form['location_id'] = '';

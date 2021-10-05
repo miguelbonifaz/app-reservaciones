@@ -101,32 +101,19 @@ class Employee extends Model
                 }
             })
             ->map(function (Carbon $slot) use ($service, $date) {
-                $appointment = Appointment::query()
+                $appointments = Appointment::query()
                     ->whereDate('date', $date)
                     ->where(function ($query) use ($slot) {
                         $query->whereTime('start_time', '>=', $slot);
-                        $query->orWhereTime('end_time', '>=', $slot);
                     })
                     ->where(function ($query) use ($slot) {
                         $query->whereTime('start_time', '<=', $slot);
-                        $query->orWhereTime('end_time', '<=', $slot);
                     })
-                    ->first();
-
-                if ($appointment) {
-                    $horasNoDisponibles = collect(CarbonInterval::minutes($service->duration)
-                        ->toPeriod(
-                            $appointment->start_time->setDateFrom($date),
-                            $appointment->end_time->setDateFrom($date)
-                        ));
-                    $horasNoDisponibles->pop();
-
-                    $bool = !$horasNoDisponibles->contains($slot);
-                }
+                    ->get();
 
                 return [
                     'hour' => $slot->format('H:i'),
-                    'isAvailable' => $bool ?? true
+                    'isAvailable' => $appointments->count() < $service->slots
                 ];
             });
     }
