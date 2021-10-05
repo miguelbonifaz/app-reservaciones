@@ -55,7 +55,6 @@
                     </div>
                 </div>
                 <div>
-                    @json($this->form)
                     @if ($this->form['location_id'])
                         <livewire:date-picker-livewire
                             wire:key="date-picker-{{ $this->form['location_id'] }}"
