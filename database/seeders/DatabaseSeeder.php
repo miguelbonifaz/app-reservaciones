@@ -15,7 +15,6 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-//        Employee::first()->schedules()->whereNotNull('start_time')->get()->map->day
         $this->call(BaseSeeder::class);
     }
 }

@@ -201,6 +201,8 @@ class BaseSeeder extends Seeder
         ];
 
         $end_time = [
+            1 => '20:30',
+            2 => '20:30',
             3 => '20:30',
             4 => '20:30',
             5 => '20:30',

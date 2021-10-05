@@ -124,7 +124,8 @@ test('can create an appointment', function () {
 
     // Arrange
     $dataAppointment = Appointment::factory()->make();
-    $dataAppointment->employee->schedules()->update(['start_time' => '10:00', 'end_time' => '20:00']);
+    $dataAppointment->employee->schedules()
+        ->update(['start_time' => '10:00', 'end_time' => '20:00']);
 
     $dataCustomer = Customer::factory()->make();
     $component = buildComponent();
@@ -197,7 +198,7 @@ test('fields are required in the first step', function () {
 test('field location_id is required if the  service has locations', function () {
     // Arrange
     $component = buildComponent();
-    $service = Service::factory()->withALocation()->create();
+    $service = Service::factory()->create();
 
     // STEP ONE
     $component->set('form.service_id', $service->id);

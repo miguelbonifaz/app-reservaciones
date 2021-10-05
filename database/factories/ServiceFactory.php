@@ -29,24 +29,8 @@ class ServiceFactory extends Factory
             'duration' => $duration,
             'value' => $this->faker->randomFloat(2, 0, 100),
             'description' => $this->faker->paragraph(6),
-            'place' => config('mariajosejauregui.place-outside-the-office')->random()
+            'place' => config('mariajosejauregui.place-outside-the-office')->random(),
+            'slots' => 1
         ];
-    }
-
-    public function withALocation($locationId = null)
-    {
-        return $this->state(function (array $attributes) {
-            return [
-                'place' => null,
-            ];
-        })->afterCreating(function (Service $service) use ($locationId) {
-            if ($locationId) {
-                $location = Location::find($locationId);
-            } else {
-                $location = Location::factory()->create();
-            }
-
-            $service->locations()->attach([$location->id]);
-        });
     }
 }
