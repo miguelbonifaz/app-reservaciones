@@ -33,21 +33,4 @@ class ServiceFactory extends Factory
             'slots' => 1
         ];
     }
-
-    public function withALocation($locationId = null)
-    {
-        return $this->state(function (array $attributes) {
-            return [
-                'place' => null,
-            ];
-        })->afterCreating(function (Service $service) use ($locationId) {
-            if ($locationId) {
-                $location = Location::find($locationId);
-            } else {
-                $location = Location::factory()->create();
-            }
-
-            $service->locations()->attach([$location->id]);
-        });
-    }
 }
