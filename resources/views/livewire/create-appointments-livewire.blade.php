@@ -17,6 +17,7 @@
                         placeholder="Seleccione un cliente"
                         :searchable="true"
                     />
+                    <x-ui.error type="customer_id" />
                 </div>
                 <div class="grid gap-6 sm:col-span-2 lg:grid-cols-3">
                     <div>
@@ -54,8 +55,10 @@
                     </div>
                 </div>
                 <div>
-                    @if ($this->form['employee_id'] && $this->form['location_id'])
+                    @json($this->form)
+                    @if ($this->form['location_id'])
                         <livewire:date-picker-livewire
+                            wire:key="date-picker-{{ $this->form['location_id'] }}"
                             :locationId="$this->form['location_id']"
                             :employeeId="$this->form['employee_id']"
                         />
@@ -70,7 +73,7 @@
                         wire:model="form.start_time"
                         name="form.start_time">
                         @foreach ($this->availableHours as $hour)
-                                <option value="{{ $hour }}">{{ $hour }}</option>
+                            <option value="{{ $hour }}">{{ $hour }}</option>
                         @endforeach
                     </x-input.select>
                 </div>

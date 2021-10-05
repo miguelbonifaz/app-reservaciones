@@ -12,7 +12,7 @@ class CustomerSelect extends LivewireSelect
     {
         return Customer::query()
             ->searchByName($searchTerm)
-            ->orderBy('name')
+            ->orderBy('full_name')
             ->limit(10)
             ->get()
             ->map(function (Customer $customer) {

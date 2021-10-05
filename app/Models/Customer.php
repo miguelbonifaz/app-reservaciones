@@ -60,7 +60,9 @@ class Customer extends Model
     public function scopeSearchByName($query, $name)
     {
         $query->when($name, function ($query, $name) {
-            $query->where('name', 'like', "%{$name}%");
+            $query->where('full_name', 'like', "%{$name}%")
+                ->orWhere('last_name', 'like', "%{$name}%")
+                ->orWhere('first_name', 'like', "%{$name}%");
         });
     }
 }

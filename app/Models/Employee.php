@@ -77,6 +77,10 @@ class Employee extends Model
             ->where('location_id', $locationId)
             ->firstWhere('day', $date->dayOfWeek);
 
+        if (!$schedule->start_time) {
+            return collect();
+        }
+
         $startTime = $schedule->start_time
             ->setDateFrom($date->format('Y-m-d'));
 
