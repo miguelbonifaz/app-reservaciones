@@ -15,7 +15,7 @@
     @foreach($eventsInHourSlot as $event)
         <div
             class="{{ $styles['eventWrapper'] }}"
-            style="{{ $getEventStyles($event, $events) }} z-index: 0 !important"
+            style="{{ $getEventStyles($event, $events) }} z-index: 1 !important"
 
             draggable="true"
             ondragstart="onLivewireResourceTimeGridEventDragStart(event, '{{ $event['id'] }}')"

@@ -33,26 +33,19 @@ class CreateAppointmentsLivewire extends Component
 
     public function updatedDay($date)
     {
-        $this->form['location_id'] = '';
         $this->form['start_time'] = '';
         $this->form['date'] = $date;
     }
 
-    public function updatedFormStartTime($hour)
+    public function updatedFormEmployeeId()
     {
-        $this->availableHours
-            ->filter(function (Collection $hours, $location) use ($hour) {
-                $hours = $hours->map(fn($data) => $data['hour']);
-
-                if ($hours->contains($hour)) {
-                    $this->form['location_id'] = Location::firstWhere('name', $location)->id;
-                }
-            });
+        $this->form['location_id'] = '';
     }
 
     public function updatedFormServiceId($serviceId)
     {
         $this->form['employee_id'] = '';
+        $this->form['location_id'] = '';
 
         if (!$serviceId) {
             $this->employees = collect();
@@ -64,7 +57,7 @@ class CreateAppointmentsLivewire extends Component
 
     public function getAvailableHoursProperty(): Collection
     {
-        if (!$this->form['employee_id'] || !$this->form['date']) {
+        if (!$this->form['employee_id'] || !$this->form['date'] || !$this->form['location_id']) {
             return collect();
         }
 

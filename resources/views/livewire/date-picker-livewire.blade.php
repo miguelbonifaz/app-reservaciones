@@ -39,7 +39,6 @@
                 <li>Sáb</li>
                 <li>Dom</li>
             </ul>
-
             <div class="pb-3 grid grid-cols-7 gap-y-3 text-sm justify-items-center text-700">
                 @foreach ($this->daysOfMonth as $date => $day)
                     <p wire:key="{{ \Illuminate\Support\Str::uuid() }}"
