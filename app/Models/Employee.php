@@ -37,6 +37,8 @@ use Illuminate\Support\Collection;
  * @method static Builder|Employee wherePhone($value)
  * @method static Builder|Employee whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Location[] $locations
+ * @property-read int|null $locations_count
  */
 class Employee extends Model
 {

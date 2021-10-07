@@ -11,13 +11,13 @@
                         Cliente
                     </label>
                     <livewire:customer-select
-                        name="customer_id"
-                        wire:model="customer_id"
-                        :value="request('customer_id')"
+                        name="form.customer_id"
+                        wire:model="form.customer_id"
+                        :value="request('form.customer_id')"
                         placeholder="Seleccione un cliente"
                         :searchable="true"
                     />
-                    <x-ui.error type="customer_id" />
+                    <x-ui.error type="form.customer_id" />
                 </div>
                 <div class="grid gap-6 sm:col-span-2 lg:grid-cols-3">
                     <div>
@@ -61,9 +61,10 @@
                             :locationId="$this->form['location_id']"
                             :employeeId="$this->form['employee_id']"
                         />
-                        <x-ui.error :type="$this->form['date']"/>
+                        <x-ui.error type="form.date"/>
                     @else
                         Escoje un profesional
+                        <x-ui.error type="form.date"/>
                     @endif
                 </div>
                 <div>

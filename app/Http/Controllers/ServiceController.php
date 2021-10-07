@@ -31,7 +31,8 @@ class ServiceController extends Controller
             'name' => 'required',
             'duration' => 'required|numeric',
             'value' => 'required|numeric',
-            'description' => 'required'
+            'description' => 'required',
+            'slots' => 'required|numeric'
         ]);
 
         Service::create([
@@ -39,6 +40,8 @@ class ServiceController extends Controller
             'duration' => request()->duration,
             'value' => request()->value,
             'description' => request()->description,
+            'place' => request()->place,
+            'slots' => request()->slots
         ]);
 
         return redirect()
@@ -63,7 +66,8 @@ class ServiceController extends Controller
             'name' => 'required',
             'duration' => 'required|numeric',
             'value' => 'required|numeric',
-            'description' => 'required'
+            'description' => 'required',
+            'slots' => 'required|numeric'
         ]);
 
         $service->update([
@@ -71,6 +75,8 @@ class ServiceController extends Controller
             'duration' => request()->duration,
             'value' => request()->value,
             'description' => request()->description,
+            'place' => request()->place,
+            'slots' => request()->slots,
         ]);
 
         return redirect()

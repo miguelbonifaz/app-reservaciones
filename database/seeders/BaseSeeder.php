@@ -147,12 +147,15 @@ class BaseSeeder extends Seeder
 
             $services = Service::all();
 
-            $employee->services()->attach($services->pluck('id'));
 
             $this->createLocation($employee, $samborondon);
 
             if ($employee->name == 'Maria Jose Jauregui') {
+                $employee->services()->attach($services->pluck('id'));
                 $this->createLocation($employee, $urdesa);
+            } else {
+                $employee->services()
+                    ->attach($services->reject(fn($service) => $service->name == 'Lúdico terapia')->pluck('id'));
             }
         }
 

@@ -24,9 +24,21 @@ class CreateAppointmentsLivewire extends Component
         'note' => '',
     ];
 
-    protected $listeners = ['updatedDay', 'customer_idUpdated'];
+    protected $messages = [
+        'form.service_id.required' => 'El campo servicio es requerido',
+        'form.employee_id.required' => 'El campo profesional es requerido',
+        'form.start_time.required' => 'El campo hora es requerido',
+        'form.location_id.required' => 'El campo localidad es requerido',
+        'form.date.required' => 'El campo fecha es requerido',
+        'form.customer_id.required' => 'El campo cliente es requerido',
+    ];
 
-    public function customer_idUpdated($data)
+    protected $listeners = [
+        'updatedDay' => 'updatedDay',
+        'form.customer_idUpdated' => 'customerIdUpdated',
+    ];
+
+    public function customerIdUpdated($data)
     {
         $this->form['customer_id'] = $data['value'];
     }

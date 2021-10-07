@@ -2,51 +2,53 @@
 
 use App\Models\Service;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 uses(RefreshDatabase::class);
 
-function updateService(Service $service, $data = [])
+uses(TestCase::class)->in('Feature');
+
+function createService($data = [])
 {
-    $url = route('services.update' ,$service);
+    $url = route('services.store');
 
     return test()->actingAsUser()->post($url, $data);
 }
 
-test('can see service edit form', function () {
+test('can see service create form', function () {
     // Arrange
-    $service = Service::factory()->create();
 
     // Act
-    $url = route('services.edit', $service);
+    $url = route('services.create');
 
     $response = $this->actingAsUser()->get($url);
+
     // Assert
     $response->assertOk();
 
-    $response->assertViewIs('services.edit');
+    $response->assertViewIs('services.create');
 
     $response->assertViewHas('service');
 });
 
-test('can update a service', function () {
-
+test('can create a service', function () {
     // Arrange
-    $service = Service::factory()->create();
-
     $data = Service::factory()->make();
 
     // Act
-    $response = updateService($service,[
+    $response = createService([
         'name' => $data->name,
         'duration' => $data->duration,
         'value' => $data->value,
         'description' => $data->description,
+        'place' => $data->place,
+        'slots' => $data->slots,
     ]);
 
     // Assert
     $response->assertRedirect(route('services.index'));
 
-    $response->assertSessionHas('flash_success', 'Se actualizó con éxito el servicio.');
+    $response->assertSessionHas('flash_success', 'Se creó con éxito el servicio.');
 
     $this->assertCount(1, Service::all());
 
@@ -56,18 +58,18 @@ test('can update a service', function () {
     $this->assertEquals($data->duration, $service->duration);
     $this->assertEquals($data->value, $service->value);
     $this->assertEquals($data->description, $service->description);
+    $this->assertEquals($data->place, $service->place);
+    $this->assertEquals($data->slots, $service->slots);
 });
 
 test('fields are required', function () {
     // Arrange
-    $service = Service::factory()->create();
-
     //Act
-    $response = updateService($service,[
+    $response = createService([
         'name' => null,
         'duration' => null,
+        'value' => null,
         'description' => null,
-        'value' => null
     ]);
 
     //Assert
@@ -75,21 +77,38 @@ test('fields are required', function () {
         'name',
         'duration',
         'value',
-        'description'
+        'description',
+        'slots'
     ]);
+
+    $response->assertSessionDoesntHaveErrors(['place']);
 });
 
-test('field duration must be a number', function () {
+test('field duration and slots must be a number', function () {
     // Arrange
-    $service = Service::factory()->create();
 
     // Act
-    $response = updateService($service,[
+    $response = createService([
         'duration' => 'string',
+        'slots' => 'string'
     ]);
 
     // Assert
     $response->assertSessionHasErrors([
         'duration',
+        'slots'
+    ]);
+});
+
+test('field value must be a number', function () {
+    // Arrange
+    // Act
+    $response = createService([
+        'value' => 'value Number String',
+    ]);
+
+    // Assert
+    $response->assertSessionHasErrors([
+        'value',
     ]);
 });

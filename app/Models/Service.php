@@ -41,6 +41,8 @@ use Illuminate\Support\Carbon;
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Location[] $locations
  * @property-read int|null $locations_count
  * @method static Builder|Service wherePlace($value)
+ * @property int $slots
+ * @method static Builder|Service whereSlots($value)
  */
 class Service extends Model
 {
@@ -52,6 +54,7 @@ class Service extends Model
         'value',
         'description',
         'place',
+        'slots'
     ];
 
     public function present(): ServicePresenter
