@@ -217,11 +217,7 @@ class AppointmentReservationLivewire extends Component
 
     public function getAppointmentLocationProperty()
     {
-        if ($this->form['location_id']) {
-            return Location::find($this->form['location_id'])->present()->name();
-        }
-
-        return $this->service->present()->place();
+        return $this->service->place ?? Location::find($this->form['location_id'])->present()->name();
     }
 
     public function getAppointmentValueProperty(): string
