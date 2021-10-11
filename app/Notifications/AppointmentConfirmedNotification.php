@@ -38,13 +38,15 @@ class AppointmentConfirmedNotification extends Notification implements ShouldQue
      */
     public function toMail($notifiable): MailMessage
     {
+        $location = $this->appointment->service->place ?? $this->appointment->location->present()->name();
+
         return (new MailMessage)
             ->subject("Su cita en " . config('app.name'))
             ->greeting("Apreciado(a) {$this->appointment->customer->present()->name()}")
             ->line("Esta es la confirmación de su cita con los siguientes datos:")
             ->line("- Fecha: {$this->appointment->present()->date()}")
             ->line("- Hora: {$this->appointment->present()->startTime()}")
-            ->line("- Lugar: {$this->appointment->location->present()->name()}")
+            ->line("- Lugar: $location")
             ->line("- Profesional: {$this->appointment->employee->present()->name()}")
             ->line("- Valor: {$this->appointment->service->present()->value()}")
             ->line("- Servicio: {$this->appointment->service->present()->name()}")
