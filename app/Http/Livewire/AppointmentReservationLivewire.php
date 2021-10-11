@@ -29,7 +29,6 @@ class AppointmentReservationLivewire extends Component
         'date' => '',
         'start_time' => '',
         'location_id' => '',
-        'place' => '',
         'full_name' => '',
         'first_name' => '',
         'last_name' => '',
@@ -320,10 +319,6 @@ class AppointmentReservationLivewire extends Component
         if (!$serviceId) {
             $this->employees = collect();
             return;
-        }
-
-        if ($this->service->place) {
-            $this->form['place'] = $this->service->place;
         }
 
         $this->employees = Service::find($this->form['service_id'])->employees;

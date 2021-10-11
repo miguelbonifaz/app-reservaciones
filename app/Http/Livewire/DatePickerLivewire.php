@@ -97,11 +97,18 @@ class DatePickerLivewire extends Component
             : Carbon::createFromDate($date);
 
         $location = Location::find($this->locationId);
+
+        $theScheduleIsAllWeek = true;
         while (!$employee->businessDays($location)->contains($date->dayOfWeek)) {
+            $theScheduleIsAllWeek = false;
             $date->addDay();
         }
 
-        $this->selectedDay = $date->addDay()->format('Y-m-d');
+        if ($theScheduleIsAllWeek) {
+            $date->addDay();
+        }
+
+        $this->selectedDay = $date->format('Y-m-d');
 
         $this->emit('updatedDay', $date->format('Y-m-d'), $dontSetHour = false);
     }
