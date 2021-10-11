@@ -27,11 +27,11 @@ class DatePickerLivewire extends Component
         $this->currentDay = today()->format('Y-m-d');
     }
 
-    public function isLessThanToday($date): bool
+    public function isGreaterThanToday($date): bool
     {
         $date = Carbon::createFromDate($date);
 
-        return $date->lessThan(today());
+        return $date->lessThan(today()->addDay());
     }
 
     public function selectedDayStyles($date): ?string
@@ -64,7 +64,7 @@ class DatePickerLivewire extends Component
 
     public function isThisDayAvailable($date): bool
     {
-        if ($this->isLessThanToday($date)) {
+        if ($this->isGreaterThanToday($date)) {
             return false;
         }
 
@@ -77,7 +77,7 @@ class DatePickerLivewire extends Component
 
     public function dayStyles($date): string
     {
-        if ($this->isLessThanToday($date) || $this->isInBusinessDays($date)) {
+        if ($this->isGreaterThanToday($date) || $this->isInBusinessDays($date)) {
             return 'text-gray-400';
         }
 
@@ -101,7 +101,7 @@ class DatePickerLivewire extends Component
             $date->addDay();
         }
 
-        $this->selectedDay = $date->format('Y-m-d');
+        $this->selectedDay = $date->addDay()->format('Y-m-d');
 
         $this->emit('updatedDay', $date->format('Y-m-d'), $dontSetHour = false);
     }
