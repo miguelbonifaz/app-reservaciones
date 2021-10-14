@@ -15,16 +15,17 @@ class DatePickerLivewire extends Component
     public $selectedDay;
     public $employeeId;
     public $locationId;
+    public $index;
 
     protected $listeners = ['selectDefaultDay'];
 
-    public function mount($employeeId, $locationId)
+    public function mount($employeeId, $locationId, $dateSelected, $index)
     {
         $this->locationId = $locationId;
         $this->employeeId = $employeeId;
 
-        $this->selectedDay = '';
         $this->currentDay = today()->format('Y-m-d');
+        $this->selectedDay = $dateSelected;
     }
 
     public function isGreaterThanToday($date): bool
@@ -93,12 +94,13 @@ class DatePickerLivewire extends Component
         $employee = Employee::find($this->employeeId);
 
         $date = $date == ''
-            ? today()
-            : Carbon::createFromDate($date);
+            ? today()->addDay()
+            : Carbon::createFromDate($date)->addDay();
 
         $location = Location::find($this->locationId);
 
         $theScheduleIsAllWeek = true;
+
         while (!$employee->businessDays($location)->contains($date->dayOfWeek)) {
             $theScheduleIsAllWeek = false;
             $date->addDay();
@@ -110,7 +112,7 @@ class DatePickerLivewire extends Component
 
         $this->selectedDay = $date->format('Y-m-d');
 
-        $this->emit('updatedDay', $date->format('Y-m-d'), $dontSetHour = false);
+        $this->emit('updatedDay', $date->format('Y-m-d'), $this->index, $dontSetHour = false);
     }
 
     public function nextMonth()
@@ -145,7 +147,7 @@ class DatePickerLivewire extends Component
     {
         $this->selectedDay = $date;
 
-        $this->emitUp('updatedDay', $date);
+        $this->emitUp('updatedDay', $date, $this->index);
     }
 
     public function getDaysOfMonthProperty(): Collection

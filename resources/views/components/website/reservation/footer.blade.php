@@ -19,6 +19,7 @@
         @endif
         @if ($nextStep ?? false)
             <button
+                id="nextStep"
                 type="button"
                 wire:click="nextStep('{{ $nextStep }}')"
                 class="inline-flex justify-center items-center py-2 pr-2 pl-4 font-bold leading-4 text-white rounded-md border border-transparent shadow-sm text-md bg-mariajose_gray hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">

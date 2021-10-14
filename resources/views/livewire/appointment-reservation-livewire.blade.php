@@ -94,47 +94,69 @@
                 @endif
 
                 @if ($currentStep == AppointmentReservationLivewire::STEP_DATE_AND_HOUR)
-                    <div class="flex flex-col space-x-2 lg:flex-row">
-                        <div class="mb-6 lg:w-96">
-                            <livewire:date-picker-livewire
-                                :locationId="$this->form['location_id']"
-                                :employeeId="$this->form['employee_id']"
-                            />
-                            <x-ui.error :type="$this->form['date']"/>
+                    @foreach ($this->form['date_and_hour'] as $index => $data)
+                        <div>
+                            @if ($index > 0)
+                                <div class="mb-2" wire:click="deleteNewDate({{ $index }})">
+                                    <span class="cursor-pointer inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium bg-gray-100 text-gray-800">
+                                      Eliminar Fecha
+                                    </span>
+                                </div>
+                            @endif
                         </div>
-                        <div class="lg:flex-grow">
-                            <div
-                                class="px-3 py-2 mb-1 w-32 text-center text-white rounded-lg border border-gray-200 bg-mariajose_gray">
-                                {{ $this->selectedDay ?? 'Cargando...' }}
+                        <div class="flex flex-col space-x-2 lg:flex-row">
+                            <div class="mb-6 lg:w-96">
+                                <livewire:date-picker-livewire
+                                    wire:key="date-picker-{{ $index }}"
+                                    :locationId="$this->form['location_id']"
+                                    :employeeId="$this->form['employee_id']"
+                                    :dateSelected="$this->form['date_and_hour'][$index]['date']"
+                                    :index="$index"
+                                />
+                                <x-ui.error type="form.date_and_hour.{{ $index }}.date"/>
                             </div>
-                            <div
-                                class="grid grid-cols-2 gap-1 lg:flex lg:flex-col lg:h-72 lg:flex-wrap lg:gap-0 lg:content-start">
-                                @if (count($this->availableHours) == 0)
-                                    <p>No existe horario disponible el día de hoy.</p>
-                                @endif
-                                @foreach ($this->availableHours as $data)
-                                    <label
-                                        dusk="hour-{{ $data['hour'] }}"
-                                        for="hour-{{ $data['hour'] }}"
-                                        class="mr-2 w-full lg:w-32 text-center border border-gray-200 text-center py-2 rounded-lg mb-1 flex items-center justify-center {{ $this->hourNotAvailableClasses($data['isAvailable']) }}">
-                                        <input
-                                            @if (!$data['isAvailable'])
-                                            disabled
-                                            @else
-                                            wire:model="form.start_time"
-                                            @endif
-                                            class="mr-1 w-4 h-4 border-gray-300 focus:ring-mariajose_gray text-mariajose_gray"
-                                            id="hour-{{ $data['hour'] }}"
-                                            name="form.start_time"
-                                            value="{{ $data['hour'] }}"
-                                            type="radio">
-                                        {{ $data['hour'] }}
-                                    </label>
-                                @endforeach
+                            <div class="lg:flex-grow">
+                                <div
+                                    wire:key="selected-day-{{ $index }}"
+                                    class="px-3 py-2 mb-1 w-32 text-center text-white rounded-lg border border-gray-200 bg-mariajose_gray">
+                                    {{ $this->selectedDay[$index] ?? 'Escoje una fecha...' }}
+                                </div>
+                                <div
+                                    class="grid grid-cols-2 gap-1 lg:flex lg:flex-col lg:h-72 lg:flex-wrap lg:gap-0 lg:content-start">
+                                    @foreach ($this->availableHours($index) as $data)
+                                        <label
+                                            wire:key="label-{{ $data['hour'] }}-{{ $index }}"
+                                            dusk="hour-{{ $data['hour'] }}-{{ $index }}"
+                                            for="hour-{{ $data['hour'] }}-{{ $index }}"
+                                            class="mr-2 w-full lg:w-32 text-center border border-gray-200 text-center py-2 rounded-lg mb-1 flex items-center justify-center {{ $this->hourNotAvailableClasses($data['isAvailable']) }}">
+                                            <input
+                                                wire:key="label-{{ $data['hour'] }}-{{ $index }}"
+                                                @if (!$data['isAvailable'])
+                                                disabled
+                                                @else
+                                                wire:model="form.date_and_hour.{{ $index }}.start_time"
+                                                @endif
+                                                class="mr-1 w-4 h-4 border-gray-300 focus:ring-mariajose_gray text-mariajose_gray"
+                                                id="hour-{{ $data['hour'] }}-{{ $index }}"
+                                                name="form.date_and_hour.{{ $index }}.start_time"
+                                                value="{{ $data['hour'] }}"
+                                                type="radio">
+                                            {{ $data['hour'] }}
+                                        </label>
+                                    @endforeach
+                                </div>
+                                <x-ui.error type="form.date_and_hour.{{ $index }}.start_time"/>
                             </div>
-
-                            <x-ui.error type="form.start_time_and_location"/>
                         </div>
+                    @endforeach
+                    <div>
+                        <button
+                                dusk="addNewDate"
+                                wire:click="addNewDate"
+                                type="button"
+                                class="inline-flex items-center px-4 py-2 text-sm font-bold text-indigo-700 bg-indigo-100 rounded-md border border-transparent hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                            Agregar nueva fecha
+                        </button>
                     </div>
                     <x-website.reservation.footer
                         :stepBack="[AppointmentReservationLivewire::STEP_SERVICE_AND_EMPLOYEE,1]"
@@ -178,45 +200,47 @@
                                         </tr>
                                         </thead>
                                         <tbody class="bg-white divide-y divide-gray-200">
-                                        <tr>
-                                            <td class="py-4 pr-6 font-medium text-gray-900 whitespace-nowrap lg:whitespace-normal">
-                                                <div class="flex items-center">
-                                                    {{ $this->service->present()->name() }}
-                                                    <div style="flex-basis: 10px">
-                                                        <svg
-                                                            wire:click="$emit('openModal', 'show-service-detail-livewire', {{ json_encode(['serviceId' => $this->service->id]) }})"
-                                                            class="ml-2 text-gray-600 cursor-pointer" width="24"
-                                                            height="24" fill="none" viewBox="0 0 24 24">
-                                                            <path stroke="currentColor" stroke-linecap="round"
-                                                                  stroke-linejoin="round" stroke-width="2"
-                                                                  d="M12 13V15"></path>
-                                                            <circle cx="12" cy="9" r="1"
-                                                                    fill="currentColor"></circle>
-                                                            <circle cx="12" cy="12" r="7.25" stroke="currentColor"
-                                                                    stroke-linecap="round" stroke-linejoin="round"
-                                                                    stroke-width="1.5"></circle>
-                                                        </svg>
+                                        @foreach ($this->form['date_and_hour'] as $index => $data)
+                                            <tr>
+                                                <td class="py-4 pr-6 font-medium text-gray-900 whitespace-nowrap lg:whitespace-normal">
+                                                    <div class="flex items-center">
+                                                        {{ $this->service->present()->name() }}
+                                                        <div style="flex-basis: 10px">
+                                                            <svg
+                                                                wire:click="$emit('openModal', 'show-service-detail-livewire', {{ json_encode(['serviceId' => $this->service->id]) }})"
+                                                                class="ml-2 text-gray-600 cursor-pointer" width="24"
+                                                                height="24" fill="none" viewBox="0 0 24 24">
+                                                                <path stroke="currentColor" stroke-linecap="round"
+                                                                      stroke-linejoin="round" stroke-width="2"
+                                                                      d="M12 13V15"></path>
+                                                                <circle cx="12" cy="9" r="1"
+                                                                        fill="currentColor"></circle>
+                                                                <circle cx="12" cy="12" r="7.25" stroke="currentColor"
+                                                                        stroke-linecap="round" stroke-linejoin="round"
+                                                                        stroke-width="1.5"></circle>
+                                                            </svg>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            </td>
-                                            <td class="px-6 py-4 font-medium text-gray-500 whitespace-nowrap">
-                                                {{ $this->appointmentDate }}
-                                            </td>
-                                            <td class="px-6 py-4 font-medium text-gray-500 whitespace-nowrap">
+                                                </td>
+                                                <td class="px-6 py-4 font-medium text-gray-500 whitespace-nowrap">
+                                                    {{ $this->appointmentDate($index) }}
+                                                </td>
+                                                <td class="px-6 py-4 font-medium text-gray-500 whitespace-nowrap">
 
-                                                {{ $this->appointmentLocation }}
-                                            </td>
-                                            <td class="px-6 py-4 font-medium text-gray-500 whitespace-nowrap">
+                                                    {{ $this->appointmentLocation }}
+                                                </td>
+                                                <td class="px-6 py-4 font-medium text-gray-500 whitespace-nowrap">
 
-                                                {{ $this->appointmentHour }}
-                                            </td>
-                                            <td class="px-6 py-4 font-medium text-gray-500 whitespace-nowrap">
-                                                {{ $this->appointmentValue }}
-                                            </td>
-                                            <td class="px-6 py-4 font-medium text-gray-500 whitespace-nowrap">
-                                                {{ $this->employee->present()->name() }}
-                                            </td>
-                                        </tr>
+                                                    {{ $this->appointmentHour($index) }}
+                                                </td>
+                                                <td class="px-6 py-4 font-medium text-gray-500 whitespace-nowrap">
+                                                    {{ $this->appointmentValue }}
+                                                </td>
+                                                <td class="px-6 py-4 font-medium text-gray-500 whitespace-nowrap">
+                                                    {{ $this->employee->present()->name() }}
+                                                </td>
+                                            </tr>
+                                        @endforeach
                                         </tbody>
                                     </table>
                                 </div>

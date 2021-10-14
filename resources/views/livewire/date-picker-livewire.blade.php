@@ -45,7 +45,7 @@
                         @if ($this->isThisDayAvailable($date))
                             wire:click="selectDay('{{ $date }}')"
                         @endif
-                        dusk="date-{{ $date }}"
+                        dusk="date-{{ $date }}-{{ $this->index }}"
                         class="font-bold flex justify-center items-center w-6 h-6 {{ $this->dayStyles($date) }} {{ $this->selectedDayStyles($date) }}">
                         {{ $day }}
                     </p>

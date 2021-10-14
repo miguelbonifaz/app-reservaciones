@@ -60,6 +60,8 @@
                             wire:key="date-picker-{{ $this->form['location_id'] }}"
                             :locationId="$this->form['location_id']"
                             :employeeId="$this->form['employee_id']"
+                            :dateSelected="null"
+                            :index="null"
                         />
                         <x-ui.error type="form.date"/>
                     @else

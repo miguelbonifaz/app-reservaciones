@@ -35,19 +35,13 @@ function stepOne(TestableLivewire $component, $dataAppointment, $isInAnOffice = 
 
     $component->assertSet('currentStep', AppointmentReservationLivewire::STEP_SERVICE_AND_EMPLOYEE);
     $component->set('form.service_id', $dataAppointment->service_id);
-    $component->set('form.location_id', $dataAppointment->location_id);
     $component->set('form.employee_id', $dataAppointment->employee_id);
+    $component->set('form.location_id', $dataAppointment->location_id);
     assertNull($component->get('firstStepProgressBarClass'));
     assertEquals('opacity-30', $component->get('secondStepProgressBarClass'));
     assertEquals('opacity-30', $component->get('thirdStepProgressBarClass'));
     assertEquals('opacity-30', $component->get('fourthStepProgressBarClass'));
     assertEquals('opacity-30', $component->get('fifthStepProgressBarClass'));
-
-    if ($isInAnOffice) {
-        $component->set('form.location_id', $dataAppointment->location_id);
-    } else {
-        assertEquals(Service::first()->place, $component->get('form.place'));
-    }
 
     $component->call('nextStep', AppointmentReservationLivewire::STEP_DATE_AND_HOUR);
 }
@@ -55,10 +49,9 @@ function stepOne(TestableLivewire $component, $dataAppointment, $isInAnOffice = 
 function stepTwo(TestableLivewire $component, $dataAppointment): void
 {
     assertCount(2, $component->viewData('steps'));
-
     $component->assertSet('currentStep', AppointmentReservationLivewire::STEP_DATE_AND_HOUR);
-    $component->set('form.date', $dataAppointment->date->format('Y-m-d'));
-    $component->set('form.start_time', $dataAppointment->start_time->format('H:i'));
+    $component->set('form.date_and_hour.0.date', $dataAppointment->date->format('Y-m-d'));
+    $component->set('form.date_and_hour.0.start_time', $dataAppointment->start_time->format('H:i'));
     assertNull($component->get('firstStepProgressBarClass'));
     assertNull($component->get('secondStepProgressBarClass'));
     assertEquals('opacity-30', $component->get('thirdStepProgressBarClass'));
@@ -108,7 +101,6 @@ function stepFourth(TestableLivewire $component, $dataCustomer, $dataAppointment
 
 function stepFive(TestableLivewire $component): void
 {
-    // Derrepente el test falla a este paso, no existe 5 pasos, solamente 4.
     assertCount(5, $component->viewData('steps'));
 
     $component->assertSet('currentStep', AppointmentReservationLivewire::STEP_FAREWELL);
@@ -172,6 +164,29 @@ test('can create an appointment', function () {
     Notification::assertSentTo($customer, AppointmentConfirmedNotification::class);
 });
 
+test('can delete a new date', function () {
+    // Arrange
+    $dataAppointment = Appointment::factory()->make();
+    $dataAppointment->employee->schedules()
+        ->update(['start_time' => '10:00', 'end_time' => '20:00']);
+
+    $component = buildComponent();
+
+    // STEP ONE
+    stepOne($component, $dataAppointment);
+    $component->call('addNewDate');
+
+    expect($component->get('form.date_and_hour'))->toHaveCount(2);
+
+    $newDateKey = collect($component->get('form.date_and_hour'))->keys()->last();
+
+    // Act
+    $component->call('deleteNewDate', $newDateKey);
+
+    // Assert
+    expect($component->get('form.date_and_hour'))->toHaveCount(1);
+});
+
 test('fields are required in the first step', function () {
     // Arrange
     $component = buildComponent();
@@ -229,8 +244,8 @@ test('fields are required in the second step', function () {
 
     // Assert
     $component->assertHasErrors([
-        'form.date' => 'required',
-        'form.start_time' => 'required',
+        'form.date_and_hour.0.date' => 'required',
+        'form.date_and_hour.0.start_time' => 'required',
     ]);
 });
 

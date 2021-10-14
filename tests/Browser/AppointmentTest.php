@@ -23,7 +23,7 @@ test('can create an appointment', function () {
 
         $service = Service::first();
         $employee = Employee::first();
-        $date = today()->addDays(2)->format('Y-m-d');
+        $date = today()->addDays(1)->format('Y-m-d');
         $hour = '11:30';
 
         $browser->visit('/reservaciones')
@@ -34,9 +34,9 @@ test('can create an appointment', function () {
             ->select('form.location_id', $employee->locations->first()->id)
             ->press('Siguiente')
             ->pause('1000')
-            ->click("@date-$date")
+            ->click("@date-$date-0")
             ->pause('1000')
-            ->click("@hour-$hour")
+            ->click("@hour-$hour-0")
             ->press('Siguiente')
             ->pause('500')
             ->press('Siguiente')
@@ -79,5 +79,61 @@ test('can create an appointment', function () {
             $hour->addMinutes($service->duration)->format('H:i')
         )->toBe($appointment->end_time->format('H:i'));
         expect($note)->toBe($appointment->note);
+    });
+});
+
+test('user can create two appointments', function () {
+    $this->browse(function (Browser $browser) {
+        // Arrange
+        $dataCustomer = Customer::factory()->make();
+
+        $service = Service::first();
+
+        $employee = Employee::first();
+        $dateOne = today()->addDays(1)->format('Y-m-d');
+        $hourOne = '11:30';
+
+        $dateTwo = today()->addDays(1)->format('Y-m-d');
+        $hourTwo = '12:15';
+
+        $browser->visit('/reservaciones')
+            ->select('form.service_id', $service->id)
+            ->pause('500')
+            ->select('form.employee_id', $employee->id)
+            ->pause('500')
+            ->select('form.location_id', $employee->locations->first()->id)
+            ->press('Siguiente')
+            ->pause('1000')
+            ->click('@addNewDate')
+            ->pause('1000')
+            // First Date
+            ->click("@date-$dateOne-0")
+            ->pause('1000')
+            ->click("@hour-$hourOne-0")
+            // Second Date
+            ->click("@date-$dateTwo-1")
+            ->pause('1000')
+            ->click("@hour-$hourTwo-1")
+            ->scrollIntoView('#nextStep')
+            ->screenshot('testing')
+            ->press('Siguiente')
+            ->pause('500')
+            ->press('Siguiente')
+            ->pause('500')
+            ->type('form.email', $dataCustomer->email)
+            ->type('form.full_name', $dataCustomer->full_name)
+            ->type('form.first_name', $dataCustomer->first_name)
+            ->type('form.last_name', $dataCustomer->last_name)
+            ->type('form.phone', $dataCustomer->phone)
+            ->type('form.name_of_child', $dataCustomer->name_of_child)
+            ->type('form.note', $note = 'This is my note')
+            ->check('termsAndConditions')
+            ->press('Siguiente')
+            ->pause('2000')
+            ->assertSee('Gracias por su reserva en linea, se le ha enviado un correo con los detalles de su reservación');
+
+        // Assert
+        expect(Customer::all())->toHaveCount(1);
+        expect(Appointment::all())->toHaveCount(2);
     });
 });

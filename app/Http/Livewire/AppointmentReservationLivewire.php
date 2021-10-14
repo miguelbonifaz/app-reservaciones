@@ -26,8 +26,12 @@ class AppointmentReservationLivewire extends Component
     public $form = [
         'service_id' => '',
         'employee_id' => '',
-        'date' => '',
-        'start_time' => '',
+        'date_and_hour' => [
+            [
+                'date' => '',
+                'start_time' => '',
+            ]
+        ],
         'location_id' => '',
         'full_name' => '',
         'first_name' => '',
@@ -42,7 +46,7 @@ class AppointmentReservationLivewire extends Component
     public $employees;
     public $locations;
 
-    public $selectedDay;
+    public $selectedDay = [];
 
     public $steps = [];
 
@@ -63,7 +67,8 @@ class AppointmentReservationLivewire extends Component
         'form.employee_id.required' => 'Seleccione un profesional',
         'form.location_id.required' => 'Seleccione un lugar',
 
-        'form.start_time.required' => 'Escoje una hora',
+        'form.date_and_hour.*.date.required' => 'Por favor, escoje una fecha',
+        'form.date_and_hour.*.start_time.required' => 'Por favor, escoje una hora',
 
         'form.full_name.required' => 'El campo nombres completos es requerido',
         'form.first_name.required' => 'El campo primer apellido Completos es requerido',
@@ -75,14 +80,16 @@ class AppointmentReservationLivewire extends Component
         'form.name_of_child.required' => 'El campo nombre del niño es requerido',
     ];
 
-    public function updatedDay($date, $dontSetHour = true)
+    public function updatedDay($date, $index, $dontSetHour = true)
     {
-        $this->form['date'] = $date;
+        $this->form['date_and_hour'][$index]['date'] = $date;
         if ($dontSetHour) {
-            $this->form['start_time'] = '';
+            $this->form['date_and_hour'][$index]['start_time'] = '';
         }
         $date = Carbon::createFromDate($date);
-        $this->selectedDay = $date->day_name();
+        $this->selectedDay = collect($this->selectedDay)
+            ->put($index, $date->day_name())
+            ->toArray();
     }
 
     public function stepBack($stepName, $stepIndex)
@@ -90,10 +97,6 @@ class AppointmentReservationLivewire extends Component
         $this->currentStep = $stepName;
 
         $this->steps = collect($this->steps)->forget($stepIndex)->toArray();
-
-        if ($stepName == self::STEP_DATE_AND_HOUR) {
-            $this->emit('selectDefaultDay', $this->form['date']);
-        }
     }
 
     public function nextStep($step)
@@ -106,12 +109,18 @@ class AppointmentReservationLivewire extends Component
 
         if ($step == self::STEP_DATE_AND_HOUR) {
             $this->emit('selectDefaultDay', '');
+            $this->form['date_and_hour'] = [
+                [
+                    'date' => '',
+                    'start_time' => '',
+                ],
+            ];
         }
 
         if ($step == self::STEP_DETAILS) {
             $this->validate([
-                'form.date' => 'required',
-                'form.start_time' => 'required',
+                'form.date_and_hour.*.date' => 'required',
+                'form.date_and_hour.*.start_time' => 'required',
             ]);
         }
 
@@ -199,14 +208,14 @@ class AppointmentReservationLivewire extends Component
         return false;
     }
 
-    public function getAppointmentDateProperty(): string
+    public function appointmentDate($index): string
     {
-        return Carbon::createFromDate($this->form['date'])->day_month_year();
+        return Carbon::createFromDate($this->form['date_and_hour'][$index]['date'])->day_month_year();
     }
 
-    public function getAppointmentHourProperty(): string
+    public function appointmentHour($index): string
     {
-        $hour = explode(':', $this->form['start_time']);
+        $hour = explode(':', $this->form['date_and_hour'][$index]['start_time']);
 
         return Carbon::createFromTime(
             $hour[0],
@@ -234,13 +243,18 @@ class AppointmentReservationLivewire extends Component
         return Service::find($this->form['service_id']);
     }
 
-    public function getAvailableHoursProperty()
+    public function availableHours($index)
     {
-        if (!$this->form['date']) {
+        if (!$this->form['date_and_hour'][$index]['date']) {
             return [];
         }
 
-        return $this->employee->workingHours($this->form['date'], $this->service, $this->form['location_id']);
+        return $this->employee
+            ->workingHours(
+                $this->form['date_and_hour'][$index]['date'],
+                $this->service,
+                $this->form['location_id']
+            );
     }
 
     public function getFirstStepProgressBarClassProperty(): ?string
@@ -377,20 +391,41 @@ class AppointmentReservationLivewire extends Component
                 ]
             );
 
-            $appointment = Appointment::create([
-                'employee_id' => $this->form['employee_id'],
-                'service_id' => $this->form['service_id'],
-                'location_id' => $this->form['location_id'] === ''
-                    ? null
-                    : $this->form['location_id'],
-                'customer_id' => $customer->id,
-                'date' => $this->form['date'],
-                'start_time' => $this->form['start_time'],
-                'note' => $this->form['note'],
-            ]);
+            $appointmentsCreated = collect();
 
-            $appointment->customer->notify(new AppointmentConfirmedNotification($appointment));
+            collect($this->form['date_and_hour'])->each(function ($data, $index) use ($appointmentsCreated, $customer) {
+                $appointment = Appointment::create([
+                    'employee_id' => $this->form['employee_id'],
+                    'service_id' => $this->form['service_id'],
+                    'location_id' => $this->form['location_id'] === ''
+                        ? null
+                        : $this->form['location_id'],
+                    'customer_id' => $customer->id,
+                    'date' => $this->form['date_and_hour'][$index]['date'],
+                    'start_time' => $this->form['date_and_hour'][$index]['start_time'],
+                    'note' => $this->form['note'],
+                ]);
+
+                $appointmentsCreated->push($appointment);
+            });
+
+            $customer->notify(new AppointmentConfirmedNotification($appointmentsCreated));
         });
+    }
+
+    public function addNewDate()
+    {
+        $this->form['date_and_hour'] = collect($this->form['date_and_hour'])
+            ->push([
+                'date' => '',
+                'start_time' => ''
+            ]);
+    }
+
+    public function deleteNewDate($key)
+    {
+        $this->form['date_and_hour'] = collect($this->form['date_and_hour'])
+            ->forget($key);
     }
 
     public function render()

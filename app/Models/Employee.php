@@ -75,6 +75,7 @@ class Employee extends Model
         $date = Carbon::createFromDate($date);
 
         /** @var Schedule $schedule */
+
         $schedule = $this->schedules()
             ->where('location_id', $locationId)
             ->firstWhere('day', $date->dayOfWeek);

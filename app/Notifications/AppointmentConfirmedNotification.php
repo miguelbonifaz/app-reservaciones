@@ -7,16 +7,40 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Support\Collection;
 
 class AppointmentConfirmedNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
-    public $appointment;
+    public $service;
+    public $location;
+    public $employee;
+    public $slots;
+    public $customer;
+    public $dateAndHour = [];
+    public $value;
 
-    public function __construct(Appointment $appointment)
+    public function __construct(Collection $appointments)
     {
-        $this->appointment = $appointment;
+        $this->dateAndHour = $appointments
+            ->map(function (Appointment $appointment) {
+                return [
+                    'date' => $appointment->present()->date(),
+                    'start_time' => $appointment->present()->startTime(),
+                ];
+            })->toArray();
+
+        /** @var Appointment $appointment */
+        $appointment = $appointments->first();
+
+        $this->value = $appointment->service->present()->value();
+        $this->customer = $appointment->customer->present()->name();
+        $this->service = $appointment->service->present()->name();
+        $this->slots = $appointment->service->slots;
+        $this->location = $appointment->service->place ??
+            $appointment->location->present()->name();
+        $this->employee = $appointment->employee->present()->name();
     }
 
     /**
@@ -38,20 +62,17 @@ class AppointmentConfirmedNotification extends Notification implements ShouldQue
      */
     public function toMail($notifiable): MailMessage
     {
-        $location = $this->appointment->service->place ?? $this->appointment->location->present()->name();
-
         return (new MailMessage)
             ->subject("Su cita en " . config('app.name'))
-            ->greeting("Apreciado(a) {$this->appointment->customer->present()->name()}")
-            ->line("Esta es la confirmación de su cita con los siguientes datos:")
-            ->line("- Fecha: {$this->appointment->present()->date()}")
-            ->line("- Hora: {$this->appointment->present()->startTime()}")
-            ->line("- Lugar: $location")
-            ->line("- Profesional: {$this->appointment->employee->present()->name()}")
-            ->line("- Valor: {$this->appointment->service->present()->value()}")
-            ->line("- Servicio: {$this->appointment->service->present()->name()}")
-            ->line('Gracias por confiar en nosotros.')
-            ->line("<br>");
+            ->markdown('emails.appointment-confirmed', [
+                'customer' => $this->customer,
+                'service' => $this->service,
+                'slots' => $this->slots,
+                'dateAndHour' => $this->dateAndHour,
+                'location' => $this->location,
+                'employee' => $this->employee,
+                'value' => $this->value,
+            ]);
     }
 
     /**
