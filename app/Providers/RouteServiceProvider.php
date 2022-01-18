@@ -2,6 +2,11 @@
 
 namespace App\Providers;
 
+use App\Models\Customer;
+use App\Models\Employee;
+use App\Models\RestSchedule;
+use App\Models\Service;
+use App\Models\User;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Http\Request;
@@ -17,7 +22,7 @@ class RouteServiceProvider extends ServiceProvider
      *
      * @var string
      */
-    public const HOME = '/home';
+    public const HOME = '/calendar';
 
     /**
      * The controller namespace for the application.
@@ -35,6 +40,12 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        Route::model('user', User::class);
+        Route::model('employee', Employee::class);
+        Route::model('service', Service::class);
+        Route::model('restSchedule', RestSchedule::class);
+        Route::model('customer', Customer::class);
+
         $this->configureRateLimiting();
 
         $this->routes(function () {
@@ -43,9 +54,13 @@ class RouteServiceProvider extends ServiceProvider
                 ->namespace($this->namespace)
                 ->group(base_path('routes/api.php'));
 
-            Route::middleware('web')
+            Route::middleware(['web', 'auth'])
                 ->namespace($this->namespace)
                 ->group(base_path('routes/web.php'));
+
+            Route::middleware(['web'])
+                ->namespace($this->namespace)
+                ->group(base_path('routes/guest.php'));
         });
     }
 
